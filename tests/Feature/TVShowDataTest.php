@@ -7,6 +7,7 @@ use App\Data\TVShowData;
 use App\Models\TVShow;
 use App\TVSHow\TVShowStatus;
 use Carbon\Carbon;
+use Spatie\LaravelData\DataCollection;
 use Tests\TestCase;
 
 class TVShowDataTest extends TestCase
@@ -28,6 +29,8 @@ class TVShowDataTest extends TestCase
         $this->assertInstanceOf(EpisodeData::class, $showData->next_ep);
         $this->assertInstanceOf(Carbon::class, $showData->start_date);
         $this->assertInstanceOf(TVShowStatus::class, $showData->status);
+        $this->assertInstanceOf(DataCollection::class, $showData->episodes);
+        $this->assertInstanceOf(EpisodeData::class, $showData->episodes->first());
         $this->assertIsArray($showData->genres);
         $this->assertIsArray($showData->pictures);
         $this->assertNotEmpty($showData->image_url);
@@ -36,6 +39,12 @@ class TVShowDataTest extends TestCase
 //        $showData->all();
 
         // from db
-        $bb = TVShowData::from(TVShow::inRandomOrder()->first());
+        $showFromDB = TVShowData::from(TVShow::inRandomOrder()->first());
+        $allFields = array_keys($showFromDB->all());
+        $allFieldNames = ["name", "permalink", "description", "status", "country", "network", "thumb_url"
+            , "image_url", "start_date", "end_date", "next_ep_date", "last_aired_ep", "next_ep", "genres", "pictures", "episodes"];
+        $hasAllFields = !array_diff($allFieldNames, $allFields);
+        $this->assertTrue($hasAllFields);
+
     }
 }

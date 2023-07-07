@@ -7,12 +7,14 @@ use App\Data\Transformers\TVShowStatusTransformer;
 use App\TVSHow\TVShowStatus;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
 class TVShowData extends Data
@@ -39,7 +41,8 @@ class TVShowData extends Data
         public ?EpisodeData $next_ep,
         public ?array $genres,
         public ?array $pictures,
-        public ?array $episodes,
+        #[DataCollectionOf(EpisodeData::class)]
+        public ?DataCollection $episodes,
 
     ) {}
 }
