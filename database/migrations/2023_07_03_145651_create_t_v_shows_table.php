@@ -27,12 +27,12 @@ return new class extends Migration
             $table->dateTime("next_ep_date")->index()->nullable();
 
             // ep info: name, season, episode, air_date
-            $table->json("last_aired_ep")->default("[]")->comment("last aired episode info");
-            $table->json("next_ep")->default("[]")->comment("next episode to be aired");;
+            $table->json("last_aired_ep")->nullable()->comment("last aired episode info");
+            $table->json("next_ep")->nullable()->comment("next episode to be aired");;
 
-            $table->json("genres")->default("[]");
-            $table->json("pictures")->default("[]");
-            $table->json("episodes")->default("[]");
+            $table->json("genres")->nullable();
+            $table->json("pictures")->nullable();
+            $table->json("episodes")->nullable();
 
             $table->timestamps();
         });
