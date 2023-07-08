@@ -8,22 +8,29 @@ enum TVShowStatus : string
 {
     case Ended = 'Ended';
     case Running = "Running";
-    case InDevelopment = "InDevelopment";
+    case InDevelopment = "In Development";
     case CanceledEnded = "Canceled/Ended";
-    case ToBeDetermined = "ToBeDetermined";
-    case TBD_OnTheBubble = "Tbd/OnTheBubble";
-    case NewSeries = "NewSeries";
+    case ToBeDetermined = "To Be Determined";
+    case TBD_OnTheBubble = "TBD/On The Bubble";
+    case NewSeries = "New Series";
 
     case Unknown = "Unknown";
 
 
     public static function fromString(mixed $value) {
-        $value = Str::studly(Str::title(trim($value)));
         try{
             return static::from($value);
         }
         catch (\Throwable $e) {
-            return static::Unknown;
+
+            $value = Str::title(trim($value));
+
+            try{
+                return static::from($value);
+            }
+            catch (\Throwable $e) {
+                return static::Unknown;
+            }
         }
     }
 }
