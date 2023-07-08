@@ -5,6 +5,7 @@ namespace App\Data;
 use App\Data\Casts\TVShowStatusCast;
 use App\TVSHow\TVShowStatus;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -16,7 +17,7 @@ class TVShowData extends Data
     public function __construct(
         public string $name,
         public string $permalink,
-        public string $description,
+        public ?string $description,
 //
 //        #[WithTransformer(TVShowStatusTransformer::class, 444)]
         #[WithCast(TVShowStatusCast::class)]
@@ -39,4 +40,14 @@ class TVShowData extends Data
         public ?DataCollection $episodes,
 
     ) {}
+
+    // do some preparation before parsing data
+    public static function prepareForPipeline(Collection $properties) : Collection
+    {
+        // we can not have a date with empty string so we convert it to null
+        if($properties['end_date'] === "")
+            $properties->put('end_date', null);
+
+        return $properties;
+    }
 }
