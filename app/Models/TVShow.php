@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Data\TVShowData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\LaravelData\WithData;
 
 class TVShow extends Model
 {
-    use HasFactory;
+    use HasFactory, WithData;
 
-    protected $table='tv_shows';
-
+    protected $table = 'tv_shows';
+    protected $dataClass = TVShowData::class;
+    protected $guarded = [];
     protected $casts = [
 //        'status' => PostStatus::class,
 
