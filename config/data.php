@@ -7,7 +7,7 @@ return [
      * and will serialize dates using the first format from the array.
      */
     //2010-05-24 01, "M/m/Y" => Mar/03/2014
-    'date_format' => [DATE_ATOM, 'Y-m-d', 'Y/m/d','Y-m-d H:i:s', "M/m/Y", "Y"],
+    'date_format' => ['Y-m-d', 'Y/m/d','Y-m-d H:i:s', "M/m/Y", "Y", DATE_ATOM],
 
     /*
      * Global transformers will take complex types and transform them into simple
