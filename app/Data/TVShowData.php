@@ -28,7 +28,7 @@ class TVShowData extends Data
         public ?string $thumb_url,
         #[MapInputName('image_path')]
         public ?string $image_url,
-        public Carbon $start_date,
+        public ?Carbon $start_date,
         public ?Carbon $end_date,
         public ?Carbon $next_ep_date,
         public ?EpisodeData $last_aired_ep,
