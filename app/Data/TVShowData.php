@@ -45,7 +45,7 @@ class TVShowData extends Data
     public static function prepareForPipeline(Collection $properties) : Collection
     {
         // we can not have a date with empty string so we convert it to null
-        if($properties['end_date'] === "")
+        if($properties->has('end_date') && $properties['end_date'] === "")
             $properties->put('end_date', null);
 
         return $properties;

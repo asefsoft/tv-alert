@@ -2,6 +2,7 @@
 
 use App\Data\RemoteSearchData;
 use App\Data\TVShowData;
+use App\TVSHow\RemoteData\GetRemoteTVShowInfo;
 use App\TVSHow\RemoteData\RemoteRequest;
 use Tests\TestCase;
 
@@ -60,5 +61,19 @@ class RemoteRequestTest extends TestCase
 
         $searchResults = RemoteSearchData::from($result);
         $this->assertInstanceOf(RemoteSearchData::class, $searchResults);
+    }
+
+    // in this test we use GetRemoteTVShowInfo class to get tvshow info from remote
+    public function test_can_get_show_info_from_remote_class() {
+        $requester = new GetRemoteTVShowInfo('hijack-apple-tv');
+        $TVShowInfo = $requester->getTVShowInfo();
+        $this->assertInstanceOf(TVShowData::class, $TVShowInfo);
+
+        // some not-exist tvshow
+        $requester = new GetRemoteTVShowInfo('vlodikarama');
+        $TVShowInfo = $requester->getTVShowInfo();
+        $this->assertNull($TVShowInfo);
+        $this->assertEquals("Empty or invalid result from remote.", $requester->getErrorMessage());
+
     }
 }

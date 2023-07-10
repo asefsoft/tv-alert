@@ -17,29 +17,33 @@ class CreateOrUpdateTVShow
     }
 
     private function createOrUpdate() {
-        $showData = TVShowData::from($this->tvShowInfo);
+
+        // parse array into tvshow data
+        try {
+            $showData = TVShowData::from($this->tvShowInfo);
+        } catch (\Exception $e) {
+            $this->status = CreateOrUpdateStatus::InvalidData;
+            return;
+        }
+
         $this->showOnDB = TVShow::updateOrCreate(['permalink' => $showData->permalink], $showData->toArray());
 
+        // created
         if($this->showOnDB->wasRecentlyCreated) {
             TVShowCreated::dispatch($this->showOnDB);
             $this->status = CreateOrUpdateStatus::Created;
         }
         else {
+            // updated
             TVShowUpdated::dispatch($this->showOnDB);
             $this->status = CreateOrUpdateStatus::Updated;
         }
     }
 
-    /**
-     * @return CreateOrUpdateStatus
-     */
     public function getCreationStatus(): CreateOrUpdateStatus {
         return $this->status;
     }
 
-    /**
-     * @return mixed
-     */
     public function getShowOnDB() : TVShow {
         return $this->showOnDB;
     }
@@ -48,4 +52,5 @@ class CreateOrUpdateTVShow
 Enum CreateOrUpdateStatus {
     case Created;
     case Updated;
+    case InvalidData;
 }
