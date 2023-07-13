@@ -1,9 +1,11 @@
 <?php
 
-use App\Data\RemoteSearchData;
+use App\Data\SearchTVShowData;
 use App\Data\TVShowData;
 use App\TVSHow\RemoteData\GetRemoteTVShowInfo;
 use App\TVSHow\RemoteData\RemoteRequest;
+use App\TVSHow\RemoteData\SearchRemoteTVShow;
+use Spatie\LaravelData\DataCollection;
 use Tests\TestCase;
 
 class RemoteRequestTest extends TestCase
@@ -59,8 +61,8 @@ class RemoteRequestTest extends TestCase
         $this->assertArrayHasKey('page', $result);
         $this->assertArrayHasKey('tv_shows', $result);
 
-        $searchResults = RemoteSearchData::from($result);
-        $this->assertInstanceOf(RemoteSearchData::class, $searchResults);
+        $searchResults = SearchTVShowData::from($result);
+        $this->assertInstanceOf(SearchTVShowData::class, $searchResults);
     }
 
     // in this test we use GetRemoteTVShowInfo class to get tvshow info from remote
@@ -73,7 +75,24 @@ class RemoteRequestTest extends TestCase
         $requester = new GetRemoteTVShowInfo('vlodikarama');
         $TVShowInfo = $requester->getTVShowInfo();
         $this->assertNull($TVShowInfo);
-        $this->assertEquals("Empty or invalid result from remote.", $requester->getErrorMessage());
+        $this->assertStringStartsWith("Empty or invalid result from remote:", $requester->getErrorMessage());
+
+    }
+
+    // in this test we use SearchRemoteTVShow class to get search result for tvshows info from remote
+    public function test_can_get_search_result_from_remote_class() {
+        $requester = new SearchRemoteTVShow('pacific');
+        $searchData = $requester->getSearchData();
+        $this->assertInstanceOf(SearchTVShowData::class, $searchData);
+        $this->assertEmpty($requester->getErrorMessage());
+
+        // some not-exist search
+        $requester = new SearchRemoteTVShow('invlodika');
+        $searchData = $requester->getSearchData();
+        $this->assertInstanceOf(SearchTVShowData::class, $searchData);
+        $this->assertEquals(0, $searchData->total);
+        $this->assertInstanceOf(DataCollection::class, $searchData->tv_shows);
+        $this->assertEmpty($requester->getErrorMessage());
 
     }
 }

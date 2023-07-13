@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 
 // data of remote search result om episodate.com api
-class RemoteSearchData extends Data
+class SearchTVShowData extends Data
 {
 
     public function __construct(
