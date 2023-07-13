@@ -79,7 +79,7 @@ class TVShowDataTest extends TestCase
         $showInfoArray = json_decode($this->showInfoJson, true);
         $creator = new CreateOrUpdateTVShow($showInfoArray);
 
-        // assert events dispatched
+        // assert events are dispatched
         if($creator->getCreationStatus() == CreateOrUpdateStatus::Created)
             Event::assertDispatched(TVShowCreated::class);
         elseif($creator->getCreationStatus() == CreateOrUpdateStatus::Updated)
@@ -87,7 +87,11 @@ class TVShowDataTest extends TestCase
 
         $createdTVShow = $creator->getShowOnDB();
         $this->assertInstanceOf(TVShow::class, $createdTVShow);
+        $this->assertInstanceOf(Carbon::class, $createdTVShow->last_check_date);
+        // assert that last_check_date is updated to now
+        $this->assertEquals(now()->format("Y-m-d H:i"), $createdTVShow->last_check_date->format("Y-m-d H:i"));
         $this->assertHasAllFields($createdTVShow->toArray());
+        
     }
 
     public function test_search_results_is_working() {

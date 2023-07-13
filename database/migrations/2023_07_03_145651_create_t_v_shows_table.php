@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string("image_url", 250)->nullable();
 
             $table->dateTime("next_ep_date")->index()->nullable();
+            $table->dateTime("last_check_date")->index()->nullable();
 
             // ep info: name, season, episode, air_date
             $table->json("last_aired_ep")->nullable()->comment("last aired episode info");
