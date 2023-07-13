@@ -26,7 +26,10 @@ class CreateOrUpdateTVShow
             return;
         }
 
-        $this->showOnDB = TVShow::updateOrCreate(['permalink' => $showData->permalink], $showData->toArray());
+        // update last_check_date
+        $showDataTobeSaved = array_merge($showData->toArray(), ['last_check_date' => now()]);
+
+        $this->showOnDB = TVShow::updateOrCreate(['permalink' => $showData->permalink], $showDataTobeSaved);
 
         // created
         if($this->showOnDB->wasRecentlyCreated) {
