@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TVSHow\RemoteData;
+namespace App\TVShow\RemoteData;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;

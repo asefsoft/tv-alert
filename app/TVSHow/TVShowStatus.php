@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TVSHow;
+namespace App\TVShow;
 
 use Illuminate\Support\Str;
 
