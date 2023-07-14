@@ -5,15 +5,15 @@ namespace App\TVShow\RemoteData;
 use App\Data\SearchTVShowData;
 use App\Data\TVShowData;
 
-class SearchRemoteTVShow
+class GetRemoteMostPopularTVShow
 {
 
     private string $errorMessage = '';
-    public function __construct(protected string $query, protected int $page = 1) { }
+    public function __construct(protected int $page = 1) { }
 
-    public function doSearch() : SearchTVShowData | null {
-        // tv show search remote api url
-        $remoteUrl = sprintf("%s%s&page=%s", config('tvshow.api_url.search'), $this->query, $this->page);
+    public function getMostPopular() : SearchTVShowData | null {
+        // tv show most popular remote api url
+        $remoteUrl = sprintf("%s?page=%s", config('tvshow.api_url.most_popular'), $this->page);
 
         // send remote request
         $request = new RemoteRequest($remoteUrl);

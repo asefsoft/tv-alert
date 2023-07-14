@@ -2,6 +2,7 @@
 
 use App\Data\SearchTVShowData;
 use App\Data\TVShowData;
+use App\TVSHow\RemoteData\GetRemoteMostPopularTVShow;
 use App\TVSHow\RemoteData\GetRemoteTVShowInfo;
 use App\TVSHow\RemoteData\RemoteRequest;
 use App\TVSHow\RemoteData\SearchRemoteTVShow;
@@ -102,5 +103,21 @@ class RemoteRequestTest extends TestCase
         $this->assertInstanceOf(DataCollection::class, $searchData->tv_shows);
         $this->assertEmpty($requester->getErrorMessage());
 
+    }
+
+    // test most popular tvshow
+    public function test_can_get_most_popular_tvshows_from_remote_class() {
+        $requester = new GetRemoteMostPopularTVShow();
+        $searchData = $requester->getMostPopular();
+        $this->assertInstanceOf(SearchTVShowData::class, $searchData);
+        $this->assertEquals(1, $searchData->page);
+        $this->assertEmpty($requester->getErrorMessage());
+
+        // get page 2
+        $requester = new GetRemoteMostPopularTVShow(page: 2);
+        $searchData = $requester->getMostPopular();
+        $this->assertInstanceOf(SearchTVShowData::class, $searchData);
+        $this->assertEquals(2, $searchData->page);
+        $this->assertEmpty($requester->getErrorMessage());
     }
 }

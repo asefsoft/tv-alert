@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TVSHow\RemoteData;
+namespace App\TVShow\RemoteData;
 
 use App\Data\TVShowData;
 
