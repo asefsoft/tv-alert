@@ -9,11 +9,11 @@ class SearchRemoteTVShow
 {
 
     private string $errorMessage = '';
-    public function __construct(protected string $query) { }
+    public function __construct(protected string $query, public int $page = 1) { }
 
-    public function getSearchData() : SearchTVShowData | null {
+    public function doSearch() : SearchTVShowData | null {
         // tv show info remote api url
-        $remoteUrl = sprintf("%s%s", config('tvshow.api_url.search'), $this->query);
+        $remoteUrl = sprintf("%s%s&page=%s", config('tvshow.api_url.search'), $this->query, $this->page);
 
         // send remote request
         $request = new RemoteRequest($remoteUrl);

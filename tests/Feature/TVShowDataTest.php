@@ -91,7 +91,7 @@ class TVShowDataTest extends TestCase
         // assert that last_check_date is updated to now
         $this->assertEquals(now()->format("Y-m-d H:i"), $createdTVShow->last_check_date->format("Y-m-d H:i"));
         $this->assertHasAllFields($createdTVShow->toArray());
-        
+
     }
 
     public function test_search_results_is_working() {

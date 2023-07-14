@@ -82,13 +82,21 @@ class RemoteRequestTest extends TestCase
     // in this test we use SearchRemoteTVShow class to get search result for tvshows info from remote
     public function test_can_get_search_result_from_remote_class() {
         $requester = new SearchRemoteTVShow('pacific');
-        $searchData = $requester->getSearchData();
+        $searchData = $requester->doSearch();
         $this->assertInstanceOf(SearchTVShowData::class, $searchData);
+        $this->assertEquals(1, $searchData->page);
+        $this->assertEmpty($requester->getErrorMessage());
+
+        // get page 2
+        $requester = new SearchRemoteTVShow('pacific', page: 2);
+        $searchData = $requester->doSearch();
+        $this->assertInstanceOf(SearchTVShowData::class, $searchData);
+        $this->assertEquals(2, $searchData->page);
         $this->assertEmpty($requester->getErrorMessage());
 
         // some not-exist search
         $requester = new SearchRemoteTVShow('invlodika');
-        $searchData = $requester->getSearchData();
+        $searchData = $requester->doSearch();
         $this->assertInstanceOf(SearchTVShowData::class, $searchData);
         $this->assertEquals(0, $searchData->total);
         $this->assertInstanceOf(DataCollection::class, $searchData->tv_shows);
