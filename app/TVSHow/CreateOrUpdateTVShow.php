@@ -17,14 +17,14 @@ class CreateOrUpdateTVShow
         if(is_array($this->tvShowInfo)) {
             // parse array into tvshow data
             try {
-                $showData = TVShowData::from($this->tvShowInfo);
+                $tvShowInfo = TVShowData::from($this->tvShowInfo);
             } catch (\Exception $e) {
                 $this->status = CreateOrUpdateStatus::InvalidData;
                 return;
             }
         }
-        
-        $this->createOrUpdate($showData);
+
+        $this->createOrUpdate($tvShowInfo);
     }
 
     private function createOrUpdate(TVShowData $showData) {
