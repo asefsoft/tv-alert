@@ -23,5 +23,28 @@ class TVShow extends Model
         'genres' => 'array',
         'pictures' => 'array',
         'episodes' => 'array',
+        'next_ep' => 'array',
     ];
+
+    // is tvshow exists on db
+    public static function isShowExist(string $permalink) : bool {
+        return TVShow::where('permalink', $permalink)->count() == 1;
+    }
+
+    public static function getShowByPermalink(string $permalink): TVShow | null {
+        return TVShow::where('permalink', $permalink)->first();
+    }
+
+    // dont crawl too often and use a minimum crawl cache hours from config:
+    // tvshow.crawl_min_cache_hours
+    public static function shouldShowBeCrawled(string $permalink): bool {
+        if (!static::isShowExist($permalink))
+            return true;
+
+        $tvshow = static::getShowByPermalink($permalink);
+
+        return now()->floatDiffInRealHours($tvshow->last_check_date) > config('tvshow.crawl_min_cache_hours');
+    }
+
+
 }
