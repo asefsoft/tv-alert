@@ -2,9 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\CrawlMostPopularJob;
 use App\TVShow\Crawl\CrawlMostPopular;
+use App\TVShow\Crawl\MainCrawler;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class CrawlMostPopularTest extends TestCase
@@ -33,5 +36,13 @@ class CrawlMostPopularTest extends TestCase
         self::assertEquals(20, $crawler->getTotalSkippedShows()); // all skipped
         self::assertEquals(0, $crawler->getTotalInvalidShowData());
 
+    }
+
+    public function test_crawl_job_is_dispatched() {
+        Queue::fake();
+
+        MainCrawler::crawlMostPopular();
+
+        Queue::assertPushed(CrawlMostPopularJob::class);
     }
 }

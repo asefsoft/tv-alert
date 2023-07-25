@@ -28,6 +28,9 @@ class CrawlMostPopular
             $searchData = $crawler->getMostPopular();
             $this->storeTVShows($searchData);
             $this->totalCrawledPages++;
+
+            // cache last crawled page
+            MainCrawler::setLastPopularPage($currentPage);
         }
 
     }
