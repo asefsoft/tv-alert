@@ -6,6 +6,7 @@ use App\Data\TVShowData;
 use App\Events\TVShowCreated;
 use App\Events\TVShowUpdated;
 use App\Models\TVShow;
+use Carbon\Carbon;
 
 class CreateOrUpdateTVShow
 {
@@ -29,6 +30,8 @@ class CreateOrUpdateTVShow
 
     private function createOrUpdate(TVShowData $showData) {
 
+        $this->updateNextEpisodeDate($showData);
+
         // update last_check_date
         $showDataTobeSaved = array_merge($showData->toArray(), ['last_check_date' => now()]);
 
@@ -44,6 +47,7 @@ class CreateOrUpdateTVShow
             TVShowUpdated::dispatch($this->showOnDB);
             $this->status = CreateOrUpdateStatus::Updated;
         }
+
     }
 
     public function getCreationStatus(): CreateOrUpdateStatus {
@@ -52,6 +56,13 @@ class CreateOrUpdateTVShow
 
     public function getShowOnDB() : TVShow {
         return $this->showOnDB;
+    }
+
+    // get info of next ep date and put it on next_ep_date field
+    private function updateNextEpisodeDate(TVShowData &$showData) {
+        if(isset($showData->next_ep?->air_date) && $showData->next_ep->air_date instanceof Carbon){
+            $showData->next_ep_date = $showData->next_ep->air_date;
+        }
     }
 }
 
