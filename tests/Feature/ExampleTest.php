@@ -5,8 +5,8 @@ namespace Tests\Feature;
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Data\TVShowData;
 use App\Models\TVShow;
-use App\TVShow\Crawl\CrawlMostPopular;
-use App\TVShow\Crawl\MainCrawler;
+use App\TVShow\Crawling\CrawlMostPopular;
+use App\TVShow\Crawling\MainCrawler;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase

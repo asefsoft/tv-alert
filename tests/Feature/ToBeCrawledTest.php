@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\TVShow;
-use App\TVShow\Crawl\CrawlToBeCrawled;
+use App\TVShow\Crawling\CrawlToBeCrawled;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Pagination\LengthAwarePaginator;
