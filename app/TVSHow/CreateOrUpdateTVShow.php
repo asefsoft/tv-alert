@@ -7,6 +7,7 @@ use App\Events\TVShowCreated;
 use App\Events\TVShowUpdated;
 use App\Models\TVShow;
 use Carbon\Carbon;
+use Str;
 
 class CreateOrUpdateTVShow
 {
@@ -35,6 +36,8 @@ class CreateOrUpdateTVShow
         // update last_check_date
         $showDataTobeSaved = array_merge($showData->toArray(), ['last_check_date' => now()]);
 
+        $this->prepareDataBeforeSave($showDataTobeSaved);
+
         $this->showOnDB = TVShow::updateOrCreate(['permalink' => $showData->permalink], $showDataTobeSaved);
 
         // created
@@ -47,7 +50,18 @@ class CreateOrUpdateTVShow
             TVShowUpdated::dispatch($this->showOnDB);
             $this->status = CreateOrUpdateStatus::Updated;
         }
+    }
 
+    // truncate extra data of fields
+    private function prepareDataBeforeSave(&$showDataTobeSaved): void {
+        $maxLenRules = ['name' => 150, 'network' => 30, 'country' => 30, 'permalink' => 150,
+            'description' => 2500, 'status' => 30, 'thumb_url' => 255, 'image_url' => 255];
+
+        foreach($maxLenRules as $field => $maxLen) {
+            if(isset($showDataTobeSaved[$field]) && Str::length($showDataTobeSaved[$field]) > $maxLen) {
+                $showDataTobeSaved[$field] = Str::limit($showDataTobeSaved[$field], $maxLen, "");
+            }
+        }
     }
 
     public function getCreationStatus(): CreateOrUpdateStatus {

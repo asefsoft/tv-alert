@@ -11,7 +11,7 @@ class GetRemoteMostPopularTVShow
     private string $errorMessage = '';
     public function __construct(protected int $page = 1) { }
 
-    public function getMostPopular() : SearchTVShowData | null {
+    public function getMostPopularShows() : SearchTVShowData | null {
         // tv show most popular remote api url
         $remoteUrl = sprintf("%s?page=%s", config('tvshow.api_url.most_popular'), $this->page);
 

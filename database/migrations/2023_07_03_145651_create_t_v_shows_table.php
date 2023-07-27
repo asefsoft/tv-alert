@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name", 150)->index();
             $table->string("permalink", 150)->unique();
-            $table->string("description", 2500);
+            $table->string("description", 2500)->nullable();
             $table->string("status", 30)->index();
             $table->string("country", 30)->nullable();
             $table->date("start_date")->nullable();
