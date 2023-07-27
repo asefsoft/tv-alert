@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Data\SearchTVShowData;
 use App\Data\TVShowData;
+use App\TVShow\TVShowStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\WithData;
 
 class TVShow extends Model
@@ -44,6 +48,30 @@ class TVShow extends Model
         $tvshow = static::getShowByPermalink($permalink);
 
         return now()->floatDiffInRealHours($tvshow->last_check_date) > config('tvshow.crawl_min_cache_hours');
+    }
+
+    // get on-air tvshows which the air date is close
+    public static function getToBeCrawledShows($page = 1, $perPage = 20): LengthAwarePaginator {
+        $q = static::
+            // only active shows, not ENDED shows
+        whereIn("status", [TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries,TVShowStatus::TBD_OnTheBubble])
+            ->where(function ($query) {
+                // if there is a next_ep_date in db then get shows that next air date is close
+                $query->where('next_ep_date', '>', now()) // not today
+                    ->where('next_ep_date', '<=', now()->addDays(2)) // only next 2 days shows
+                    ->orWhereNull('next_ep_date');
+            })
+            ->orderBy('next_ep_date', 'desc')
+            ->orderBy('updated_at', 'asc');
+//            ->select(['name', 'next_ep_date', 'updated_at']);
+//        $q->toSql();
+//        dd($q->paginate($perPage, ['*'], 'page', $page)->toArray());
+        return $q->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    public static function convertShowsToSearchData(LengthAwarePaginator $shows) {
+        $showsData = new DataCollection(TVShowData::class, $shows->items());
+        return new SearchTVShowData($shows->total(), $shows->currentPage(), $shows->lastPage(),$showsData);
     }
 
 

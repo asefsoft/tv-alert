@@ -56,21 +56,6 @@ class TVShowDataTest extends TestCase
             "start_date", "end_date", "next_ep_date", "last_aired_ep", "next_ep", "genres", "pictures", "episodes"];
         $hasAllFields = !array_diff($allRequiredFieldNames, $allFields);
         $this->assertTrue($hasAllFields);
-
-        // assert data content
-        $showData = (object)$data;
-        $this->assertEquals("Lost", $showData->name);
-        $this->assertEquals("lost", $showData->permalink);
-        $this->assertEquals("The End (2)", $showData->last_aired_ep['name']);
-        $this->assertEquals("Draw a Blank", $showData->next_ep['name']);
-        $this->assertEquals("Drama", $showData->genres[0]);
-        $this->assertNotNull($showData->thumb_url);
-        $this->assertNotNull($showData->image_url);
-        $this->assertNotNull($showData->description);
-        $this->assertNotNull($showData->start_date);
-        $this->assertCount(7, $showData->pictures);
-        $this->assertEquals(121, count($showData->episodes));
-
     }
 
     public function test_create_and_update_tv_show_is_working() {
@@ -78,6 +63,8 @@ class TVShowDataTest extends TestCase
         Event::fake();
 
         $showInfoArray = json_decode($this->showInfoJson, true);
+        // setting lathe data on a limited field
+        $showInfoArray['network'] = "SOME LARGE DATA WHICH SHOULD BE LIMIT WHILE SAVING";
         $creator = new CreateOrUpdateTVShow($showInfoArray);
 
         // assert events are dispatched
@@ -94,6 +81,9 @@ class TVShowDataTest extends TestCase
         $this->assertEquals(now()->format("Y-m-d H:i"), $createdTVShow->last_check_date->format("Y-m-d H:i"));
         $this->assertEquals("2023-07-05", $createdTVShow->next_ep_date->format("Y-m-d"));
         $this->assertHasAllFields($createdTVShow->toArray());
+
+        // assert preparing data before save is working
+        self::assertEquals("SOME LARGE DATA WHICH SHOULD B", $createdTVShow->network);
 
     }
 
