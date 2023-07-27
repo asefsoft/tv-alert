@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TVShow\Crawl;
+namespace App\TVShow\Crawling;
 
 use App\Models\TVShow;
 use App\TVShow\RemoteData\GetRemoteMostPopularTVShow;

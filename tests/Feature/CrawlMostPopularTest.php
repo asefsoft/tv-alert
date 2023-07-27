@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Jobs\CrawlMostPopularJob;
-use App\TVShow\Crawl\CrawlMostPopular;
-use App\TVShow\Crawl\MainCrawler;
+use App\TVShow\Crawling\CrawlMostPopular;
+use App\TVShow\Crawling\MainCrawler;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
