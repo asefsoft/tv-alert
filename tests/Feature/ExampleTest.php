@@ -24,7 +24,7 @@ class ExampleTest extends TestCase
 
     public function test_internals() {
 
-        $this->markTestSkipped('temporarily test');
+//        $this->markTestSkipped('temporarily test');
 
         MainCrawler::crawlMostPopular(200);
 

@@ -19,7 +19,7 @@ abstract class CrawlerAbstract
     protected int $totalCrawledPages = 0;
     protected int $totalSkippedShows = 0;
     protected int $totalInvalidShowData = 0;
-    protected int $delayBetweenRequests = 3;
+    protected int $delayBetweenRequests = 2;
 
     public function __construct(protected int $startPage = 1, protected int $totalPages = 1) {
     }
