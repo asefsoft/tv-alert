@@ -13,7 +13,7 @@ class ToBeCrawledTest extends TestCase
 {
     public function test_can_get_list_of_to_be_crawled(): void
     {
-        $shows = TVShow::getToBeCrawledShows();
+        $shows = TVShow::getToBeCrawledShows(1,200);
         self::assertInstanceOf(LengthAwarePaginator::class, $shows);
         self::assertGreaterThan(0, $shows->total());
         TVShow::convertShowsToSearchData($shows);

@@ -8,6 +8,7 @@ use App\TVShow\TVShowStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\WithData;
 
@@ -55,17 +56,14 @@ class TVShow extends Model
         $q = static::
             // only active shows, not ENDED shows
         whereIn("status", [TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries,TVShowStatus::TBD_OnTheBubble])
-            ->where(function ($query) {
-                // if there is a next_ep_date in db then get shows that next air date is close
-                $query->where('next_ep_date', '>', now()) // not today
-                    ->where('next_ep_date', '<=', now()->addDays(2)) // only next 2 days shows
-                    ->orWhereNull('next_ep_date');
-            })
-            ->orderBy('next_ep_date', 'desc')
-            ->orderBy('updated_at', 'asc');
+            // get shows with close air-date
+            ->whereBetween('next_ep_date', [now()->subHours(6), now()->addDays(2)]) // only next 2 days shows
+            ->where('updated_at', '<', now()->subHours(6)) // dont include recently updated shows
+            ->orderBy('next_ep_date', 'asc');
+//            ->orderBy('updated_at', 'asc')
 //            ->select(['name', 'next_ep_date', 'updated_at']);
 //        $q->toSql();
-//        dd($q->paginate($perPage, ['*'], 'page', $page)->toArray());
+//        dd($q->paginate($perPage, ['*'], 'page', $page)->toArray(), $q->getBindings());
         return $q->paginate($perPage, ['*'], 'page', $page);
     }
 
