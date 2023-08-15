@@ -6,7 +6,7 @@ use App\TVShow\RemoteData\GetRemoteMostPopularTVShow;
 
 class CrawlMostPopular extends CrawlerAbstract
 {
-    public function doCrawl() {
+    public function doCrawl($total = 20) {
 
         for ($currentPage = $this->startPage; $currentPage < ($this->startPage + $this->totalPages); $currentPage++) {
             $crawler = new GetRemoteMostPopularTVShow($currentPage);

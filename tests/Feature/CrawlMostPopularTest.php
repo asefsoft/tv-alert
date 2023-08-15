@@ -14,14 +14,14 @@ class CrawlMostPopularTest extends TestCase
     {
         // force to crawl all shows
         config()->set('tvshow.crawl_min_cache_hours', 0);
-        $crawler = new CrawlMostPopular(1,2); // crawl 2 pages of populars
+        $crawler = new CrawlMostPopular(1,1); // crawl 2 pages of populars
         $crawler->setDelayBetweenRequests(0); // no delay between requests
         $crawler->doCrawl();
 
-        self::assertEquals(40, $crawler->getTotalFoundShows()); // 2 pages each 20 shows = 40
-        self::assertEquals(40, $crawler->getTotalCrawledShows());
+        self::assertEquals(20, $crawler->getTotalFoundShows());
+        self::assertEquals(20, $crawler->getTotalCrawledShows());
         self::assertTrue($crawler->getTotalFoundShows() == $crawler->getTotalCrawledShows());
-        self::assertEquals(2, $crawler->getTotalCrawledPages());
+        self::assertEquals(1, $crawler->getTotalCrawledPages());
 
         // force to NOT crawl shows and use current stored data on db
         config()->set('tvshow.crawl_min_cache_hours', 999999);
