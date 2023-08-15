@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\TVShow\Crawling\CrawlToBeCrawled;
+use App\TVShow\Crawling\CrawlNotRecentlyCrawledShows;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,14 +10,14 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class CrawlToBeCrawledJob implements ShouldQueue
+class CrawlNotRecentlyCrawledShowsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(protected int $totalPages = 1, protected int $startPage = 1)
+    public function __construct(protected int $totalShows = 20)
     {
         //
     }
@@ -27,7 +27,7 @@ class CrawlToBeCrawledJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $crawler = new CrawlToBeCrawled($this->startPage, $this->totalPages);
-        $crawler->doCrawl();
+        $crawler = new CrawlNotRecentlyCrawledShows();
+        $crawler->doCrawl($this->totalShows);
     }
 }

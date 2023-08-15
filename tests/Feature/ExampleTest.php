@@ -24,7 +24,34 @@ class ExampleTest extends TestCase
 
     public function test_internals() {
 
-//        $this->markTestSkipped('temporarily test');
+        $this->markTestSkipped('temporarily test');
+
+        $a=TVShow::getTodayShows(1, 300)->getCollection()->map->only(['name','last_ep_date', 'next_ep_date']);
+        dump($a);
+        exit();
+
+// update last_aired_ep of all tv shows
+        $shows = TVShow::where('episodes', '<>', '[]')->orderBy('updated_at')->take(4000)->get();
+        foreach ($shows as $showData) {
+            if(isset($showData->episodes) && count($showData->episodes)){
+                $last_aired_ep = collect(array_reverse($showData->episodes))->firstWhere("air_date","<=", now()->endOfDay());
+                $showData->last_aired_ep = $last_aired_ep;
+                $showData->last_ep_date = $last_aired_ep['air_date'] ?? null;
+
+                $next_ep = collect($showData->episodes)->firstWhere("air_date",">=", now()->startOfDay());
+                if(!empty($next_ep)){
+                    $showData->next_ep = $next_ep;
+                    $showData->next_ep_date = $next_ep['air_date'] ?? null;
+                }
+
+                $showData->updated_at = now();
+                $showData->save();
+
+                $a=1;
+            }
+        }
+
+        exit;
 
         MainCrawler::crawlMostPopular(200);
 

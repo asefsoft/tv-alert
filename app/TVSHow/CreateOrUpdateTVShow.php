@@ -32,6 +32,7 @@ class CreateOrUpdateTVShow
     private function createOrUpdate(TVShowData $showData) {
 
         $this->updateNextEpisodeDate($showData);
+        $this->updateLastAiredEpisode($showData);
 
         // update last_check_date
         $showDataTobeSaved = array_merge($showData->toArray(), ['last_check_date' => now()]);
@@ -74,8 +75,28 @@ class CreateOrUpdateTVShow
 
     // get info of next ep date and put it on next_ep_date field
     private function updateNextEpisodeDate(TVShowData &$showData) {
+        /// first we use `next_ep` field if it is filled with data
         if(isset($showData->next_ep?->air_date) && $showData->next_ep->air_date instanceof Carbon){
             $showData->next_ep_date = $showData->next_ep->air_date;
+        }
+        //then we try to find next ep data in `episodes` filed if there is any
+        elseif(isset($showData->episodes) && count($showData->episodes)){
+            $next_ep = $showData->episodes->toCollection()->firstWhere("air_date",">=", now()->startOfDay());
+            if(!empty($next_ep)) {
+                $showData->next_ep = $next_ep;
+                $showData->next_ep_date = $next_ep->air_date;
+            }
+        }
+    }
+
+    // get info of last ep and put it on last_aired_ep and last_ep_date field
+    private function updateLastAiredEpisode(TVShowData &$showData) {
+        if(isset($showData->episodes) && count($showData->episodes)){
+            $last_aired_ep = $showData->episodes->toCollection()->reverse()->firstWhere("air_date","<=", now()->endOfDay());
+            if(!empty($last_aired_ep)) {
+                $showData->last_aired_ep = $last_aired_ep;
+                $showData->last_ep_date = $last_aired_ep->air_date;
+            }
         }
     }
 }

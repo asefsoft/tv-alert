@@ -15,7 +15,6 @@ abstract class CrawlerAbstract
 {
     protected int $totalFoundShows = 0;
     protected int $totalCrawledShows = 0;
-
     protected int $totalCrawledPages = 0;
     protected int $totalSkippedShows = 0;
     protected int $totalInvalidShowData = 0;
@@ -24,7 +23,7 @@ abstract class CrawlerAbstract
     public function __construct(protected int $startPage = 1, protected int $totalPages = 1) {
     }
 
-    abstract public function doCrawl();
+    abstract public function doCrawl($total = 20);
 
     // store on db
     public function setDelayBetweenRequests(int $delayBetweenRequests): void {

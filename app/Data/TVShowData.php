@@ -35,6 +35,7 @@ class TVShowData extends Data
         public ?Carbon                  $start_date,
         public ?Carbon                  $end_date,
         public ?Carbon                  $next_ep_date,
+        public ?Carbon                  $last_ep_date,
         public ?EpisodeData             $last_aired_ep,
         #[MapInputName('countdown')]
         public ?EpisodeData             $next_ep,

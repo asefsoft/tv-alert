@@ -3,7 +3,9 @@
 namespace App\TVShow\Crawling;
 
 use App\Jobs\CrawlMostPopularJob;
-use App\Jobs\CrawlToBeCrawledJob;
+use App\Jobs\CrawlNotRecentlyCrawledShowsJob;
+use App\TVSHow\CreateOrUpdateTVShow;
+use App\TVShow\RemoteData\GetRemoteTVShowInfo;
 
 class MainCrawler
 {
@@ -23,12 +25,22 @@ class MainCrawler
     }
 
     // resume crawl from last crawled page number
-    public static function crawlMostPopular($totalPages = 1, ?int $startPage = null) {
+    public static function crawlMostPopular($totalPages = 1, ?int $startPage = null): void {
         CrawlMostPopularJob::dispatch($totalPages, $startPage);
     }
 
-    public static function crawlToBeCrawled($totalPages = 1, int $startPage = 1) {
-        CrawlToBeCrawledJob::dispatch($totalPages, $startPage);
+    public static function CrawlNotRecentlyCrawledShows($totalShows = 20): void {
+        CrawlNotRecentlyCrawledShowsJob::dispatch($totalShows);
+    }
+
+    public static function crawlByPermalink(string $permalink): void {
+        // get show data from remote
+        $crawler = new GetRemoteTVShowInfo($permalink);
+        $tvshow = $crawler->getTVShowInfo();
+        if(!empty($tvshow)){
+            // save on db
+            new CreateOrUpdateTVShow($tvshow);
+        }
     }
 
 
