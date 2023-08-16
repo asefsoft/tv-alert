@@ -29,5 +29,6 @@ class CrawlNotRecentlyCrawledShowsJob implements ShouldQueue
     {
         $crawler = new CrawlNotRecentlyCrawledShows();
         $crawler->doCrawl($this->totalShows);
+        dump($crawler);
     }
 }

@@ -75,7 +75,7 @@ class TVShowDataTest extends TestCase
 
         $createdTVShow = $creator->getShowOnDB();
         $this->assertInstanceOf(TVShow::class, $createdTVShow);
-        $this->assertInstanceOf(Carbon::class, $createdTVShow->last_check_date);
+        $this->assertInstanceOf(CarbonImmutable::class, $createdTVShow->last_check_date);
         $this->assertInstanceOf(CarbonImmutable::class, $createdTVShow->next_ep_date);
         // assert that last_check_date is updated to now
         $this->assertEquals(now()->format("Y-m-d H:i"), $createdTVShow->last_check_date->format("Y-m-d H:i"));
