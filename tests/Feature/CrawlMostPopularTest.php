@@ -14,7 +14,7 @@ class CrawlMostPopularTest extends TestCase
     {
         // force to crawl all shows
         config()->set('tvshow.crawl_min_cache_hours', 0);
-        $crawler = new CrawlMostPopular(1,1); // crawl 2 pages of populars
+        $crawler = new CrawlMostPopular(startPage: 1, totalPages: 1); // crawl 1 pages of populars
         $crawler->setDelayBetweenRequests(0); // no delay between requests
         $crawler->doCrawl();
 

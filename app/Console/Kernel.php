@@ -21,13 +21,12 @@ class Kernel extends ConsoleKernel
              echo $t->longAbsoluteDiffForHumans(), "\n";;
          })
              ->name("crawl not recently crawled shows every 5 min")
-             ->withoutOverlapping()
              ->everyFiveMinutes();
 
-    $schedule->call(function (){
-             echo 'hi', now();
-         })->name("hiiiii")
-             ->everyMinute();
+//    $schedule->call(function (){
+//             echo 'hi', now();
+//         })->name("hiiiii")
+//             ->everyMinute();
     }
 
     /**

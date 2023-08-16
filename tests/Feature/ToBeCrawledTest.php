@@ -2,11 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\TVShow;
 use App\TVShow\Crawling\CrawlNotRecentlyCrawledShows;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Tests\TestCase;
 
 class ToBeCrawledTest extends TestCase

@@ -27,11 +27,11 @@ class TvShowModelTest extends TestCase
 
             self::assertTrue($show->last_check_date->lessThan(now()->subHours(6)));
 
-            $array_keys = array_keys($show->getAttributes());
-            self::assertTrue(in_array('name' , $array_keys));
-            self::assertTrue(in_array('permalink' , $array_keys));
-            self::assertTrue(in_array('last_check_date' , $array_keys));
-            self::assertTrue(in_array('id' , $array_keys));
+            $showFields = array_keys($show->getAttributes());
+            self::assertTrue(in_array('name' , $showFields));
+            self::assertTrue(in_array('permalink' , $showFields));
+            self::assertTrue(in_array('last_check_date' , $showFields));
+            self::assertTrue(in_array('id' , $showFields));
         }
     }
 
