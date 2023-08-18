@@ -20,6 +20,8 @@ abstract class CrawlerAbstract
     protected int $totalInvalidShowData = 0;
     protected int $delayBetweenRequests = 2;
 
+    protected int $maxProcessedShows = -1;
+
     public function __construct(protected int $startPage = 1, protected int $totalPages = 1) {
     }
 
@@ -30,10 +32,20 @@ abstract class CrawlerAbstract
         $this->delayBetweenRequests = $delayBetweenRequests;
     }
 
+    public function setMaxProcessedShows(int $maxProcessedShows): void {
+        $this->maxProcessedShows = $maxProcessedShows;
+    }
+
     protected function storeTVShows(array $showPermalinks): void {
         foreach ($showPermalinks as $permalink) {
 
             $this->totalFoundShows++;
+
+            // dont crawl too much
+            if($this->maxProcessedShows > 0 && $this->totalFoundShows > $this->maxProcessedShows){
+                // we did not use break here to allow updating $this->totalFoundShows
+                continue;
+            }
 
             // dont crawl too often
             if(!TVShow::shouldShowBeCrawled($permalink)) {

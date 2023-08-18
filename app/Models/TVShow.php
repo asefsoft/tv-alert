@@ -8,8 +8,11 @@ use App\TVShow\TVShowStatus;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Integer;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\WithData;
 
@@ -28,11 +31,33 @@ class TVShow extends Model
         'next_ep_date' => 'immutable_datetime:Y-m-d H:i:s',
         'last_ep_date' => 'immutable_datetime',
         'last_check_date' => 'immutable_datetime',
+        'last_aired_ep' => 'array',
         'genres' => 'array',
         'pictures' => 'array',
         'episodes' => 'array',
         'next_ep' => 'array',
     ];
+
+    // users that subscribed to tvshow
+    public function subscribers(): BelongsToMany {
+        return $this->belongsToMany(User::class, 'subscriptions', 'tvshow_id', 'user_id');
+    }
+
+    // add
+    public function addSubscriber(User | int $user): bool {
+        try {
+            $this->subscribers()->attach($user->id ?? $user);
+        } catch (QueryException $e) {
+            // skipping Duplicate entry exception which means subscription is already exist
+            return str_contains($e->getMessage(), "Duplicate entry");
+        }
+
+        return true;
+    }
+
+    public function removeSubscriber(User | int $user): void {
+        $this->subscribers()->detach($user->id ?? $user);
+    }
 
     // is tvshow exists on db
     public static function isShowExist(string $permalink) : bool {
