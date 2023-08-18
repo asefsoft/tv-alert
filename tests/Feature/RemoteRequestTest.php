@@ -74,8 +74,8 @@ class RemoteRequestTest extends TestCase
 
         // some not-exist tvshow
         $requester = new GetRemoteTVShowInfo('vlodikarama');
-        $TVShowInfo = $requester->getTVShowInfo();
-        $this->assertNull($TVShowInfo);
+        $TVShowInfo2 = $requester->getTVShowInfo();
+        $this->assertNull($TVShowInfo2);
         $this->assertStringStartsWith("Empty or invalid result from remote:", $requester->getErrorMessage());
 
     }
