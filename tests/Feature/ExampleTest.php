@@ -24,9 +24,9 @@ class ExampleTest extends TestCase
 
     public function test_internals() {
 
-//        $this->markTestSkipped('temporarily test');
+        $this->markTestSkipped('temporarily test');
 
-        $a= TVShow::whereId(34)->first()->removeSubscriber(2);
+        $a= TVShow::factory()->create();
         exit();
 
 // update last_aired_ep of all tv shows

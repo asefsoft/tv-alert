@@ -71,13 +71,14 @@ class RemoteRequestTest extends TestCase
         $requester = new GetRemoteTVShowInfo('hijack-apple-tv');
         $TVShowInfo = $requester->getTVShowInfo();
         $this->assertInstanceOf(TVShowData::class, $TVShowInfo);
+    }
 
+    public function test_none_exist_show_result() {
         // some not-exist tvshow
         $requester = new GetRemoteTVShowInfo('vlodikarama');
-        $TVShowInfo2 = $requester->getTVShowInfo();
-        $this->assertNull($TVShowInfo2);
+        $TVShowInfo = $requester->getTVShowInfo();
+        $this->assertNull($TVShowInfo);
         $this->assertStringStartsWith("Empty or invalid result from remote:", $requester->getErrorMessage());
-
     }
 
     // in this test we use SearchRemoteTVShow class to get search result for tvshows info from remote
@@ -87,14 +88,18 @@ class RemoteRequestTest extends TestCase
         $this->assertInstanceOf(SearchTVShowData::class, $searchData);
         $this->assertEquals(1, $searchData->page);
         $this->assertEmpty($requester->getErrorMessage());
+    }
 
+    public function test_can_get_search_result_from_remote_class_page2() {
         // get page 2
         $requester = new SearchRemoteTVShow('pacific', page: 2);
         $searchData = $requester->doSearch();
         $this->assertInstanceOf(SearchTVShowData::class, $searchData);
         $this->assertEquals(2, $searchData->page);
         $this->assertEmpty($requester->getErrorMessage());
+    }
 
+    public function test_non_exist_search_result_from_remote_class() {
         // some not-exist search
         $requester = new SearchRemoteTVShow('invlodika');
         $searchData = $requester->doSearch();

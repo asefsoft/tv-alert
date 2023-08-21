@@ -2,56 +2,43 @@
 
 namespace Tests;
 
+use App\Models\TVShow;
+use Database\Seeders\TVShowSeeder;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\ParallelTesting;
+
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    private static $configurationApp = null;
     public function createApplication(): Application
     {
-
         // using a trick to migrate database JUST ONCE per each whole test and not on each test
-        // to do so, we dont let flush and clear the `application` on tearDown event and also
-        // cache it here in static $configurationApp variable.
-        if(is_null(self::$configurationApp)){
-            $app = require __DIR__.'/../bootstrap/app.php';
+        $app = require __DIR__ . '/../bootstrap/app.php';
 
-            $app->make(Kernel::class)->bootstrap();
+        $app->make(Kernel::class)->bootstrap();
 
-            if (config('database.default') == 'sqlite') {
-                $db = app()->make('db');
+        if (config('database.default') == 'sqlite') {
+            $db = app()->make('db');
+            try {
+                // test db is working
                 $db->connection()->getPdo()->exec("pragma foreign_keys=1");
-
-                // migrate only if db is sqlite
+                // not enough tvshow exist? then seed it
+                if (TVShow::count() < TVShowSeeder::TOTAL_TVSHOWS_SEED) {
+                    Artisan::call('db:seed --class=TVShowSeeder');
+                }
+                // if db is not working then create it
+            } catch (\Exception $e) {
+                // create db file if not exist
+                touch(config('database.connections.sqlite.database'));
+                // finally migrate
                 Artisan::call('migrate:fresh');
-                // Artisan::call('db:seed');
-
             }
-
-            self::$configurationApp = $app;
-            return $app;
         }
 
-        return self::$configurationApp;
-    }
-
-    // override tearDown event to prevent flushing app
-    protected function tearDown(): void
-    {
-        if ($this->app) {
-            $this->callBeforeApplicationDestroyedCallbacks();
-
-            ParallelTesting::callTearDownTestCaseCallbacks($this);
-
-//            $this->app->flush();
-//
-//            $this->app = null;
-        }
+        return $app;
     }
 }
