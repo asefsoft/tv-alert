@@ -49,7 +49,8 @@ class TVShow extends Model
             $this->subscribers()->attach($user->id ?? $user);
         } catch (QueryException $e) {
             // skipping Duplicate entry exception which means subscription is already exist
-            return str_contains($e->getMessage(), "Duplicate entry");
+            return str_contains($e->getMessage(), "Duplicate entry") ||
+                   str_contains($e->getMessage(), "Integrity constraint violation");
         }
 
         return true;
@@ -130,7 +131,7 @@ class TVShow extends Model
             ];
     }
 
-    public static function getShowsByAirDateDistance(int $daysDistance = 0, $page = 1, $perPage = 20){
+    public static function getShowsByAirDateDistance(int $daysDistance = 0, $page = 1, $perPage = 20) {
         $q = static::
         // only active shows, not ENDED shows
             whereIn("status", self::ActiveShows);
@@ -150,7 +151,7 @@ class TVShow extends Model
                     ->orderBy('last_ep_date', 'asc');
             }
 
-        $q->toSql(); $q->getBindings();
+//        $q->toSql(); $q->getBindings();
 //        dd($q->getBindings());
 //        dump($q->paginate($perPage, ['*'], 'page', $page)->toArray());
         return $q->paginate($perPage, ['*'], 'page', $page);
