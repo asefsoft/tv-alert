@@ -3,9 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\TVShow;
+use App\TVShow\TVShowStatus;
+use Database\Seeders\TVShowSeeder;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
-use function PHPUnit\Framework\assertTrue;
 
 class TvShowModelTest extends TestCase
 {
@@ -13,9 +14,13 @@ class TvShowModelTest extends TestCase
         public function test_not_recently_crawled_shows_are_ok(): void
     {
         $shows = TVShow::getNotRecentlyCrawledShows();
-        assertTrue(true);
-        return;
-        self::assertInstanceOf(Collection::class, $shows);;
+
+        if(count($shows) == 0) {
+            $this->seed(TVShowSeeder::class);
+            $shows = TVShow::getNotRecentlyCrawledShows(100);
+        }
+
+        self::assertInstanceOf(Collection::class, $shows);
 
         // assure that result are in ascending order of last_check_date field
         self::assertTrue($shows->first()->last_check_date->lessThanOrEqualTo($shows->last()->last_check_date));
@@ -34,12 +39,16 @@ class TvShowModelTest extends TestCase
     }
 
     public function test_today_tomorrow_etc_shows_are_ok() {
-        assertTrue(true);
-        return;
+
         $today = TVShow::getTodayShows();
         $yesterday = TVShow::getYesterdayShows();
         $tomorrow = TVShow::getTomorrowsShows();
         $allRecent = TVShow::getRecentShows();
+
+        // seed if tvshow table is empty
+        if(count($today) == 0 || count($yesterday) == 0 || count($tomorrow) == 0) {
+            list($today, $yesterday, $tomorrow, $allRecent) = $this->seedTodayYesterdayTomorrow();
+        }
 
         // has data
         self::assertGreaterThan(0, $today->count());
@@ -73,5 +82,20 @@ class TvShowModelTest extends TestCase
             self::assertTrue($show->next_ep_date->between(now()->addDay()->startOfDay(), now()->addDay()->endOfDay()),
                 "tomorrow has shows that next_ep_date is not in tomorrow date range");
         }
+    }
+
+    private function seedTodayYesterdayTomorrow(): array {
+        $this->seed(TVShowSeeder::class);
+
+        // make sure there is all today, yesterday and tomorrow shows in db
+        TVShow::factory()->create(['last_ep_date' => now(), 'status' => TVShowStatus::Running]);
+        TVShow::factory()->create(['last_ep_date' => now()->subDay(), 'status' => TVShowStatus::Running]);
+        TVShow::factory()->create(['next_ep_date' => now()->addDay(), 'status' => TVShowStatus::Running]);
+
+        $today = TVShow::getTodayShows();
+        $yesterday = TVShow::getYesterdayShows();
+        $tomorrow = TVShow::getTomorrowsShows();
+        $allRecent = TVShow::getRecentShows();
+        return array($today, $yesterday, $tomorrow, $allRecent);
     }
 }

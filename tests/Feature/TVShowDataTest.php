@@ -45,6 +45,13 @@ class TVShowDataTest extends TestCase
 
 
         // from db
+        if(TVShow::count() < 1) {
+            try {
+                TVShow::factory(3)->create();
+            } catch (Exception $e) {
+            }
+        }
+
         $showFromDB = TVShowData::from(TVShow::inRandomOrder()->first());
         $this->assertHasAllFields($showFromDB->toArray());
 
