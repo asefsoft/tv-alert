@@ -110,28 +110,28 @@ class TVShow extends Model
         return $q->get();
     }
 
-    public static function getTodayShows($page = 1, $perPage = 20): LengthAwarePaginator {
-        return static::getShowsByAirDateDistance(0, $page, $perPage);
+    public static function getTodayShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator {
+        return static::getShowsByAirDateDistance(0, $page, $perPage, $targetShows);
     }
 
-    public static function getYesterdayShows($page = 1, $perPage = 20): LengthAwarePaginator {
-        return static::getShowsByAirDateDistance(-1, $page, $perPage);
+    public static function getYesterdayShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator {
+        return static::getShowsByAirDateDistance(-1, $page, $perPage, $targetShows);
     }
 
-    public static function getTomorrowsShows($page = 1, $perPage = 20): LengthAwarePaginator {
-        return static::getShowsByAirDateDistance(1, $page, $perPage);
+    public static function getTomorrowsShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator {
+        return static::getShowsByAirDateDistance(1, $page, $perPage, $targetShows);
     }
 
     // get yesterday, today, tomorrow shows
-    public static function getRecentShows($page = 1, $perPage = 20): array {
+    public static function getRecentShows($page = 1, $perPage = 20, $targetShows = []): array {
         return [
-            'yesterday' => static::getShowsByAirDateDistance(-1, $page, $perPage),
-            'today'     => static::getShowsByAirDateDistance(0, $page, $perPage),
-            'tomorrow'  => static::getShowsByAirDateDistance(1, $page, $perPage),
+            'yesterday' => static::getShowsByAirDateDistance(-1, $page, $perPage, $targetShows),
+            'today'     => static::getShowsByAirDateDistance(0, $page, $perPage, $targetShows),
+            'tomorrow'  => static::getShowsByAirDateDistance(1, $page, $perPage, $targetShows),
             ];
     }
 
-    public static function getShowsByAirDateDistance(int $daysDistance = 0, $page = 1, $perPage = 20) {
+    public static function getShowsByAirDateDistance(int $daysDistance = 0, $page = 1, $perPage = 20, $targetShows = []) {
         $q = static::
         // only active shows, not ENDED shows
             whereIn("status", self::ActiveShows);
@@ -149,6 +149,12 @@ class TVShow extends Model
                 $q->whereBetween("next_ep_date", [now()->addDays(1)->startOfDay(), now()->addDays($daysDistance)->endOfDay()])
                     ->orderBy('next_ep_date', 'asc')
                     ->orderBy('last_ep_date', 'asc');
+            }
+
+            // is there any target show ids?
+            // we use this to filter shows that a user is subscribed to
+            if(count($targetShows)){
+                $q->whereIn('id', $targetShows);
             }
 
 //        $q->toSql(); $q->getBindings();
