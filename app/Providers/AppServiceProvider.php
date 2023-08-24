@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Livewire\Component;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Component::macro('emit', function ($event) {
+            $this->dispatch($event);
+        });
+
+        Component::macro('dispatchBrowserEvent', function ($event) {
+            $this->dispatch($event);
+        });
     }
 }

@@ -40,7 +40,9 @@ abstract class TestCase extends BaseTestCase
                 // if db is not working then create it
             } catch (\Exception $e) {
                 // create db file if not exist
-                touch(config('database.connections.sqlite.database'));
+                try {
+                    touch(config('database.connections.sqlite.database'));
+                } catch (\Exception $e) {}
                 // finally migrate
                 Artisan::call('migrate:fresh');
             }
