@@ -20,12 +20,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Component::macro('emit', function ($event) {
-            $this->dispatch($event);
-        });
-
-        Component::macro('dispatchBrowserEvent', function ($event) {
-            $this->dispatch($event);
-        });
+//        Component::macro('emit', function ($event) {
+//            $this->dispatch($event);
+//        });
+//
+//        Component::macro('dispatchBrowserEvent', function ($event) {
+//            $this->dispatch($event);
+//        });
     }
 }

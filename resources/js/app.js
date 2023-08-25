@@ -1,9 +1,9 @@
 import './bootstrap';
 
-import Alpine from 'alpinejs';
+// changed base on doc: https://livewire.laravel.com/docs/upgrading#including-via-js-bundle
+import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
 import focus from '@alpinejs/focus';
-window.Alpine = Alpine;
 
-Alpine.plugin(focus);
+Alpine.plugin(focus)
 
-Alpine.start();
+Livewire.start()
