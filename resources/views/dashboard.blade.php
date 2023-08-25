@@ -8,7 +8,10 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <x-welcome />
+                <div class="grid grid-cols-5 gap-4 p-3">
+                <livewire:tvshow-box display-poster=1 :tv-show="\App\Models\TVShow::whereId(rand(1, 20000))->first()"></livewire:tvshow-box>
+                <livewire:tvshow-box :tv-show="\App\Models\TVShow::whereId(rand(1, 20000))->first()"></livewire:tvshow-box>
+                </div>
             </div>
         </div>
     </div>
