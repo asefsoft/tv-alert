@@ -41,5 +41,17 @@
         @stack('modals')
 
         @livewireScriptConfig
+
+        {{-- Sweet Alert --}}
+        @include('sweetalert::alert')
+        <script>
+            window.addEventListener('swal',function(e){
+                console.log(e);
+                Swal.fire(e.detail[0]);
+            });
+
+            window.isAuthenticated = '{{auth()->check()?1:0}}'
+        </script>
+
     </body>
 </html>

@@ -5,14 +5,13 @@ namespace App\Models;
 use App\Data\SearchTVShowData;
 use App\Data\TVShowData;
 use App\TVShow\TVShowStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\Types\Integer;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\WithData;
 
@@ -20,7 +19,7 @@ class TVShow extends Model
 {
     use HasFactory, WithData;
 
-    const ActiveShows = [TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries, TVShowStatus::TBD_OnTheBubble];
+    public const ActiveShows = [TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries, TVShowStatus::TBD_OnTheBubble];
 
     protected $table = 'tv_shows';
     protected $dataClass = TVShowData::class;
@@ -58,6 +57,27 @@ class TVShow extends Model
 
     public function removeSubscriber(User | int $user): void {
         $this->subscribers()->detach($user->id ?? $user);
+    }
+
+    public function toggleSubscriber(User | int $user): void {
+        $this->subscribers()->toggle($user->id ?? $user);
+    }
+
+    public function scopeActiveShows(Builder $builder) {
+        return $builder->whereIn("status", self::ActiveShows);
+    }
+
+    public function scopeHasNextEpisodeDate(Builder $builder) {
+        return $builder->whereNotNull("next_ep_date");
+    }
+
+    public function getNextEpisodeDateText(): ?string {
+        return $this->next_ep_date ? $this->next_ep_date->diffForHumans() : "N/A";
+    }
+
+    public static function getRandomShow($count = 1) : Collection {
+        //where('id', '>', rand(1, 20000))
+        return static::activeShows()->hasNextEpisodeDate()->inRandomOrder()->take($count)->get();
     }
 
     // is tvshow exists on db
