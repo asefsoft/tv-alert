@@ -74,6 +74,26 @@ class User extends Authenticatable
         $this->subscriptions()->detach($tvshow->id ?? $tvshow);
     }
 
+    // is user subscribed for a tvshow?
+    public function hasSubscriptionFor(TVShow |int $tvshow) : bool {
+        return in_array($tvshow->id ?? $tvshow, $this->subscriptions->pluck('id')->toArray());
+    }
+
+    // is authenticated user subscribed for given tvshow?
+    // using static cache to prevent many db queries
+    public static function isAuthUserSubscribedFor(TVShow |int $tvshow, bool $forceCheck = false): bool {
+        static $authUserSubscriptions;
+
+        if(! auth()->check())
+            return false;
+
+        if ($forceCheck || ! isset($authUserSubscriptions)) {
+            $authUserSubscriptions = auth()->user()->subscriptions()->get()->pluck('id')->toArray();
+        }
+
+        return in_array($tvshow->id ?? $tvshow, $authUserSubscriptions);
+    }
+
     // get recent shows that user is subscribed to
     // recent = aired recently or will be aired
     public function getRecentShows($page = 1, $perPage = 20): array {
