@@ -9,6 +9,7 @@ use Livewire\Component;
 class TVShowBox extends Component
 {
     public bool $displayPoster = true;
+    public bool $displayLastEpDate = false;
     public bool $isSubscribed = false;
     public TVShow $tvShow;
 
