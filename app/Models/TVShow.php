@@ -67,12 +67,35 @@ class TVShow extends Model
         return $builder->whereIn("status", self::ActiveShows);
     }
 
+
     public function scopeHasNextEpisodeDate(Builder $builder) {
         return $builder->whereNotNull("next_ep_date");
     }
 
-    public function getNextEpisodeDateText(): ?string {
-        return $this->next_ep_date ? $this->next_ep_date->diffForHumans() : "N/A";
+    // limit results to give show ids
+    // usually use for filtering shows to current user subscribed shows
+    public function scopeLimitToIDs(Builder $builder, array $showIDs) {
+        return count($showIDs) ? $builder->whereIn('id', $showIDs) : $builder;
+    }
+
+    public function getNextEpisodeDateText($format = 'diffForHumans'): string {
+        if(!$this->next_ep_date)
+            return "N/A";
+
+        if(empty($format) || $format == 'default')
+            $format = 'Y/m/d H:i';
+
+        return $format == 'diffForHumans' ? $this->next_ep_date->diffForHumans() : $this->next_ep_date->format($format);
+    }
+
+    public function getLastEpisodeDateText($format = 'diffForHumans'): string {
+        if(!$this->last_ep_date)
+            return "N/A";
+
+        if(empty($format) || $format == 'default')
+            $format = 'Y/m/d H:i';
+
+        return $format == 'diffForHumans' ? $this->last_ep_date->diffForHumans() : $this->last_ep_date->format($format);
     }
 
     public static function getRandomShow($count = 1) : Collection {
@@ -101,14 +124,14 @@ class TVShow extends Model
     }
 
     // get on-air tvshows which the air date is close
-    public static function getCloseAirDateShows($page = 1, $perPage = 20): LengthAwarePaginator {
+    public static function getCloseAirDateShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator {
         $q = static::
             // only active shows, not ENDED shows
-            whereIn("status", self::ActiveShows)
+            activeShows()
+            ->LimitToIDs($targetShows) // only return shows we want, usually user's subscribed shows
             // get shows with close air-date
-            ->whereNotNull('next_ep_date')
-            ->whereBetween('next_ep_date', [now()->subDay()->startOfDay(), now()->addDays(2)]) // only next 2 days shows
-            ->where('last_check_date', '<', now()->subHours(6)) // dont include recently updated shows
+            ->hasNextEpisodeDate()
+            ->whereBetween('next_ep_date', [now(), now()->addDays(2)]) // only next 2 days shows
             ->orderBy('next_ep_date', 'asc');
 //            ->orderBy('updated_at', 'asc')
 //            ->select(['name', 'next_ep_date', 'updated_at']);
@@ -154,7 +177,9 @@ class TVShow extends Model
     public static function getShowsByAirDateDistance(int $daysDistance = 0, $page = 1, $perPage = 20, $targetShows = []) {
         $q = static::
         // only active shows, not ENDED shows
-            whereIn("status", self::ActiveShows);
+            whereIn("status", self::ActiveShows)
+            ->LimitToIDs($targetShows); // only return shows we want, usually user's subscribed shows
+
             // for today and before today shows we use `last_ep_date` field. giving from X days ago until end of today
             // for tomorrow and beyond shows we use `next_ep_date` field. giving from start of tomorrow until end of X days after.
             if($daysDistance < 0) {

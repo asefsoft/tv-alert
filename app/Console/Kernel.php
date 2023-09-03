@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // main crawling task
          $schedule->call(function (){
              $t = now();
              echo $t, "\n";
@@ -20,7 +21,7 @@ class Kernel extends ConsoleKernel
              echo now(), "\n";
              echo $t->longAbsoluteDiffForHumans(), "\n";;
          })
-             ->name("crawl not recently crawled shows every 5 min")
+             ->name("crawling not recently crawled shows every 5 min")
              ->everyFiveMinutes();
 
 //    $schedule->call(function (){

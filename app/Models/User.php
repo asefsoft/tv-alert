@@ -75,23 +75,27 @@ class User extends Authenticatable
     }
 
     // is user subscribed for a tvshow?
-    public function hasSubscriptionFor(TVShow |int $tvshow) : bool {
+    public function hasSubscriptionFor(TVShow | int $tvshow) : bool {
         return in_array($tvshow->id ?? $tvshow, $this->subscriptions->pluck('id')->toArray());
     }
 
     // is authenticated user subscribed for given tvshow?
     // using static cache to prevent many db queries
     public static function isAuthUserSubscribedFor(TVShow |int $tvshow, bool $forceCheck = false): bool {
+        return in_array($tvshow->id ?? $tvshow, self::getAuthUserSubscribedShows($forceCheck));
+    }
+
+    public static function getAuthUserSubscribedShows(bool $forceCheck = false) : array {
         static $authUserSubscriptions;
 
         if(! auth()->check())
-            return false;
+            return [];
 
         if ($forceCheck || ! isset($authUserSubscriptions)) {
             $authUserSubscriptions = auth()->user()->subscriptions()->get()->pluck('id')->toArray();
         }
 
-        return in_array($tvshow->id ?? $tvshow, $authUserSubscriptions);
+        return $authUserSubscriptions;
     }
 
     // get recent shows that user is subscribed to
@@ -99,5 +103,9 @@ class User extends Authenticatable
     public function getRecentShows($page = 1, $perPage = 20): array {
         $shows = $this->subscriptions()->select('tvshow_id')->get()->pluck('tvshow_id')->toArray();
         return TVShow::getRecentShows($page, $perPage, $shows);
+    }
+
+    public function getSubscribedShows($page = 1, $perPage = 20) {
+        return $this->subscriptions()->paginate($perPage, ['*'], 'page', $page);
     }
 }
