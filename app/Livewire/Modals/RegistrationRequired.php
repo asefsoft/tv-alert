@@ -10,16 +10,21 @@ class RegistrationRequired extends Component
     public bool $displayRegisterModal = false;
 
     #[On('register-required')]
-    public function displayRegisterRequiredModal() {
+    public function displayRegisterRequiredModal()
+    {
         $this->displayRegisterModal = true;
     }
 
-    public function goToRegister() {
+    public function goToRegister()
+    {
         return redirect()->route('register');
     }
-    public function goToLogin() {
+
+    public function goToLogin()
+    {
         return redirect()->route('login');
     }
+
     public function render()
     {
         return view('livewire.modals.registration-required');

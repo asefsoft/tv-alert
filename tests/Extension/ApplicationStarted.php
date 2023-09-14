@@ -2,9 +2,6 @@
 
 namespace Tests\Extension;
 
-use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Testing\PendingCommand;
 use PHPUnit\Event;
 
 final class ApplicationStarted implements Event\TestRunner\ExecutionStartedSubscriber

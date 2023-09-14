@@ -13,28 +13,28 @@ return new class extends Migration
     {
         Schema::create('tv_shows', function (Blueprint $table) {
             $table->id();
-            $table->string("name", 150)->index();
-            $table->string("permalink", 150)->unique();
-            $table->string("description", 2500)->nullable();
-            $table->string("status", 30)->index();
-            $table->string("country", 30)->nullable();
-            $table->date("start_date")->nullable();
-            $table->date("end_date")->nullable();
-            $table->string("network", 30)->nullable();
-            $table->string("thumb_url", 255)->nullable();
-            $table->string("image_url", 250)->nullable();
+            $table->string('name', 150)->index();
+            $table->string('permalink', 150)->unique();
+            $table->string('description', 2500)->nullable();
+            $table->string('status', 30)->index();
+            $table->string('country', 30)->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->string('network', 30)->nullable();
+            $table->string('thumb_url', 255)->nullable();
+            $table->string('image_url', 250)->nullable();
 
-            $table->dateTime("next_ep_date")->index()->nullable();
-            $table->dateTime("last_ep_date")->index()->nullable();
-            $table->dateTime("last_check_date")->index()->nullable();
+            $table->dateTime('next_ep_date')->index()->nullable();
+            $table->dateTime('last_ep_date')->index()->nullable();
+            $table->dateTime('last_check_date')->index()->nullable();
 
             // ep info: name, season, episode, air_date
-            $table->json("last_aired_ep")->nullable()->comment("last aired episode info");
-            $table->json("next_ep")->nullable()->comment("next episode to be aired");;
+            $table->json('last_aired_ep')->nullable()->comment('last aired episode info');
+            $table->json('next_ep')->nullable()->comment('next episode to be aired');
 
-            $table->json("genres")->nullable();
-            $table->json("pictures")->nullable();
-            $table->json("episodes")->nullable();
+            $table->json('genres')->nullable();
+            $table->json('pictures')->nullable();
+            $table->json('episodes')->nullable();
 
             $table->timestamps();
 

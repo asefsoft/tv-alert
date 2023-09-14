@@ -12,5 +12,6 @@ class EpisodeData extends Data
         public int $episode,
         public string $name,
         public Carbon $air_date,
-    ) {}
+    ) {
+    }
 }

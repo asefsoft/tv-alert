@@ -22,8 +22,11 @@ class TVShow extends Model
     public const ActiveShows = [TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries, TVShowStatus::TBD_OnTheBubble];
 
     protected $table = 'tv_shows';
+
     protected $dataClass = TVShowData::class;
+
     protected $guarded = [];
+
     protected $casts = [
         'start_date' => 'immutable_date',
         'end_date' => 'immutable_date',
@@ -38,85 +41,102 @@ class TVShow extends Model
     ];
 
     // users that subscribed to tvshow
-    public function subscribers(): BelongsToMany {
+    public function subscribers(): BelongsToMany
+    {
         return $this->belongsToMany(User::class, 'subscriptions', 'tvshow_id', 'user_id');
     }
 
     // add
-    public function addSubscriber(User | int $user): bool {
+    public function addSubscriber(User|int $user): bool
+    {
         try {
             $this->subscribers()->attach($user->id ?? $user);
         } catch (QueryException $e) {
             // skipping Duplicate entry exception which means subscription is already exist
-            return str_contains($e->getMessage(), "Duplicate entry") ||
-                   str_contains($e->getMessage(), "Integrity constraint violation");
+            return str_contains($e->getMessage(), 'Duplicate entry') ||
+                   str_contains($e->getMessage(), 'Integrity constraint violation');
         }
 
         return true;
     }
 
-    public function removeSubscriber(User | int $user): void {
+    public function removeSubscriber(User|int $user): void
+    {
         $this->subscribers()->detach($user->id ?? $user);
     }
 
-    public function toggleSubscriber(User | int $user): void {
+    public function toggleSubscriber(User|int $user): void
+    {
         $this->subscribers()->toggle($user->id ?? $user);
     }
 
-    public function scopeActiveShows(Builder $builder) {
-        return $builder->whereIn("status", self::ActiveShows);
+    public function scopeActiveShows(Builder $builder)
+    {
+        return $builder->whereIn('status', self::ActiveShows);
     }
 
-
-    public function scopeHasNextEpisodeDate(Builder $builder) {
-        return $builder->whereNotNull("next_ep_date");
+    public function scopeHasNextEpisodeDate(Builder $builder)
+    {
+        return $builder->whereNotNull('next_ep_date');
     }
 
     // limit results to give show ids
     // usually use for filtering shows to current user subscribed shows
-    public function scopeLimitToIDs(Builder $builder, array $showIDs) {
+    public function scopeLimitToIDs(Builder $builder, array $showIDs)
+    {
         return count($showIDs) ? $builder->whereIn('id', $showIDs) : $builder;
     }
 
-    public function getNextEpisodeDateText($format = 'diffForHumans'): string {
-        if(!$this->next_ep_date)
-            return "N/A";
+    public function getNextEpisodeDateText($format = 'diffForHumans'): string
+    {
+        if (! $this->next_ep_date) {
+            return 'N/A';
+        }
 
-        if(empty($format) || $format == 'default')
+        if (empty($format) || $format == 'default') {
             $format = 'Y/m/d H:i';
+        }
 
         return $format == 'diffForHumans' ? $this->next_ep_date->diffForHumans() : $this->next_ep_date->format($format);
     }
 
-    public function getLastEpisodeDateText($format = 'diffForHumans'): string {
-        if(!$this->last_ep_date)
-            return "N/A";
+    public function getLastEpisodeDateText($format = 'diffForHumans'): string
+    {
+        if (! $this->last_ep_date) {
+            return 'N/A';
+        }
 
-        if(empty($format) || $format == 'default')
+        if (empty($format) || $format == 'default') {
             $format = 'Y/m/d H:i';
+        }
 
         return $format == 'diffForHumans' ? $this->last_ep_date->diffForHumans() : $this->last_ep_date->format($format);
     }
 
-    public static function getRandomShow($count = 1) : Collection {
+    public static function getRandomShow($count = 1): Collection
+    {
         //where('id', '>', rand(1, 20000))
         return static::activeShows()->hasNextEpisodeDate()->inRandomOrder()->take($count)->get();
     }
 
     // is tvshow exists on db
-    public static function isShowExist(string $permalink) : bool {
+    public static function isShowExist(string $permalink): bool
+    {
         return TVShow::where('permalink', $permalink)->count() == 1;
     }
 
-    public static function getShowByPermalink(string $permalink): TVShow | null {
+    public static function getShowByPermalink(string $permalink): ?TVShow
+    {
         return TVShow::where('permalink', $permalink)->first();
     }
 
     // dont crawl too often and use a minimum crawl cache hours from config:
     // tvshow.crawl_min_cache_hours
-    public static function shouldShowBeCrawled(string $permalink): bool {
-        if (!static::isShowExist($permalink))
+    public static function shouldShowBeCrawled(string $permalink): bool
+    {
+        if (! static::isShowExist($permalink)) {
             return true;
+        }
 
         $tvshow = static::getShowByPermalink($permalink);
 
@@ -124,96 +144,101 @@ class TVShow extends Model
     }
 
     // get on-air tvshows which the air date is close
-    public static function getCloseAirDateShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator {
+    public static function getCloseAirDateShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator
+    {
         $q = static::
             // only active shows, not ENDED shows
             activeShows()
-            ->LimitToIDs($targetShows) // only return shows we want, usually user's subscribed shows
+                ->LimitToIDs($targetShows) // only return shows we want, usually user's subscribed shows
             // get shows with close air-date
-            ->hasNextEpisodeDate()
-            ->whereBetween('next_ep_date', [now(), now()->addDays(2)]) // only next 2 days shows
-            ->orderBy('next_ep_date', 'asc');
-//            ->orderBy('updated_at', 'asc')
-//            ->select(['name', 'next_ep_date', 'updated_at']);
+                ->hasNextEpisodeDate()
+                ->whereBetween('next_ep_date', [now(), now()->addDays(2)]) // only next 2 days shows
+                ->orderBy('next_ep_date', 'asc');
+        //            ->orderBy('updated_at', 'asc')
+        //            ->select(['name', 'next_ep_date', 'updated_at']);
         $q->toSql();
-//        dd($q->paginate($perPage, ['*'], 'page', $page)->toArray(), $q->getBindings());
+        //        dd($q->paginate($perPage, ['*'], 'page', $page)->toArray(), $q->getBindings());
         return $q->paginate($perPage, ['*'], 'page', $page);
     }
 
     // get shows that not recently crawled and we should crawl them sooner
-    public static function getNotRecentlyCrawledShows($total = 20): Collection {
-        $q = static::select(['id','permalink','name','last_check_date'])
+    public static function getNotRecentlyCrawledShows($total = 20): Collection
+    {
+        $q = static::select(['id', 'permalink', 'name', 'last_check_date'])
             // only active shows, not ENDED shows
-            ->whereIn("status", self::ActiveShows)
+            ->whereIn('status', self::ActiveShows)
             ->where('last_check_date', '<', now()->subHours(6)) // dont include recently updated shows
             // not recently crawled shows
             ->orderBy('last_check_date', 'asc')
             ->take($total);
-//            ->select(['name', 'next_ep_date', 'updated_at']);
+        //            ->select(['name', 'next_ep_date', 'updated_at']);
         return $q->get();
     }
 
-    public static function getTodayShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator {
+    public static function getTodayShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator
+    {
         return static::getShowsByAirDateDistance(0, $page, $perPage, $targetShows);
     }
 
-    public static function getYesterdayShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator {
+    public static function getYesterdayShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator
+    {
         return static::getShowsByAirDateDistance(-1, $page, $perPage, $targetShows);
     }
 
-    public static function getTomorrowsShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator {
+    public static function getTomorrowsShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator
+    {
         return static::getShowsByAirDateDistance(1, $page, $perPage, $targetShows);
     }
 
     // get yesterday, today, tomorrow shows
-    public static function getRecentShows($page = 1, $perPage = 20, $targetShows = []): array {
+    public static function getRecentShows($page = 1, $perPage = 20, $targetShows = []): array
+    {
         return [
             'yesterday' => static::getShowsByAirDateDistance(-1, $page, $perPage, $targetShows),
-            'today'     => static::getShowsByAirDateDistance(0, $page, $perPage, $targetShows),
-            'tomorrow'  => static::getShowsByAirDateDistance(1, $page, $perPage, $targetShows),
-            ];
+            'today' => static::getShowsByAirDateDistance(0, $page, $perPage, $targetShows),
+            'tomorrow' => static::getShowsByAirDateDistance(1, $page, $perPage, $targetShows),
+        ];
     }
 
-    public static function getShowsByAirDateDistance(int $daysDistance = 0, $page = 1, $perPage = 20, $targetShows = []) {
+    public static function getShowsByAirDateDistance(int $daysDistance = 0, $page = 1, $perPage = 20, $targetShows = [])
+    {
         $q = static::
         // only active shows, not ENDED shows
-            whereIn("status", self::ActiveShows)
-            ->LimitToIDs($targetShows); // only return shows we want, usually user's subscribed shows
+            whereIn('status', self::ActiveShows)
+                ->LimitToIDs($targetShows); // only return shows we want, usually user's subscribed shows
 
-            // for today and before today shows we use `last_ep_date` field. giving from X days ago until end of today
-            // for tomorrow and beyond shows we use `next_ep_date` field. giving from start of tomorrow until end of X days after.
-            if($daysDistance < 0) {
-                $q->whereBetween("last_ep_date", [now()->addDays($daysDistance)->startOfDay(), now()->subDay()->endOfDay()])
-                    ->orderBy("last_ep_date", 'asc')
-                    ->orderBy('next_ep_date', 'asc');
-            } elseif($daysDistance == 0) { // today
-                $q->whereBetween("last_ep_date", [now()->startOfDay(), now()->endOfDay()])
-                    ->orderBy("last_ep_date", 'asc')
-                    ->orderBy('next_ep_date', 'asc');
-            } else {
-                $q->whereBetween("next_ep_date", [now()->addDays(1)->startOfDay(), now()->addDays($daysDistance)->endOfDay()])
-                    ->orderBy('next_ep_date', 'asc')
-                    ->orderBy('last_ep_date', 'asc');
-            }
+        // for today and before today shows we use `last_ep_date` field. giving from X days ago until end of today
+        // for tomorrow and beyond shows we use `next_ep_date` field. giving from start of tomorrow until end of X days after.
+        if ($daysDistance < 0) {
+            $q->whereBetween('last_ep_date', [now()->addDays($daysDistance)->startOfDay(), now()->subDay()->endOfDay()])
+                ->orderBy('last_ep_date', 'asc')
+                ->orderBy('next_ep_date', 'asc');
+        } elseif ($daysDistance == 0) { // today
+            $q->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
+                ->orderBy('last_ep_date', 'asc')
+                ->orderBy('next_ep_date', 'asc');
+        } else {
+            $q->whereBetween('next_ep_date', [now()->addDays(1)->startOfDay(), now()->addDays($daysDistance)->endOfDay()])
+                ->orderBy('next_ep_date', 'asc')
+                ->orderBy('last_ep_date', 'asc');
+        }
 
-            // is there any target show ids?
-            // we use this to filter shows that a user is subscribed to
-            if(count($targetShows)){
-                $q->whereIn('id', $targetShows);
-            }
+        // is there any target show ids?
+        // we use this to filter shows that a user is subscribed to
+        if (count($targetShows)) {
+            $q->whereIn('id', $targetShows);
+        }
 
-//        $q->toSql(); $q->getBindings();
-//        dd($q->getBindings());
-//        dump($q->paginate($perPage, ['*'], 'page', $page)->toArray());
+        //        $q->toSql(); $q->getBindings();
+        //        dd($q->getBindings());
+        //        dump($q->paginate($perPage, ['*'], 'page', $page)->toArray());
         return $q->paginate($perPage, ['*'], 'page', $page);
     }
 
-
-
-    public static function convertShowsToSearchData(LengthAwarePaginator $shows) {
+    public static function convertShowsToSearchData(LengthAwarePaginator $shows)
+    {
         $showsData = new DataCollection(TVShowData::class, $shows->items());
-        return new SearchTVShowData($shows->total(), $shows->currentPage(), $shows->lastPage(),$showsData);
+
+        return new SearchTVShowData($shows->total(), $shows->currentPage(), $shows->lastPage(), $showsData);
     }
-
-
 }

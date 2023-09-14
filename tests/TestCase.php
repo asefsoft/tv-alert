@@ -10,7 +10,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
 
-
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
@@ -18,7 +17,7 @@ abstract class TestCase extends BaseTestCase
     public function createApplication(): Application
     {
         // using a trick to migrate database JUST ONCE per each whole test and not on each test
-        $app = require __DIR__ . '/../bootstrap/app.php';
+        $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
 
@@ -27,12 +26,13 @@ abstract class TestCase extends BaseTestCase
         return $app;
     }
 
-    private function initializeDatabase(): void {
+    private function initializeDatabase(): void
+    {
         if (config('database.default') == 'sqlite') {
             $db = app()->make('db');
             try {
                 // test db is working
-                $db->connection()->getPdo()->exec("pragma foreign_keys=1");
+                $db->connection()->getPdo()->exec('pragma foreign_keys=1');
 
                 // if tvshow table is not exists then this will throw exception
                 TVShow::count();
@@ -42,7 +42,8 @@ abstract class TestCase extends BaseTestCase
                 // create db file if not exist
                 try {
                     touch(config('database.connections.sqlite.database'));
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
                 // finally migrate
                 Artisan::call('migrate:fresh');
             }

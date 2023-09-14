@@ -26,7 +26,7 @@ class CrawlMostPopularTest extends TestCase
 
         // force to NOT crawl shows and use current stored data on db
         config()->set('tvshow.crawl_min_cache_hours', 999999);
-        $crawler = new CrawlMostPopular(1,1);
+        $crawler = new CrawlMostPopular(1, 1);
         $crawler->setMaxProcessedShows(5);
         $crawler->doCrawl();
 
@@ -37,7 +37,8 @@ class CrawlMostPopularTest extends TestCase
 
     }
 
-    public function test_crawl_job_is_dispatched() {
+    public function test_crawl_job_is_dispatched()
+    {
         Queue::fake();
 
         MainCrawler::crawlMostPopular();

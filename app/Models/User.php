@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\QueryException;
@@ -54,42 +53,49 @@ class User extends Authenticatable
     ];
 
     // tv shows that user is subscribed to
-    public function subscriptions(): BelongsToMany {
+    public function subscriptions(): BelongsToMany
+    {
         return $this->belongsToMany(TVShow::class, 'subscriptions', 'user_id', 'tvshow_id');
     }
 
-    public function addSubscription(TVShow | int $tvshow): bool {
+    public function addSubscription(TVShow|int $tvshow): bool
+    {
         try {
             $this->subscriptions()->attach($tvshow->id ?? $tvshow);
         } catch (QueryException $e) {
             // skipping Duplicate entry exception which means subscription is already exist
-            return str_contains($e->getMessage(), "Duplicate entry") ||
-                   str_contains($e->getMessage(), "Integrity constraint violation");
+            return str_contains($e->getMessage(), 'Duplicate entry') ||
+                   str_contains($e->getMessage(), 'Integrity constraint violation');
         }
 
         return true;
     }
 
-    public function removeSubscription(TVShow | int $tvshow): void {
+    public function removeSubscription(TVShow|int $tvshow): void
+    {
         $this->subscriptions()->detach($tvshow->id ?? $tvshow);
     }
 
     // is user subscribed for a tvshow?
-    public function hasSubscriptionFor(TVShow | int $tvshow) : bool {
+    public function hasSubscriptionFor(TVShow|int $tvshow): bool
+    {
         return in_array($tvshow->id ?? $tvshow, $this->subscriptions->pluck('id')->toArray());
     }
 
     // is authenticated user subscribed for given tvshow?
     // using static cache to prevent many db queries
-    public static function isAuthUserSubscribedFor(TVShow |int $tvshow, bool $forceCheck = false): bool {
+    public static function isAuthUserSubscribedFor(TVShow|int $tvshow, bool $forceCheck = false): bool
+    {
         return in_array($tvshow->id ?? $tvshow, self::getAuthUserSubscribedShows($forceCheck));
     }
 
-    public static function getAuthUserSubscribedShows(bool $forceCheck = false) : array {
+    public static function getAuthUserSubscribedShows(bool $forceCheck = false): array
+    {
         static $authUserSubscriptions;
 
-        if(! auth()->check())
+        if (! auth()->check()) {
             return [];
+        }
 
         if ($forceCheck || ! isset($authUserSubscriptions)) {
             $authUserSubscriptions = auth()->user()->subscriptions()->get()->pluck('id')->toArray();
@@ -100,12 +106,15 @@ class User extends Authenticatable
 
     // get recent shows that user is subscribed to
     // recent = aired recently or will be aired
-    public function getRecentShows($page = 1, $perPage = 20): array {
+    public function getRecentShows($page = 1, $perPage = 20): array
+    {
         $shows = $this->subscriptions()->select('tvshow_id')->get()->pluck('tvshow_id')->toArray();
+
         return TVShow::getRecentShows($page, $perPage, $shows);
     }
 
-    public function getSubscribedShows($page = 1, $perPage = 20) {
+    public function getSubscribedShows($page = 1, $perPage = 20)
+    {
         return $this->subscriptions()->paginate($perPage, ['*'], 'page', $page);
     }
 }

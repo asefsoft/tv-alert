@@ -21,8 +21,8 @@ class TVShowData extends Data
         public string $name,
         public string $permalink,
         public ?string $description,
-//
-//        #[WithTransformer(TVShowStatusTransformer::class, 444)]
+        //
+        //        #[WithTransformer(TVShowStatusTransformer::class, 444)]
         #[WithCast(TVShowStatusCast::class)]
         public TVShowStatus $status,
         public string $country,
@@ -31,45 +31,49 @@ class TVShowData extends Data
         #[MapInputName('image_thumbnail_path')]
         public ?string $thumb_url,
         #[MapInputName('image_path')]
-        public ?string                  $image_url,
-        public ?Carbon                  $start_date,
-        public ?Carbon                  $end_date,
-        public ?Carbon                  $next_ep_date,
-        public ?Carbon                  $last_ep_date,
-        public ?EpisodeData             $last_aired_ep,
+        public ?string $image_url,
+        public ?Carbon $start_date,
+        public ?Carbon $end_date,
+        public ?Carbon $next_ep_date,
+        public ?Carbon $last_ep_date,
+        public ?EpisodeData $last_aired_ep,
         #[MapInputName('countdown')]
-        public ?EpisodeData             $next_ep,
-        public ?array                   $genres,
-        public ?array                   $pictures,
+        public ?EpisodeData $next_ep,
+        public ?array $genres,
+        public ?array $pictures,
         #[DataCollectionOf(EpisodeData::class)]
         public DataCollection|Lazy|null $episodes,
 
-    ) {}
+    ) {
+    }
 
     // do some preparation before parsing data
-    public static function prepareForPipeline(Collection $properties) : Collection
+    public static function prepareForPipeline(Collection $properties): Collection
     {
         // we can not have a date with empty string so we convert it to null
-        if($properties->has('end_date') && $properties['end_date'] === "")
+        if ($properties->has('end_date') && $properties['end_date'] === '') {
             $properties->put('end_date', null);
+        }
 
-        if($properties->has('start_date') && $properties['start_date'] === "")
+        if ($properties->has('start_date') && $properties['start_date'] === '') {
             $properties->put('start_date', null);
+        }
 
-        if($properties->has('description') && Str::length($properties['description']) > 2500)
+        if ($properties->has('description') && Str::length($properties['description']) > 2500) {
             $properties->put('description', substr($properties['description'], 0, 2500));
+        }
 
         return $properties;
     }
 
-//    public static function fromModel( $post)
-//    {
-//        return new self(
-//            Lazy::create(fn() => $post->title),
-//            Lazy::create(fn() => $post->content),
-//            Lazy::create(fn() => $post->status),
-//            Lazy::create(fn() => $post->image),
-//            Lazy::create(fn() => $post->published_at)
-//        );
-//    }
+    //    public static function fromModel( $post)
+    //    {
+    //        return new self(
+    //            Lazy::create(fn() => $post->title),
+    //            Lazy::create(fn() => $post->content),
+    //            Lazy::create(fn() => $post->status),
+    //            Lazy::create(fn() => $post->image),
+    //            Lazy::create(fn() => $post->published_at)
+    //        );
+    //    }
 }
