@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
     'api_url' => [
         'search' => env('EPISODATE_SEARCH_URL'),

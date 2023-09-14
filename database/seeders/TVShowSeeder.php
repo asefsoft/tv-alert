@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\TVShow;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TVShowSeeder extends Seeder
@@ -12,6 +11,7 @@ class TVShowSeeder extends Seeder
      * Run the database seeds.
      */
     public const TOTAL_TVSHOWS_SEED = 60;
+
     public function run(): void
     {
         TVShow::truncate();

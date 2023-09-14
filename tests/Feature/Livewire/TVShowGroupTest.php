@@ -3,10 +3,7 @@
 namespace Tests\Feature\Livewire;
 
 use App\Livewire\TVShowGroup;
-use App\Models\TVShow;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -17,7 +14,7 @@ class TVShowGroupTest extends TestCase
     {
         // first test without auth user
         Livewire::test(TVShowGroup::class, ['type' => 'recent-shows', 'title' => 'Recent Shows'])
-            ->assertSee(['Recent Shows', "</livewire:tvshow-box>",
+            ->assertSee(['Recent Shows', '</livewire:tvshow-box>',
                 'alt="TV Show Poster"', 'aria-label="Pagination Navigation"'], false) // see all necessary parts
             ->assertDontSee(['Only Subscribed Shows?', 'No tv show available!'])
             ->assertSet('canToggleSubscribedShowsFilter', false)
@@ -27,7 +24,7 @@ class TVShowGroupTest extends TestCase
         // now with auth user
         $user = User::factory()->create();
         Livewire::actingAs($user)->test(TVShowGroup::class, ['type' => 'recent-shows', 'title' => 'Recent Shows'])
-            ->assertSee(['Recent Shows', "</livewire:tvshow-box>", 'Only Subscribed Shows?',
+            ->assertSee(['Recent Shows', '</livewire:tvshow-box>', 'Only Subscribed Shows?',
                 'alt="TV Show Poster"', 'aria-label="Pagination Navigation"'], false) // see all necessary parts
             ->assertDontSee(['No tv show available!'])
             ->assertSet('canToggleSubscribedShowsFilter', true) // can toggle var now must be true
@@ -58,14 +55,16 @@ class TVShowGroupTest extends TestCase
     public function last_7_days_shows_renders_successfully()
     {
         Livewire::test(TVShowGroup::class, ['type' => 'last-7-days-shows', 'title' => 'Last 7 days shows'])
-            ->assertSee(['Last 7 days shows', "</livewire:tvshow-box>"], false)
+            ->assertSee(['Last 7 days shows', '</livewire:tvshow-box>'], false)
             ->assertDontSee(['Only Subscribed Shows?', 'No tv show available!'])
             ->assertSet('canToggleSubscribedShowsFilter', false)
             ->assertSet('displayOnlySubscribedShows', false)
             ->assertStatus(200);
     }
+
     /** @test */
-    public function dont_accept_invalid_group_type() {
+    public function dont_accept_invalid_group_type()
+    {
         $this->expectExceptionMessage("Invalid 'type' is set for tvshow-group: some-invalid-type");
         Livewire::test(TVShowGroup::class, ['type' => 'some-invalid-type']);
     }

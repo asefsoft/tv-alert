@@ -9,7 +9,6 @@ use Spatie\LaravelData\DataCollection;
 // data of remote search result om episodate.com api
 class SearchTVShowData extends Data
 {
-
     public function __construct(
         public int $total,
         public int $page,

@@ -7,9 +7,9 @@ use Tests\TestCase;
 
 class ToBeCrawledTest extends TestCase
 {
-
-    public function test_can_crawl_to_be_crawled_shows() {
-//        $this->seed(TVShowSeeder::class);
+    public function test_can_crawl_to_be_crawled_shows()
+    {
+        //        $this->seed(TVShowSeeder::class);
         config()->set('tvshow.crawl_min_cache_hours', 0);
         $crawler = new CrawlNotRecentlyCrawledShows();
         $crawler->setDelayBetweenRequests(0); // no delay between requests

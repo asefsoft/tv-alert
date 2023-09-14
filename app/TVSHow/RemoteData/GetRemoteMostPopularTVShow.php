@@ -3,17 +3,19 @@
 namespace App\TVShow\RemoteData;
 
 use App\Data\SearchTVShowData;
-use App\Data\TVShowData;
 
 class GetRemoteMostPopularTVShow
 {
-
     private string $errorMessage = '';
-    public function __construct(protected int $page = 1) { }
 
-    public function getMostPopularShows() : SearchTVShowData | null {
+    public function __construct(protected int $page = 1)
+    {
+    }
+
+    public function getMostPopularShows(): ?SearchTVShowData
+    {
         // tv show most popular remote api url
-        $remoteUrl = sprintf("%s?page=%s", config('tvshow.api_url.most_popular'), $this->page);
+        $remoteUrl = sprintf('%s?page=%s', config('tvshow.api_url.most_popular'), $this->page);
 
         // send remote request
         $request = new RemoteRequest($remoteUrl);
@@ -25,19 +27,22 @@ class GetRemoteMostPopularTVShow
 
                 // could not parse
             } catch (\Exception $e) {
-                $this->errorMessage = "Empty or invalid result from remote:" . $e->getMessage();
+                $this->errorMessage = 'Empty or invalid result from remote:'.$e->getMessage();
+
                 return null;
             }
+
             return $TVShowData;
-        }
-        else {
+        } else {
             // any server or client errors?
             $this->errorMessage = $request->getErrorMessage();
+
             return null;
         }
     }
 
-    public function getErrorMessage(): string {
+    public function getErrorMessage(): string
+    {
         return $this->errorMessage;
     }
 }

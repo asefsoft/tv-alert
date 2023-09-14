@@ -14,20 +14,20 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // main crawling task
-         $schedule->call(function (){
-             $t = now();
-             echo $t, "\n";
-             MainCrawler::CrawlNotRecentlyCrawledShows(70);
-             echo now(), "\n";
-             echo $t->longAbsoluteDiffForHumans(), "\n";;
-         })
-             ->name("crawling not recently crawled shows every 5 min")
-             ->everyFiveMinutes();
+        $schedule->call(function () {
+            $t = now();
+            echo $t, "\n";
+            MainCrawler::CrawlNotRecentlyCrawledShows(70);
+            echo now(), "\n";
+            echo $t->longAbsoluteDiffForHumans(), "\n";
+        })
+            ->name('crawling not recently crawled shows every 5 min')
+            ->everyFiveMinutes();
 
-//    $schedule->call(function (){
-//             echo 'hi', now();
-//         })->name("hiiiii")
-//             ->everyMinute();
+        //    $schedule->call(function (){
+        //             echo 'hi', now();
+        //         })->name("hiiiii")
+        //             ->everyMinute();
     }
 
     /**

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('tvshow_id')->references('id')->on('tv_shows')->cascadeOnDelete();
 
-            $table->unique(['tvshow_id' ,'user_id']);
+            $table->unique(['tvshow_id', 'user_id']);
         });
     }
 

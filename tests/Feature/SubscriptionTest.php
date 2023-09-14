@@ -26,10 +26,10 @@ class SubscriptionTest extends TestCase
 
         self::assertEquals($show->id, $subShow->id);
 
-        self::assertDatabaseHas('subscriptions' , [
-             'user_id' => $user->id,
-             'tvshow_id' => $show->id,
-         ]);
+        self::assertDatabaseHas('subscriptions', [
+            'user_id' => $user->id,
+            'tvshow_id' => $show->id,
+        ]);
 
         return [$user, $show];
     }
@@ -37,13 +37,14 @@ class SubscriptionTest extends TestCase
     /**
      * @depends test_user_can_subscribe_to_a_show
      */
-    public function test_user_can_unsubscribe_a_show($userAndShow) {
+    public function test_user_can_unsubscribe_a_show($userAndShow)
+    {
         /** @var User $user */
-        list($user, $show) = $userAndShow;
+        [$user, $show] = $userAndShow;
 
         $user->removeSubscription($show);
 
-        self::assertDatabaseMissing('subscriptions' , [
+        self::assertDatabaseMissing('subscriptions', [
             'user_id' => $user->id,
             'tvshow_id' => $show->id,
         ]);
@@ -65,7 +66,7 @@ class SubscriptionTest extends TestCase
 
         self::assertEquals($user->id, $subUser->id);
 
-        self::assertDatabaseHas('subscriptions' , [
+        self::assertDatabaseHas('subscriptions', [
             'user_id' => $user->id,
             'tvshow_id' => $show->id,
         ]);
@@ -76,20 +77,22 @@ class SubscriptionTest extends TestCase
     /**
      * @depends test_show_can_add_subscription_for_a_user_to_itself
      */
-    public function test_show_can_unsubscribe_a_user_from_itself($userAndShow) {
+    public function test_show_can_unsubscribe_a_user_from_itself($userAndShow)
+    {
         /** @var User $user */
         /** @var TVShow $show */
-        list($user, $show) = $userAndShow;
+        [$user, $show] = $userAndShow;
 
         $show->removeSubscriber($user);
 
-        self::assertDatabaseMissing('subscriptions' , [
+        self::assertDatabaseMissing('subscriptions', [
             'user_id' => $user->id,
             'tvshow_id' => $show->id,
         ]);
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         // clear subscriptions table
         DB::table('subscriptions')->truncate();
         parent::tearDown();
