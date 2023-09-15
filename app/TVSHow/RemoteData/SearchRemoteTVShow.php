@@ -27,7 +27,7 @@ class SearchRemoteTVShow
 
                 // could not parse
             } catch (\Exception $e) {
-                $this->errorMessage = 'Empty or invalid result from remote:'.$e->getMessage();
+                $this->errorMessage = 'Empty or invalid result from remote: '. $e->getMessage();
 
                 return null;
             }
