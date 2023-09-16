@@ -49,7 +49,7 @@ abstract class TestCase extends BaseTestCase
             }
 
             // not enough tvshow exist? then seed it
-            if (TVShow::count() < TVShowSeeder::TOTAL_TVSHOWS_SEED) {
+            if (TVShow::getCloseAirDateShows()->count() < 1 || TVShow::count() < TVShowSeeder::TOTAL_TVSHOWS_SEED) {
                 Artisan::call('db:seed --class=TVShowSeeder');
             }
 

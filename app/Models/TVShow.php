@@ -70,6 +70,11 @@ class TVShow extends Model
         $this->subscribers()->toggle($user->id ?? $user);
     }
 
+    public function getShowDescription($maxLen = 0) {
+        $description = str_replace(["<br>", "<br/>", "<br />", "<br/>", "</b>", "<b>"], "",  $this->description);
+        return $maxLen > 0 ? substr($description, 0, $maxLen) . ' ...' : $description;
+    }
+
     public function scopeActiveShows(Builder $builder)
     {
         return $builder->whereIn('status', self::ActiveShows);
@@ -87,9 +92,17 @@ class TVShow extends Model
         return count($showIDs) ? $builder->whereIn('id', $showIDs) : $builder;
     }
 
+    public function getFullInfoUrl() {
+        return route("display-show-full-info", $this);
+    }
+
+    public function hasNexEpDate() : bool {
+        return ! empty($this->next_ep_date);
+    }
+
     public function getNextEpisodeDateText($format = 'diffForHumans'): string
     {
-        if (! $this->next_ep_date) {
+        if (! $this->hasNexEpDate()) {
             return 'N/A';
         }
 
