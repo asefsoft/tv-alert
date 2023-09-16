@@ -40,6 +40,7 @@
         </div>
 
         <livewire:modals.registration-required/>
+        <livewire:modals.full-info-modal/>
 
         @stack('modals')
 
