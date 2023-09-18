@@ -16,11 +16,11 @@ abstract class TestCase extends BaseTestCase
 
     public function createApplication(): Application
     {
-        // using a trick to migrate database JUST ONCE per each whole test and not on each test
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
 
+        // using a trick to migrate database JUST ONCE per each whole test and not on each test
         $this->initializeDatabase();
 
         return $app;
