@@ -14,6 +14,9 @@
                             </svg>
                         </div>
                         <input wire:model.live.debounce.500ms="term" name="term" type="search" id="search" class="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search" required>
+                        @if($usedFuzzy)
+                        <span class="absolute right-16 bottom-3 text-sm text-gray-400">Fuz</span>
+                        @endif
                         <button type="submit" class="text-white absolute right-2 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4
                             focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1">GO</button>
                     </div>
