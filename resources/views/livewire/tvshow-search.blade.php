@@ -34,8 +34,8 @@
             @if(!empty($results) && count($results) > 0)
                 <ul class="divide-y divide-gray-200" style="width: max-content">
                     @foreach($results as $i => $tvShow)
-                    <li class="pb-1 sm:pb-2 hover:bg-gray-200 cursor-pointer px-3" x-on:click.prevent="tvShowClicked($wire, {{$tvShow->id}})">
-                        <div class="flex items-center space-x-4">
+                    <li class="flex justify-between space-y-2 px-3" wire:key="show-{{$tvShow->id}}">
+                        <div class="flex flex-1 items-center hover:bg-gray-200 space-x-4 cursor-pointer pr-3" x-on:click.prevent="tvShowClicked($wire, {{$tvShow->id}})">
                             @if(!empty($tvShow->thumb_url))
                             {{-- Thumbnail --}}
                             <div class="flex-shrink-0">
@@ -57,6 +57,9 @@
                             <div class="inline-flex items-center text-xs text-gray-800">
                                 {{ $tvShow->status }}
                             </div>
+                        </div>
+                        <div class="inline-flex items-center text-xs text-gray-800 ml-2 pb-2">
+                            <livewire:subscribe-button :tv-show="$tvShow" :showLoadingIndicator="false" wire:key="{{$tvShow->id}}"/>
                         </div>
                     </li>
                 @endforeach
