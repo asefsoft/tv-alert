@@ -18,4 +18,6 @@ yarn-error.log
 /.idea
 /.vscode
 /tests/test.db
+/tests/*.index
 /tv-alert.rar
+/storage/*.index
