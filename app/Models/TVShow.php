@@ -12,12 +12,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Laravel\Scout\Searchable;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\WithData;
 
 class TVShow extends Model
 {
-    use HasFactory, WithData;
+    use HasFactory, WithData, Searchable;
+
+    // for tnt scout search
+    public $asYouType = true;
 
     public const ActiveShows = [TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries, TVShowStatus::TBD_OnTheBubble];
 
@@ -253,5 +257,19 @@ class TVShow extends Model
         $showsData = new DataCollection(TVShowData::class, $shows->items());
 
         return new SearchTVShowData($shows->total(), $shows->currentPage(), $shows->lastPage(), $showsData);
+    }
+
+    public function toSearchableArray()
+    {
+        $array = [
+            'id' => $this->id,
+            'name' => $this->name,
+            'network' => $this->network,
+            'genre' => implode(" ", $this->genres ?? []),
+        ];
+
+        // Customize array...
+
+        return $array;
     }
 }

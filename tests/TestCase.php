@@ -28,6 +28,9 @@ abstract class TestCase extends BaseTestCase
 
     private function initializeDatabase(): void
     {
+        // tnt scout storage is set to test db not that one in the storage folder
+        config()->set('scout.tntsearch.storage', base_path('tests'));
+
         if (config('database.default') == 'sqlite') {
             $db = app()->make('db');
             try {
