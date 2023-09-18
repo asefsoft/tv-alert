@@ -4,6 +4,7 @@ namespace App\TVShow;
 
 use App\Models\TVShow;
 use Illuminate\Database\Eloquent\Collection;
+use TeamTNT\TNTSearch\TNTSearch;
 
 class SearchTVShow
 {
@@ -12,12 +13,14 @@ class SearchTVShow
     protected bool $searchDone = false;
     private int $maxResults;
 
+    protected bool $usedFuzzy = false;
+
     public function __construct(int $maxResults = 10) {
         $this->maxResults = $maxResults;
     }
 
     // quick static search function
-    public static function fastSearch(string $term, int $maxResults = 10): Collection {
+    public static function fastSearch(string $term, int $maxResults = 10, &$searcher = null): Collection {
         $searcher = new SearchTVShow($maxResults);
         return $searcher->doSearch($term);
     }
@@ -25,8 +28,23 @@ class SearchTVShow
     // do search via tntsearch scout
     public function doSearch(string $term): Collection {
         $result = TVShow::search($term)->take($this->maxResults)->get();
+        TVShow::search($term, function (TNTSearch $tnt) use ($term)  {
+
+            $result = $tnt->search($term);
+
+            if($result['hits'] == 0) {
+                $tnt->fuzziness(true);
+                $this->usedFuzzy = true;
+                return $tnt->search($term);
+            }
+
+            return $result;
+
+        })->take($this->maxResults)->get();
+
         $this->totalResult = count($result ?? []);
         $this->searchDone = true;
+
         return $result;
     }
 
@@ -50,6 +68,10 @@ class SearchTVShow
             $maxResults = 10;
 
         $this->maxResults = $maxResults;
+    }
+
+    public function isUsedFuzzy(): bool {
+        return $this->usedFuzzy;
     }
 
 

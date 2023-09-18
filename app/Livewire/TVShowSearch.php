@@ -11,11 +11,13 @@ class TVShowSearch extends Component
     public Collection $results;
 
     public string $term;
+    public bool $usedFuzzy = false;
 
     public function updated($property) {
         if ($property === 'term') {
             if(!empty($this->term)) {
-                $this->results = SearchTVShow::fastSearch($this->term, 7);
+                $this->results = SearchTVShow::fastSearch($this->term, 7, $searcher);
+                $this->usedFuzzy = $searcher->isUsedFuzzy();
             }
         }
     }
