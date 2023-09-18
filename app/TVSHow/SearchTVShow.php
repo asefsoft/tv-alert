@@ -11,9 +11,12 @@ class SearchTVShow
     protected bool $hasResult = false;
     protected int $totalResult = -1;
     protected bool $searchDone = false;
+    protected bool $doHighlight = true;
     private int $maxResults;
 
     protected bool $usedFuzzy = false;
+
+    protected Collection $searchResults;
 
     public function __construct(int $maxResults = 10) {
         $this->maxResults = $maxResults;
@@ -28,24 +31,39 @@ class SearchTVShow
     // do search via tntsearch scout
     public function doSearch(string $term): Collection {
         $result = TVShow::search($term)->take($this->maxResults)->get();
-        TVShow::search($term, function (TNTSearch $tnt) use ($term)  {
+        TVShow::search($term, function (TNTSearch $tnt) use ($term) {
 
             $result = $tnt->search($term);
 
             if($result['hits'] == 0) {
                 $tnt->fuzziness(true);
                 $this->usedFuzzy = true;
-                return $tnt->search($term);
+                $result = $tnt->search($term);
             }
 
             return $result;
 
         })->take($this->maxResults)->get();
 
+        $this->searchResults = $result;
+
+        if($this->doHighlight) {
+            $this->highlightResults($term);
+        }
+
         $this->totalResult = count($result ?? []);
         $this->searchDone = true;
 
         return $result;
+    }
+
+    public function highlightResults(string $term): void {
+        /** @var TVShow $tvShow */
+        $tnt = new TNTSearch();
+        foreach ($this->searchResults as $tvShow) {
+            $tvShow->name = $tnt->highlight($tvShow->name, $term, 'hl' ,['wholeWord' => false]);
+            $tvShow->network = $tnt->highlight($tvShow->network, $term, 'hl' ,['wholeWord' => false]);
+        }
     }
 
     public function hasResult(): bool {
@@ -72,6 +90,10 @@ class SearchTVShow
 
     public function isUsedFuzzy(): bool {
         return $this->usedFuzzy;
+    }
+
+    public function doHighlight(bool $doHighlight): void {
+        $this->doHighlight = $doHighlight;
     }
 
 

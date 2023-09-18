@@ -45,12 +45,12 @@
                                 {{-- Name --}}
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-900 truncate">
-                                    {{ Str::limit($tvShow->name, 35) }}
+                                    {!! Str::limit($tvShow->name, 35) !!}
                                 </p>
                                 {{-- Date, Country ... --}}
                                 <p class="flex space-x-2 text-sm text-gray-500 truncate">
                                     <span>{{ $tvShow->start_date?->format('Y') }}</span>
-                                    <span>{{ Str::limit($tvShow->network, 15, '') }}</span>
+                                    <span>{!! Str::limit($tvShow->network, 20, '') !!}, </span>
                                     <span>{{ $tvShow->country }}</span>
                                 </p>
                             </div>
@@ -70,6 +70,11 @@
             @endif
         </x-slot>
     </x-dropdown>
+    <style>
+        hl {
+            background-color: yellow;
+        }
+    </style>
 </div>
 
 <script>
@@ -82,3 +87,4 @@
         Livewire.getByName('tv-show-full-info')[0].isLoadingShowInfo = true;
     }
 </script>
+
