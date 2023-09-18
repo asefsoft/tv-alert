@@ -34,12 +34,16 @@
             </div>
 
             <!-- Subscribe Button -->
-            <span wire:loading>Saving...</span>
+
             <button class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 {{ $isSubscribed ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600' }}"
                     wire:loading.attr="disabled"
                     x-on:click="subscribeClicked($wire)"
             >
                 {{ $isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
+                {{-- Loading indicator --}}
+                <div class="absolute inline-block ml-3">
+                @include('livewire.partials.loading-indicator')
+                </div>
             </button>
         </div>
     </div>
