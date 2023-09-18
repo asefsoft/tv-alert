@@ -49,7 +49,7 @@
                     </div>
                     <div>
                         <p class="font-semibold">Start Date:</p>
-                        <p>{{ $tvShow?->start_date->format('Y/m/d') }}</p>
+                        <p>{{ $tvShow?->start_date?->format('Y/m/d') }}</p>
                     </div>
                     @if($tvShow?->hasNexEpDate())
                         <div>

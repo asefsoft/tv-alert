@@ -34,7 +34,7 @@
             </div>
 
             <!-- Subscribe Button -->
-            <x-subscribe-button :isSubscribed="$isSubscribed"/>
+            <livewire:subscribe-button :tv-show="$tvShow" wire:key="{{$tvShow->id}}"/>
         </div>
     </div>
 </div>
