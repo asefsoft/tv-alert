@@ -25,7 +25,8 @@ switch ($width) {
 }
 @endphp
 
-<div class="relative" x-data="{ open: false }" @click.away="open = false" @close.stop="open = false">
+{{-- setting custom 'open-me' event by asef --}}
+<div class="relative" id="dropdown" x-data="{ open: false }" @open-me="open=true" @click.away="open = false" @close.stop="open = false">
     <div @click="open = ! open">
         {{ $trigger }}
     </div>

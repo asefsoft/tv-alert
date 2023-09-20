@@ -9,7 +9,8 @@ use TeamTNT\TNTSearch\TNTSearch;
 class SearchTVShow
 {
     protected bool $hasResult = false;
-    protected int $totalResult = -1;
+    protected int $fetchedResults = -1;
+    protected int $possibleResults = -1;
     protected bool $searchDone = false;
     protected bool $doHighlight = true;
     private int $maxResults;
@@ -30,20 +31,23 @@ class SearchTVShow
 
     // do search via tntsearch scout
     public function doSearch(string $term): Collection {
-        $result = TVShow::search($term)->take($this->maxResults)->get();
-        TVShow::search($term, function (TNTSearch $tnt) use ($term) {
+        $term = strtolower(trim($term));
 
-            $result = $tnt->search($term);
+        $result = TVShow::search($term, function (TNTSearch $tnt) use ($term) {
+
+            $result = $tnt->search($term, $this->maxResults);
 
             if($result['hits'] == 0) {
                 $tnt->fuzziness(true);
                 $this->usedFuzzy = true;
-                $result = $tnt->search($term);
+                $result = $tnt->search($term, $this->maxResults);
             }
+
+            $this->possibleResults = $result['hits'] ?? [];
 
             return $result;
 
-        })->take($this->maxResults)->get();
+        })->get();
 
         $this->searchResults = $result;
 
@@ -51,7 +55,7 @@ class SearchTVShow
             $this->highlightResults($term);
         }
 
-        $this->totalResult = count($result ?? []);
+        $this->fetchedResults = count($result ?? []);
         $this->searchDone = true;
 
         return $result;
@@ -70,8 +74,8 @@ class SearchTVShow
         return $this->hasResult;
     }
 
-    public function getTotalResult(): int {
-        return $this->totalResult;
+    public function getFetchedResultsCount(): int {
+        return $this->fetchedResults;
     }
 
     public function isSearchDone(): bool {
@@ -94,6 +98,10 @@ class SearchTVShow
 
     public function doHighlight(bool $doHighlight): void {
         $this->doHighlight = $doHighlight;
+    }
+
+    public function getPossibleResults(): int {
+        return $this->possibleResults;
     }
 
 
