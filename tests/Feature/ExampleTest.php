@@ -6,6 +6,7 @@ namespace Tests\Feature;
 use App\Data\TVShowData;
 use App\Models\TVShow;
 use App\TVShow\Crawling\MainCrawler;
+use TeamTNT\TNTSearch\TNTSearch;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -22,8 +23,18 @@ class ExampleTest extends TestCase
 
     public function test_internals()
     {
-
         $this->markTestSkipped('temporarily test');
+
+        $tnt =  new TNTSearch();
+        $tnt->loadConfig([
+            "storage" => storage_path(),
+        ]);
+
+        $tnt->selectIndex("tv_shows.index");
+        $tnt->asYouType = true;
+        $term = "the big bang theory";
+        $tnt->search($term);
+        $tnt->searchBoolean($term);
 
         $a = TVShow::factory()->create();
         exit();

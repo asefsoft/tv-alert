@@ -31,6 +31,7 @@ function isAdmin(): bool
     if (! empty($isAdmin) && $booted) {
         return $isAdmin;
     } else {
+        // todo: add this functionality
         return $isAdmin = auth()->user() != null && auth()->user()->can('manage');
     }
 }

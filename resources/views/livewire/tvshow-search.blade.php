@@ -14,11 +14,14 @@
                             </svg>
                         </div>
                         <input wire:model.live.debounce.500ms="term" name="term" type="search" id="search" class="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search" required>
-                        @if($usedFuzzy)
+                        @if($usedFuzzy && isAdmin())
                         <span class="absolute right-16 bottom-3 text-sm text-gray-400">Fuz</span>
                         @endif
-                        <button type="submit" class="text-white absolute right-2 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4
-                            focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1">GO</button>
+
+                        <button type="submit" class="text-white absolute right-1 top-1 bg-blue-700 hover:bg-blue-800 focus:ring-4
+                            focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2">
+                            GO
+                        </button>
                     </div>
                 </form>
 
@@ -35,14 +38,14 @@
                 <ul class="divide-y divide-gray-200" style="width: max-content">
                     @foreach($results as $i => $tvShow)
                     <li class="flex justify-between space-y-2 px-3" wire:key="show-{{$tvShow->id}}">
-                        <div class="flex flex-1 items-center hover:bg-gray-200 space-x-4 cursor-pointer pr-3" x-on:click.prevent="tvShowClicked($wire, {{$tvShow->id}})">
+                        <div class="flex flex-1 items-center hover:bg-gray-200 space-x-4 cursor-pointer pr-1 sm:pr-3" x-on:click.prevent="tvShowClicked($wire, {{$tvShow->id}})">
                             @if(!empty($tvShow->thumb_url))
                             {{-- Thumbnail --}}
                             <div class="flex-shrink-0">
-                                <img class="w-8 h-9 text-xs rounded-md" src="{{ $tvShow->thumb_url }}" alt="Poster">
+                                <img class="w-8 h-9 text-xs rounded-md" src="{{ $tvShow->thumb_url }}" alt="No Poster">
                             </div>
                             @endif
-                                {{-- Name --}}
+                            {{-- Name --}}
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-900 truncate">
                                     {!! Str::limit($tvShow->name, 35) !!}
@@ -54,15 +57,25 @@
                                     <span>{{ $tvShow->country }}</span>
                                 </p>
                             </div>
-                            <div class="inline-flex items-center text-xs text-gray-800">
+                            <div class="hidden sm:inline-flex items-center text-xs text-gray-800">
                                 {{ $tvShow->status }}
                             </div>
                         </div>
-                        <div class="inline-flex items-center text-xs text-gray-800 ml-2 pb-2">
+                        {{-- Subscribe button --}}
+                        <div class="hidden sm:inline-flex items-center text-xs text-gray-800 ml-2 pb-2">
                             <livewire:subscribe-button :tv-show="$tvShow" :showLoadingIndicator="false" wire:key="{{$tvShow->id}}"/>
                         </div>
                     </li>
                 @endforeach
+                    {{-- More results ... --}}
+                    @if($possibleResults > 7)
+                    <li class="text-center group flex justify-center">
+                        <a href="/search?term={{$term}}" class="w-full text-sm p-2 font-semibold group-hover:text-red-700">
+                            See More Results
+                            <span class="text-sm text-gray-400 ml-1">({{ $possibleResults }})</span>
+                        </a>
+                    </li>
+                    @endif
                 </ul>
 
             @elseif(!empty($term))
@@ -78,6 +91,17 @@
 </div>
 
 <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        // forcing search result to be open after each search
+        Livewire.hook('morph.updated', ({ el, component }) => {
+            // is dropdown?
+            if(el.getAttribute('id') === 'dropdown') {
+                // then dispatch AlpineJs custom event 'open-me' to ser open to true on dropdown component
+                el.dispatchEvent(new CustomEvent('open-me', { detail: {}}));
+            }
+        })
+    });
+
     // clicked on tv-show
     function tvShowClicked(wire, tvshowId) {
         wire.dispatch('tvshow-changed', [tvshowId]);

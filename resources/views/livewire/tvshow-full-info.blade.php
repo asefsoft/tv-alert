@@ -16,7 +16,7 @@
             </div>
 
             <!-- Right Column: Show Information -->
-            <div class="lg:w-1/2 p-4 pt-0 pl-0 lg:pl-4">
+            <div class="lg:w-1/2 p-4 pt-0 pl-2 sm:pl-0 lg:pl-4">
                 <!-- Above Section: Name and Description -->
                 <div class="mb-4 mt-2 lg:mt-0">
                     <h2 class="text-2xl font-semibold">{{ $tvShow?->name ?? 'Loading...'}}</h2>
