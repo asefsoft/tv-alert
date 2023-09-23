@@ -2,7 +2,7 @@
     $state = $isSubscribed ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'
 @endphp
 
-<button class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 {{$state}}"
+<button class="px-4 py-2 text-white bg-blue-500 rounded {{$state}} {{ $cssClasses }}"
         wire:loading.attr="disabled"
         x-on:click.prevent="subscribeClicked($wire)"
 >

@@ -58,8 +58,16 @@
                         </div>
                     @endif
                 </div>
+                {{-- Subscribe button --}}
+                @if($tvShow)
+                    <div class="mt-6 pb-2">
+                        <livewire:subscribe-button :tv-show="$tvShow" class="w-full" wire:key="{{$tvShow?->id}}"/>
+                    </div>
+                @endif
             </div>
         </div>
+
+
     </div>
 
 </div>
