@@ -12,8 +12,11 @@ class SubscribeButton extends Component
     public bool $isSubscribed;
     public bool $showLoadingIndicator = true;
 
-    public function mount()
+    public string $cssClasses = '';
+
+    public function mount($class = '')
     {
+        $this->cssClasses = $class;
         $this->checkSubscription();
     }
 
