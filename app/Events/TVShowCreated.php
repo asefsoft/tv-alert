@@ -17,7 +17,11 @@ class TVShowCreated
      */
     public function __construct(public TVShow $TVShow)
     {
-        //
+        $isTesting = isTesting() ? "<TESTING ENV> " : "";
+        logMe('new_tv_series_found.log', sprintf('%sShow: %s, Start Date: %s, Status: %s, ID: %s',
+            $isTesting,
+            $this->TVShow?->name, $this->TVShow?->start_date, $this->TVShow?->status, $this->TVShow?->id
+        ), true, false);
     }
 
     /**

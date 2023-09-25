@@ -23,6 +23,7 @@ class ExampleTest extends TestCase
 
     public function test_internals()
     {
+
         $this->markTestSkipped('temporarily test');
 
         $tnt =  new TNTSearch();

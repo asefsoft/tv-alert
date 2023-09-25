@@ -23,7 +23,10 @@ class LastAiredEpisodeDateUpdated
         public ?Carbon $newDate)
     {
         //
-        logMe('last_ep_date_changes.log', sprintf('Show: %s, Old: %s, New: %s, Diff: %s',
+        $isTesting = isTesting() ? "<TESTING ENV> " : "";
+
+        logMe('last_ep_date_changes.log', sprintf('%sShow: %s, Old: %s, New: %s, Diff: %s',
+            $isTesting,
             $this->TVShow?->name, $this->oldDate ?? 'N/A', $this->newDate,
             $this->newDate->diffForHumans($this->oldDate)
         ), true, false);

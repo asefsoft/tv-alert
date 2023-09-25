@@ -28,12 +28,12 @@ class MainCrawler
     }
 
     // resume crawl from last crawled page number
-    public static function crawlMostPopular($totalPages = 1, int $startPage = null): void
+    public static function crawlMostPopular($totalPages = 1, int $startPage = null, bool $onlyCrawlNewShows = false): void
     {
-        CrawlMostPopularJob::dispatch($totalPages, $startPage);
+        CrawlMostPopularJob::dispatch($totalPages, $startPage, $onlyCrawlNewShows);
     }
 
-    public static function CrawlNotRecentlyCrawledShows($totalShows = 20): void
+    public static function crawlNotRecentlyCrawledShows($totalShows = 20): void
     {
         CrawlNotRecentlyCrawledShowsJob::dispatch($totalShows);
     }

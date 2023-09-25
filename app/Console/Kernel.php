@@ -14,20 +14,29 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // main crawling task
+
+        // crawl not recently crawled shows
         $schedule->call(function () {
             $t = now();
-            echo $t, "\n";
-            MainCrawler::CrawlNotRecentlyCrawledShows(70);
+            echo "\n", $t, "\n";
+            MainCrawler::crawlNotRecentlyCrawledShows(70);
             echo now(), "\n";
-            echo $t->longAbsoluteDiffForHumans(), "\n";
+            echo "Done in ", $t->longAbsoluteDiffForHumans(), "\n";
         })
             ->name('crawling not recently crawled shows every 5 min')
             ->everyFiveMinutes();
 
-        //    $schedule->call(function (){
-        //             echo 'hi', now();
-        //         })->name("hiiiii")
-        //             ->everyMinute();
+        // crawl most popular shows to find NEW tvshows
+        $schedule->call(function () {
+            $t = now();
+            echo "\n", $t, "\n";
+            MainCrawler::crawlMostPopular(totalPages: 5, startPage: null, onlyCrawlNewShows: true);
+            echo now(), "\n";
+            echo "Done in ", $t->longAbsoluteDiffForHumans(), "\n";
+        })
+            ->name('crawling most popular shows every 5 min')
+            ->everyFiveMinutes();
+
     }
 
     /**

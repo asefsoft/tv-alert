@@ -22,9 +22,10 @@ abstract class CrawlerAbstract
 
     protected int $maxProcessedShows = -1;
 
-    public function __construct(protected int $startPage = 1, protected int $totalPages = 1)
-    {
-    }
+    public function __construct(protected int $startPage = 1,
+                                protected int $totalPages = 1,
+                                protected bool $onlyCrawlNewShows = false)
+    { }
 
     abstract public function doCrawl($total = 20);
 
@@ -52,7 +53,7 @@ abstract class CrawlerAbstract
             }
 
             // dont crawl too often
-            if (! TVShow::shouldShowBeCrawled($permalink)) {
+            if (! $this->shouldCrawl($permalink)) {
                 $this->totalSkippedShows++;
 
                 continue;
@@ -75,6 +76,16 @@ abstract class CrawlerAbstract
 
             // save on db
             new CreateOrUpdateTVShow($tvshowInfo);
+        }
+    }
+
+    // should crawl or not
+    protected function shouldCrawl($permalink) : bool {
+        if($this->onlyCrawlNewShows) {
+            return ! TVShow::isShowExist($permalink);
+        }
+        else {
+            return TVShow::shouldShowBeCrawled($permalink);
         }
     }
 
