@@ -22,7 +22,7 @@ class SubscribeButtonTest extends TestCase
 
         $test = Livewire::actingAs($user)
             ->test(SubscribeButton::class, ['tvShow' => $tvShow])
-            ->assertSee(['Subscribe', "wire:loading", "function subscribeClicked(wire)", "bg-blue-500 hover:bg-blue-600"]) // see contents
+            ->assertSee(['Subscribe', "wire:loading", "bg-blue-500 hover:bg-blue-600"]) // see contents
             ->call('subscribe')
             ->assertSee(['Unsubscribe', "bg-green-500 hover:bg-green-600"]) // see Unsubscribe text on button
             ->assertSet('isSubscribed', true) // property is set

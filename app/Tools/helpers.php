@@ -115,6 +115,14 @@ function getDateString($date, $type = 'remaining', $format = 'd F, Y H:i:s')
     }
 }
 
+// highlighted texts has <hl> and </hl> in it
+// so we will skip that tah
+function strLimitHighlighted(string $text, int $length = 0, $end= "...") : string {
+    $addition = substr_count($text, "<hl>") * 3;
+    $addition += substr_count($text, "</hl>") * 4;
+    return strip_tags(Str::limit($text, $length + $addition, $end), ['hl']);
+}
+
 function jalalianDate($date, $format = 'd F, Y', $default = ''): string
 {
     if (empty($date)) {

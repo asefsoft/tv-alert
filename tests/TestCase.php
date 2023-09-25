@@ -32,6 +32,7 @@ abstract class TestCase extends BaseTestCase
         config()->set('scout.tntsearch.storage', base_path('tests'));
 
         if (config('database.default') == 'sqlite') {
+            config()->set('database.connections.sqlite.database', base_path('tests/test.db'));
             $db = app()->make('db');
             try {
                 // test db is working
@@ -52,7 +53,8 @@ abstract class TestCase extends BaseTestCase
             }
 
             // not enough tvshow exist? then seed it
-            if (TVShow::getCloseAirDateShows()->count() < 1 || TVShow::count() < TVShowSeeder::TOTAL_TVSHOWS_SEED) {
+            // 7 or more is needed to activate pagination
+            if (TVShow::getCloseAirDateShows()->count() < 7 || TVShow::count() < TVShowSeeder::TOTAL_TVSHOWS_SEED) {
                 Artisan::call('db:seed --class=TVShowSeeder');
             }
 

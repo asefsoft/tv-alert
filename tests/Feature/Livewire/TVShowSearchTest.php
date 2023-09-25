@@ -25,8 +25,9 @@ class TVShowSearchTest extends TestCase
         self::assertGreaterThan(0, $test->get('results')->count());
 
         $test
-            ->assertSee([Str::limit($tvShow->name, 35), $tvShow->status, $tvShow->thumb_url, $tvShow->network, $tvShow->country,
+            ->assertSee([$tvShow->status, $tvShow->thumb_url, $tvShow->country,
             'wire:model.live.debounce', 'wire:loading', 'x-on:click.prevent=', "tvShowClicked(\$wire, $tvShow->id)"])
+            ->assertSeeText([Str::limit($tvShow->name, 35), $tvShow->network], false)
             ->set('term', 'some-not-exist-search-term') // not exist search term
             ->assertSee('No results!')
             ->assertCount('results', 0)

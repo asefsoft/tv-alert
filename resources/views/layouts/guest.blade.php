@@ -48,7 +48,6 @@
 @include('sweetalert::alert')
 <script>
     window.addEventListener('swal',function(e){
-        console.log(e);
         Swal.fire(e.detail[0]);
     });
 

@@ -8,9 +8,13 @@ use Illuminate\Http\Request;
 
 class TVShowController extends Controller
 {
-    //
-
+    // full info of a tvshow
     public function fullInfo(TVShow $tvshow) {
         return view('tvshow.full-info', ['tvshowId' => $tvshow->id]);
+    }
+
+    // timeline
+    public function timeline(TVShow $tvshow) {
+        return view('tvshow.timeline');
     }
 }

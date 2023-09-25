@@ -5,6 +5,7 @@
 <button class="px-4 py-2 text-white bg-blue-500 rounded {{$state}} {{ $cssClasses }}"
         wire:loading.attr="disabled"
         x-on:click.prevent="subscribeClicked($wire)"
+
 >
     {{ $isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
 
@@ -15,19 +16,3 @@
     </div>
     @endif
 </button>
-
-
-<script>
-    // clicked on subscribe
-    function subscribeClicked(wire) {
-        // not logged-in?
-        if(window.isAuthenticated === '0') {
-            // display register required modal form.
-            Livewire.getByName('modals.registration-required')[0].displayRegisterModal = true;
-        }
-        else {
-            // call subscribe on livewire component
-            wire.call('subscribe');
-        }
-    }
-</script>

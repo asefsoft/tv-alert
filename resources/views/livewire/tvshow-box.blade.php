@@ -5,7 +5,7 @@
         @if($displayPoster)
             <a href="{{$tvShow->getFullInfoUrl()}}" style="background-image: url('{{ $tvShow?->thumb_url }}');" alt="TV Show Poster"
                x-on:click.prevent="tvShowClicked($wire, tvshowId)"
-                 class="w-full h-[220px]">
+                 class="w-full h-[220px] bg-contain bg-center">
             </a>
         @endif
 
@@ -20,7 +20,7 @@
 
             <!-- Last Episode Date -->
             @if($displayLastEpDate)
-                <p class="text-gray-600 mb-3" title="Last Episode: {{$tvShow->getNextEpisodeDateText('default')}}">Last: {{ $tvShow->getLastEpisodeDateText() }}</p>
+                <p class="text-gray-600 mb-3" title="Last Episode: {{$tvShow->getLastEpisodeDateText('default')}}">Last: {{ $tvShow->getLastEpisodeDateText() }}</p>
             @endif
 
             <!-- Watch Later and Other Info -->
@@ -38,15 +38,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    // clicked on link of tv-show
-    function tvShowClicked(wire, tvshowId) {
-        wire.dispatch('tvshow-changed', [tvshowId]);
-        // showing full info modal
-        Livewire.getByName('modals.full-info-modal')[0].displayTvShowModal = true;
-        // this will hide old data of current tv show
-        Livewire.getByName('tv-show-full-info')[0].isLoadingShowInfo = true;
-    }
-
-</script>

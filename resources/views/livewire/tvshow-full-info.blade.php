@@ -2,21 +2,21 @@
     <div class="max-w-4xl mx-auto pb-4 bg-white rounded-lg shadow-md overflow-hidden">
 
         {{-- Loading Progress --}}
-        <div class="lg:flex" x-show="isLoading">
+        <div class="md:flex" x-show="isLoading">
             <div class="mb-4">
                 <h3 class="text-xl font-semibold">Loading...</h3>
             </div>
         </div>
 
         {{-- Show Info --}}
-        <div class="lg:flex" x-show="!isLoading">
+        <div class="md:flex" x-show="!isLoading">
             <!-- Left Column: Show Poster -->
-            <div class="lg:w-1/2">
-                <img src="{{ $tvShow?->image_url }}" alt="TV Show Poster" class="w-full h-auto">
+            <div class="flex justify-center md:w-1/2">
+                <img src="{{ $tvShow?->image_url }}" alt="TV Show Poster" class="w-full h-auto max-w-xs md:max-w-sm object-cover hover:object-contain">
             </div>
 
             <!-- Right Column: Show Information -->
-            <div class="lg:w-1/2 p-4 pt-0 pl-2 sm:pl-0 lg:pl-4">
+            <div class="md:w-1/2 p-4 pt-0 {{$isModalMode ? "pl-2 sm:pl-0 md:pl-4" : ""}}">
                 <!-- Above Section: Name and Description -->
                 <div class="mb-4 mt-2 lg:mt-0">
                     <h2 class="text-2xl font-semibold">{{ $tvShow?->name ?? 'Loading...'}}</h2>
@@ -40,12 +40,12 @@
                     </div>
 
                     <div>
-                        <p class="font-semibold">Country:</p>
-                        <p>{{ $tvShow?->country }}</p>
-                    </div>
-                    <div>
                         <p class="font-semibold">Network:</p>
                         <p>{{ $tvShow?->network }}</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Country:</p>
+                        <p>{{ $tvShow?->country }}</p>
                     </div>
                     <div>
                         <p class="font-semibold">Start Date:</p>
@@ -54,7 +54,18 @@
                     @if($tvShow?->hasNexEpDate())
                         <div>
                             <p class="font-semibold">Next Episode:</p>
-                            <p>{{ $tvShow?->getNextEpisodeDateText() }}</p>
+                            <p title="{{ $tvShow?->getNextEpisodeDateText('default') }}">
+                                {{ $tvShow?->getNextEpisodeDateText() }}
+                            </p>
+                        </div>
+                    @endif
+
+                    @if($tvShow?->hasLastEpDate())
+                        <div>
+                            <p class="font-semibold">Last Episode:</p>
+                            <p title="{{ $tvShow?->getLastEpisodeDateText('default') }}">
+                                {{ $tvShow?->getLastEpisodeDateText() }}
+                            </p>
                         </div>
                     @endif
                 </div>
