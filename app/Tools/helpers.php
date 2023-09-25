@@ -41,6 +41,11 @@ function isLocal(): bool
     return app()->environment('local');
 }
 
+function isTesting(): bool
+{
+    return app()->environment('testing');
+}
+
 function isProduction(): bool
 {
     return app()->environment('production');

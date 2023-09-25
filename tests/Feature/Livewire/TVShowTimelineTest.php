@@ -19,18 +19,20 @@ class TVShowTimelineTest extends TestCase
         // preparation
         $user = User::first();
         list($totalSubscription, $daysToShow, $pastTvShows, $todayTvShows, $futureTvShows, $pastTimePeriod,
-            $todayTimePeriod, $futureTimePeriod) = $this->preparation($user);
+            $todayTimePeriod, $futureTimePeriod)
+            = $this->preparation($user);
 
         /** @var \Livewire\Features\SupportTesting\Testable $test */
         $test = Livewire::actingAs($user)->test(TVShowTimeline::class);
+        $test->getContent();
             $test->assertSeeText([sprintf("You have subscribed to %s TV shows.", $totalSubscription),
                     'Past Episodes', "Today Episodes", "Future Episodes",
                 ], false)
                 ->assertSeeText(sprintf("Show More Days >> (%s)", $daysToShow), false)
                 // checking that all series name appeared in the timeline
-                ->assertSeeText($pastTvShows->pluck('name')->toArray(), false)
-                ->assertSeeText($todayTvShows->pluck('name')->toArray(), false)
-                ->assertSeeText($futureTvShows->pluck('name')->toArray(), false)
+                ->assertSeeText($pastTvShows->pluck('name')->toArray())
+                ->assertSeeText($todayTvShows->pluck('name')->toArray())
+                ->assertSeeText($futureTvShows->pluck('name')->toArray())
                 // time periods
                 ->assertSeeText([$pastTimePeriod, $todayTimePeriod, $futureTimePeriod], false)
                 ->call('showMore') // click on show more days
@@ -39,14 +41,15 @@ class TVShowTimelineTest extends TestCase
     }
 
     private function preparation(User $user): array {
+        auth()->login($user);
+
         // subscribe to 15 series for given user
-        $totalSubscription = $user->subscriptions()->count();
+        $totalSubscription = User::getAuthUserTotalSubscribedShows(true); // force to clear possible cached data
         if ($totalSubscription < 15) {
             $shows = TVShow::inRandomOrder()->take(15);
             $user->subscriptions()->sync($shows->pluck('id'));
         }
 
-        auth()->login($user);
         // making a manual timeline, so we could use it to validate rendered timeline component data
         $daysToShow = TVShowTimeline::DAYS_TO_SHOW_INIT;
         $timeline = Timeline::makeTimeline($daysToShow);

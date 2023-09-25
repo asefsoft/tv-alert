@@ -14,12 +14,29 @@ class CrawlMostPopularJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    const MAX_CRAWL_PAGE_NUMBER = 1250;
+
     /**
      * Create a new job instance.
      */
-    public function __construct(protected int $totalPages = 1, protected ?int $startPage = null)
+    public function __construct(protected int $totalPages = 1,
+                                protected ?int $startPage = null,
+                                protected bool $onlyCrawlNewShows = false)
     {
         //
+    }
+
+    // get next page number from cache
+    private function getNextCrawlPageNumber() : int {
+        $nextPage = MainCrawler::getLastPopularPage() + 1;
+
+        // dont exceed max page number
+        if($nextPage > self::MAX_CRAWL_PAGE_NUMBER) {
+            $nextPage = 1;
+            MainCrawler::setLastPopularPage($nextPage);
+        }
+
+        return $nextPage;
     }
 
     /**
@@ -27,8 +44,9 @@ class CrawlMostPopularJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $startPage = is_null($this->startPage) ? MainCrawler::getLastPopularPage() + 1 : $this->startPage;
-        $crawler = new CrawlMostPopular($startPage, $this->totalPages);
+        $startPage = is_null($this->startPage) ? $this->getNextCrawlPageNumber() : $this->startPage;
+        $crawler = new CrawlMostPopular($startPage, $this->totalPages, $this->onlyCrawlNewShows);
         $crawler->doCrawl();
+        dump($crawler);
     }
 }

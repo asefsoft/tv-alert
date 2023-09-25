@@ -104,8 +104,8 @@ class User extends Authenticatable
         return $authUserSubscriptions;
     }
 
-    public static function getAuthUserTotalSubscribedShows() : int {
-        return count(self::getAuthUserSubscribedShows());
+    public static function getAuthUserTotalSubscribedShows(bool $forceCheck = false) : int {
+        return count(self::getAuthUserSubscribedShows($forceCheck));
     }
 
     // get recent shows that user is subscribed to
@@ -119,7 +119,6 @@ class User extends Authenticatable
 
     public function getSubscribedShows($page = 1, $perPage = 20)
     {
-        // todo: order by ->orderBy('next_ep_date', 'desc')
         return $this->subscriptions()->orderBy(\DB::raw('isnull(next_ep_date)'))
             ->orderBy('next_ep_date')->paginate($perPage, ['*'], 'page', $page);
     }

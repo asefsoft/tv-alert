@@ -27,8 +27,9 @@
                              x-on:click="tvShowClicked($wire, tvshowId)"
                              wire:key="show-{{$tvShow->id}}"
                         >
-                            {{-- Show Title--}}
-                            <div class="text-md font-semibold text-gray-900 group-hover:text-red-700">{{$tvShow->name}}
+                            {{-- Show Name--}}
+                            <div class="text-md font-semibold text-gray-900 group-hover:text-red-700">
+                                {{$tvShow->name}}
                                 <div class="text-sm text-gray-400 overflow-hidden">{{$tvShow->start_date?->format('Y')}}, {{$tvShow->network}}, {{$tvShow->country}}</div>
                             </div>
                             <ol class="mt-1 divide-y divider-gray-200 ">
