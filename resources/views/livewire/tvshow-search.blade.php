@@ -48,12 +48,12 @@
                             {{-- Name --}}
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-900 truncate">
-                                    {!! Str::limit($tvShow->name, 35) !!}
+                                    {!! strLimitHighlighted($tvShow->name, 35) !!}
                                 </p>
                                 {{-- Date, Country ... --}}
                                 <p class="flex space-x-2 text-sm text-gray-500 truncate">
                                     <span>{{ $tvShow->start_date?->format('Y') }}</span>
-                                    <span>{!! Str::limit($tvShow->network, 20, '') !!}, </span>
+                                    <span>{!! strLimitHighlighted($tvShow->network, 20, '') !!}, </span>
                                     <span>{{ $tvShow->country }}</span>
                                 </p>
                             </div>
@@ -91,24 +91,7 @@
 </div>
 
 <script>
-    window.addEventListener('DOMContentLoaded', (event) => {
-        // forcing search result to be open after each search
-        Livewire.hook('morph.updated', ({ el, component }) => {
-            // is dropdown?
-            if(el.getAttribute('id') === 'dropdown') {
-                // then dispatch AlpineJs custom event 'open-me' to ser open to true on dropdown component
-                el.dispatchEvent(new CustomEvent('open-me', { detail: {}}));
-            }
-        })
-    });
 
-    // clicked on tv-show
-    function tvShowClicked(wire, tvshowId) {
-        wire.dispatch('tvshow-changed', [tvshowId]);
-        // showing full info modal
-        Livewire.getByName('modals.full-info-modal')[0].displayTvShowModal = true;
-        // this will hide old data of current tv show
-        Livewire.getByName('tv-show-full-info')[0].isLoadingShowInfo = true;
-    }
+
 </script>
 

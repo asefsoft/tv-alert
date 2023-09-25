@@ -42,6 +42,7 @@ class TVShow extends Model
         'pictures' => 'array',
         'episodes' => 'array',
         'next_ep' => 'array',
+        'last_ep' => 'array',
     ];
 
     // users that subscribed to tvshow
@@ -75,7 +76,7 @@ class TVShow extends Model
     }
 
     public function getShowDescription($maxLen = 0) {
-        $description = str_replace(["<br>", "<br/>", "<br />", "<br/>", "</b>", "<b>"], "",  $this->description);
+        $description = strip_tags($this->description);
         return $maxLen > 0 ? substr($description, 0, $maxLen) . ' ...' : $description;
     }
 
@@ -101,6 +102,10 @@ class TVShow extends Model
     }
 
     public function hasNexEpDate() : bool {
+        return ! empty($this->next_ep_date);
+    }
+
+    public function hasLastEpDate() : bool {
         return ! empty($this->next_ep_date);
     }
 
@@ -232,6 +237,7 @@ class TVShow extends Model
                 ->orderBy('next_ep_date', 'asc');
         } elseif ($daysDistance == 0) { // today
             $q->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
+//                ->orwhereBetween('next_ep_date', [now()->startOfDay(), now()->endOfDay()])
                 ->orderBy('last_ep_date', 'asc')
                 ->orderBy('next_ep_date', 'asc');
         } else {

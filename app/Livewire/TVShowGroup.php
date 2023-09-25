@@ -12,6 +12,9 @@ class TVShowGroup extends Component
 {
     use WithPagination;
 
+    protected $listeners = ['subscriptions-changed' => '$refresh'];
+
+
     // it will be passed to sub component 'TVShowBox'
     public bool $displayLastEpDate = false;
 
@@ -66,7 +69,7 @@ class TVShowGroup extends Component
 
                 // in this type we show subscribed shows, then it is meaningless to toggle subscribed shows
                 $this->canToggleSubscribedShowsFilter = false;
-                $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage, $targetShows);
+                $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage);
                 break;
             default:
                 throw new Exception("Invalid 'type' is set for tvshow-group: ".$this->type);

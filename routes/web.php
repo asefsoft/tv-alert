@@ -19,6 +19,7 @@ Route::get('/', function () {
 });
 
 Route::get('/show/{tvshow}', [TVShowController::class, "fullInfo"])->name('display-show-full-info');
+Route::get('/timeline', [TVShowController::class, "timeline"])->name('display-timeline')->middleware(['auth']);
 
 Route::middleware([
     'auth:sanctum',

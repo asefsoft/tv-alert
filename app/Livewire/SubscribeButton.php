@@ -33,6 +33,8 @@ class SubscribeButton extends Component
                 'toast' => true,
                 'position' => 'top',
             ]);
+
+            $this->dispatch('subscriptions-changed');
         } else {
             $this->dispatch('register-required');
         }
