@@ -3,10 +3,6 @@
 namespace App\Livewire;
 
 use App\TVShow\Timeline\Timeline;
-use App\TVShow\Timeline\Types\FutureTimeline;
-use App\TVShow\Timeline\Types\PastTimeline;
-use App\TVShow\Timeline\Types\TimelineInfo;
-use App\TVShow\Timeline\Types\TodayTimeline;
 use Livewire\Component;
 
 class TVShowTimeline extends Component
@@ -16,6 +12,7 @@ class TVShowTimeline extends Component
 
     // how many days include in timeline at start of component
     public const DAYS_TO_SHOW_INIT = 60;
+    public $lastPoll, $diffPoll;
 
     public int $daysToShow;
     private $timeline;
@@ -23,6 +20,7 @@ class TVShowTimeline extends Component
     public function mount() {
         $this->daysToShow = self::DAYS_TO_SHOW_INIT;
         $this->getTimeline();
+        $this->updatePollingStats();
     }
 
     // show more days in timeline
@@ -34,6 +32,11 @@ class TVShowTimeline extends Component
     {
         $this->getTimeline();
         return view('livewire.tvshow-timeline', ['timeline' => $this->timeline]);
+    }
+
+    public function updatePollingStats(): void {
+        $this->diffPoll = $this->lastPoll?->diffInSeconds();
+        $this->lastPoll = now();
     }
 
     private function getTimeline(): void {

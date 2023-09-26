@@ -1,11 +1,14 @@
 @php /** @var $section \App\TVShow\Timeline\TimelineSection **/  /** @var $tvShow \App\Models\TVShow **/  @endphp
-<div class="p-3 sm:p-5 mb-4 border border-gray-100 space-y-4 sm:space-y-6 rounded-lg">
+<div wire:poll.100s="updatePollingStats" class="p-3 sm:p-5 mb-4 border border-gray-100 space-y-4 sm:space-y-6 rounded-lg">
 
     <div class="py-2 flex justify-between sm:flex-row flex-col">
-        <div class="mb-4">You have subscribed to <strong>{{\App\Models\User::getAuthUserTotalSubscribedShows()}}</strong> TV shows.</div>
+        <div class="mb-4">
+            You have subscribed to <strong>{{\App\Models\User::getAuthUserTotalSubscribedShows()}}</strong> TV shows.
+        </div>
         @if($timeline->getInfo()->hasPastTimeline())
         @include('livewire.partials.load-more-timeline-btn')
         @endif
+
     </div>
 
     @foreach($timeline->getSections() as $secKey => $section)
