@@ -17,4 +17,10 @@ class TVShowController extends Controller
     public function timeline(TVShow $tvshow) {
         return view('tvshow.timeline');
     }
+
+    // search results
+    public function search() {
+        $term = request()->get('term');
+        return view('tvshow.search-full', ['term' => $term]);
+    }
 }

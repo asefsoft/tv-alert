@@ -13,7 +13,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                             </svg>
                         </div>
-                        <input wire:model.live.debounce.500ms="term" name="term" type="search" id="search" class="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search" required>
+                        <input wire:model.live.debounce.800ms="term" name="term" type="search" id="search" class="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search" required>
                         @if($usedFuzzy && isAdmin())
                         <span class="absolute right-16 bottom-3 text-sm text-gray-400">Fuz</span>
                         @endif
@@ -52,7 +52,7 @@
                                 </p>
                                 {{-- Date, Country ... --}}
                                 <p class="flex space-x-2 text-sm text-gray-500 truncate">
-                                    <span>{{ $tvShow->start_date?->format('Y') }}</span>
+                                    <span>{{ $tvShow->start_date?->format('Y') }},</span>
                                     <span>{!! strLimitHighlighted($tvShow->network, 20, '') !!}, </span>
                                     <span>{{ $tvShow->country }}</span>
                                 </p>
@@ -70,7 +70,7 @@
                     {{-- More results ... --}}
                     @if($possibleResults > 7)
                     <li class="text-center group flex justify-center">
-                        <a href="/search?term={{$term}}" class="w-full text-sm p-2 font-semibold group-hover:text-red-700">
+                        <a href="/search?term={{$term}}" class="w-full text-sm p-2 font-semibold group-hover:text-m-red">
                             See More Results
                             <span class="text-sm text-gray-400 ml-1">({{ $possibleResults }})</span>
                         </a>

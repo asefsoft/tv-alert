@@ -32,7 +32,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <p class="font-semibold">Genres:</p>
-                        <p>{{ implode(', ', $tvShow?->genres ?? []) }}</p>
+                        <p>{{ $tvShow?->getGenresText(6) }}</p>
                     </div>
                     <div>
                         <p class="font-semibold">Status:</p>

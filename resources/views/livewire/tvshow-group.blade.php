@@ -1,16 +1,15 @@
 <div class="px-3 my-2 shadow-md">
     {{-- Title --}}
     <div class="grid grid-cols-1 sm:grid-cols-2">
-        <h1 class="text-2xl font-semibold mb-8 underline underline-offset-[14px] decoration-4 decoration-gray-300">
+        <h2 class="text-xl font-semibold mb-8 underline underline-offset-[14px] decoration-4 decoration-gray-300">
             {{ $title }}
-        </h1>
+        </h2>
 
         {{-- Subscribed Shows Filter --}}
         @if($canToggleSubscribedShowsFilter)
-        <div class="flex justify-end text-right">
+        <div class="flex justify-end text-right mt-2">
             <div class="mr-2 text-sm">
                 <label for="helper-checkbox-{{$type}}" class="font-medium text-gray-900 cursor-pointer">Only Subscribed Shows?</label>
-                <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500">Only display your subscribed shows in this list?</p>
             </div>
             <div class="flex items-center h-5">
                 <input id="helper-checkbox-{{$type}}" aria-describedby="helper-checkbox-text" type="checkbox"
@@ -34,7 +33,7 @@
         </div>
 
         <div class="py-5 px-3">
-            {{ $shows->links() }}
+            {{ $shows->onEachSide(1)->links() }}
         </div>
     @else
         {{-- Empty State --}}

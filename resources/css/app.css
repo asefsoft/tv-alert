@@ -5,3 +5,9 @@
 [x-cloak] {
     display: none;
 }
+
+[aria-current] .select-none{
+    font-weight: bold;
+    background-color: #3b82f6;
+    color: white;
+}
