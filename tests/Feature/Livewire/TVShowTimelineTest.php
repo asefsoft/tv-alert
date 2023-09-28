@@ -24,7 +24,7 @@ class TVShowTimelineTest extends TestCase
 
         /** @var \Livewire\Features\SupportTesting\Testable $test */
         $test = Livewire::actingAs($user)->test(TVShowTimeline::class);
-        $test->getContent();
+
             $test->assertSeeText([sprintf("You have subscribed to %s TV shows.", $totalSubscription),
                     'Past Episodes', "Today Episodes", "Future Episodes",
                 ], false)

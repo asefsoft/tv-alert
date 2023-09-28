@@ -4,33 +4,32 @@ namespace App\TVShow;
 
 use App\Models\TVShow;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use TeamTNT\TNTSearch\TNTSearch;
 
 class SearchTVShow
 {
     protected bool $hasResult = false;
-    protected int $fetchedResults = -1;
     protected int $possibleResults = -1;
     protected bool $searchDone = false;
     protected bool $doHighlight = true;
-    private int $maxResults;
 
     protected bool $usedFuzzy = false;
 
-    protected Collection $searchResults;
+    protected LengthAwarePaginator $searchResults;
 
-    public function __construct(int $maxResults = 10) {
-        $this->maxResults = $maxResults;
+    public function __construct(protected int $perPage = 10, protected int $page = 1, protected int $maxResults = 200) {
     }
 
     // quick static search function
-    public static function fastSearch(string $term, int $maxResults = 10, &$searcher = null): Collection {
-        $searcher = new SearchTVShow($maxResults);
+    public static function fastSearch(string $term, int $perPage = 10, int $page = 1, int $maxResults = 200,
+                                      &$searcher = null): LengthAwarePaginator {
+        $searcher = new SearchTVShow($perPage, $page, $maxResults);
         return $searcher->doSearch($term);
     }
 
     // do search via tntsearch scout
-    public function doSearch(string $term): Collection {
+    public function doSearch(string $term): LengthAwarePaginator {
         $term = strtolower(trim($term));
 
         $result = TVShow::search($term, function (TNTSearch $tnt) use ($term) {
@@ -47,18 +46,17 @@ class SearchTVShow
 
             return $result;
 
-        })->get();
+        });
 
-        $this->searchResults = $result;
+        $this->searchResults = $result->paginate($this->perPage, 'page', $this->page);
 
         if($this->doHighlight) {
             $this->highlightResults($term);
         }
 
-        $this->fetchedResults = count($result ?? []);
         $this->searchDone = true;
 
-        return $result;
+        return $this->searchResults;
     }
 
     public function highlightResults(string $term): void {
@@ -74,22 +72,9 @@ class SearchTVShow
         return $this->hasResult;
     }
 
-    public function getFetchedResultsCount(): int {
-        return $this->fetchedResults;
-    }
 
     public function isSearchDone(): bool {
         return $this->searchDone;
-    }
-
-    public function setMaxResults(int $maxResults): void {
-        if($maxResults > 50)
-            $maxResults = 50;
-
-        if($maxResults < 1)
-            $maxResults = 10;
-
-        $this->maxResults = $maxResults;
     }
 
     public function isUsedFuzzy(): bool {

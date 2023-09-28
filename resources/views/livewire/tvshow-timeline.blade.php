@@ -31,7 +31,7 @@
                              wire:key="show-{{$tvShow->id}}"
                         >
                             {{-- Show Name--}}
-                            <div class="text-md font-semibold text-gray-900 group-hover:text-red-700">
+                            <div class="text-md font-semibold text-gray-900 group-hover:text-m-red">
                                 {{$tvShow->name}}
                                 <div class="text-sm text-gray-400 overflow-hidden">{{$tvShow->start_date?->format('Y')}}, {{$tvShow->network}}, {{$tvShow->country}}</div>
                             </div>

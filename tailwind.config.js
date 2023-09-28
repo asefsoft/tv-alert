@@ -18,6 +18,9 @@ export default {
             },
             screens:{
                 xs: '480px'
+            },
+            colors:{
+                'm-red':'#e4002b'
             }
         },
     },

@@ -80,6 +80,10 @@ class TVShow extends Model
         return $maxLen > 0 ? substr($description, 0, $maxLen) . ' ...' : $description;
     }
 
+    public function isRunning(): bool {
+        return strtolower($this->status) == 'running';
+    }
+
     public function scopeActiveShows(Builder $builder)
     {
         return $builder->whereIn('status', self::ActiveShows);
@@ -133,6 +137,11 @@ class TVShow extends Model
         }
 
         return $format == 'diffForHumans' ? $this->last_ep_date->diffForHumans() : $this->last_ep_date->format($format);
+    }
+
+    public function getGenresText($max = -1): string {
+        $genres = $max > 0 ? array_slice($this->genres, 0, $max) : $this->genres;
+        return implode(', ', $genres ?? []);
     }
 
     public static function getRandomShow($count = 1): Collection
