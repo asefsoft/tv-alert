@@ -25,10 +25,10 @@
         {{-- TVShow List --}}
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             @foreach($shows as $show)
-                <livewire:tvshow-box wire:key="{{$show->id}}"
+                <livewire:TVShow-Box wire:key="{{$show->id}}"
                                      :tv-show="$show"
                                      displayLastEpDate="{{ $displayLastEpDate }}"
-                ></livewire:tvshow-box>
+                ></livewire:TVShow-Box>
             @endforeach
         </div>
 

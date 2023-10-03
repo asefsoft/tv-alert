@@ -28,7 +28,7 @@
 
                 <!-- Search -->
                 <div class="flex items-center ml-5 sm:ml-10">
-                    <livewire:tvshow-search></livewire:tvshow-search>
+                    <livewire:TVShow-Search></livewire:TVShow-Search>
                 </div>
             </div>
 

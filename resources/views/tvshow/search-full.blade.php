@@ -8,7 +8,7 @@
     <div class="py-6 md:py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <livewire:tvshow-search-full term={{$term}}></livewire:tvshow-search-full>
+                <livewire:TVShow-Search-Full term={{$term}}></livewire:TVShow-Search-Full>
             </div>
         </div>
     </div>

@@ -14,7 +14,7 @@ class TVShowGroupTest extends TestCase
     {
         // first test without auth user
         Livewire::test(TVShowGroup::class, ['type' => 'recent-shows', 'title' => 'Recent Shows'])
-            ->assertSee(['Recent Shows', '</livewire:tvshow-box>',
+            ->assertSee(['Recent Shows', '</livewire:TVShow-Box>',
                 'alt="TV Show Poster"', 'aria-label="Pagination Navigation"'], false) // see all necessary parts
             ->assertDontSee(['Only Subscribed Shows?', 'No tv show available!'])
             ->assertSet('canToggleSubscribedShowsFilter', false)
@@ -24,7 +24,7 @@ class TVShowGroupTest extends TestCase
         // now with auth user
         $user = User::factory()->create();
         Livewire::actingAs($user)->test(TVShowGroup::class, ['type' => 'recent-shows', 'title' => 'Recent Shows'])
-            ->assertSee(['Recent Shows', '</livewire:tvshow-box>', 'Only Subscribed Shows?',
+            ->assertSee(['Recent Shows', '</livewire:TVShow-Box>', 'Only Subscribed Shows?',
                 'alt="TV Show Poster"', 'aria-label="Pagination Navigation"'], false) // see all necessary parts
             ->assertDontSee(['No tv show available!'])
             ->assertSet('canToggleSubscribedShowsFilter', true) // can toggle var now must be true
@@ -55,7 +55,7 @@ class TVShowGroupTest extends TestCase
     public function last_7_days_shows_renders_successfully()
     {
         Livewire::test(TVShowGroup::class, ['type' => 'last-7-days-shows', 'title' => 'Last 7 days shows'])
-            ->assertSee(['Last 7 days shows', '</livewire:tvshow-box>'], false)
+            ->assertSee(['Last 7 days shows', '</livewire:TVShow-Box>'], false)
             ->assertDontSee(['Only Subscribed Shows?', 'No tv show available!'])
             ->assertSet('canToggleSubscribedShowsFilter', false)
             ->assertSet('displayOnlySubscribedShows', false)

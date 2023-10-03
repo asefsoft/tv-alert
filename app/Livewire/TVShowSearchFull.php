@@ -21,8 +21,9 @@ class TVShowSearchFull extends Component
     public int $page = 1;
     private $shows;
 
-    public function mount() {
+    public function mount($term = "") {
         $this->setPage(request()->get('page', 1));
+        $this->getSearchResults();
     }
 
     public function updated($property) {
@@ -35,8 +36,12 @@ class TVShowSearchFull extends Component
     // livewire paginator hook
     public function updatedPage($page)
     {
+        $pageChanged = $this->page != $page;
         $this->page = $page;
-        $this->getSearchResults();
+
+        if($pageChanged) {
+            $this->getSearchResults();
+        }
     }
 
     // get search results

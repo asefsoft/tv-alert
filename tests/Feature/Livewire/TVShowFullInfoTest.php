@@ -27,7 +27,7 @@ class TVShowFullInfoTest extends TestCase
             ->set('isModalMode', true) // testing Modal Mode
             ->assertSee('Read More', $tvShow->getShowDescription(400)) // in modal mode we should see 'Read More' and limited text
             ->dispatch('tvshow-changed', [$secondTvShow->id]) // dispatch an event to switch into the second tvshow
-            ->assertSee([$secondTvShow->name, $tvShow->image_url]) // should see second tvshow info
+            ->assertSee([$secondTvShow->name, $secondTvShow->image_url]) // should see second tvshow info
             ->assertStatus(200);
     }
 }
