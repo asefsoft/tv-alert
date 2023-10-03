@@ -5,7 +5,7 @@
         </x-slot>
 
         <x-slot name="content">
-            <livewire:tv-show-full-info isModalMode="true"></livewire:tv-show-full-info>
+            <livewire:TVShow-Full-Info isModalMode="true"></livewire:TVShow-Full-Info>
         </x-slot>
 
         <x-slot name="footer">
