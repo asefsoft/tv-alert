@@ -2,7 +2,7 @@
 
 namespace App\Data\Casts;
 
-use App\TVSHow\TVShowStatus;
+use App\TVShow\TVShowStatus;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Support\DataProperty;
 

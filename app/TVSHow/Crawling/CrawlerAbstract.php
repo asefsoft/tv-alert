@@ -3,7 +3,7 @@
 namespace App\TVShow\Crawling;
 
 use App\Models\TVShow;
-use App\TVSHow\CreateOrUpdateTVShow;
+use App\TVShow\CreateOrUpdateTVShow;
 use App\TVShow\RemoteData\GetRemoteTVShowInfo;
 
 abstract class CrawlerAbstract

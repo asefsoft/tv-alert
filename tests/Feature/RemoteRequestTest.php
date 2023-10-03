@@ -2,10 +2,10 @@
 
 use App\Data\SearchTVShowData;
 use App\Data\TVShowData;
-use App\TVSHow\RemoteData\GetRemoteMostPopularTVShow;
-use App\TVSHow\RemoteData\GetRemoteTVShowInfo;
-use App\TVSHow\RemoteData\RemoteRequest;
-use App\TVSHow\RemoteData\SearchRemoteTVShow;
+use App\TVShow\RemoteData\GetRemoteMostPopularTVShow;
+use App\TVShow\RemoteData\GetRemoteTVShowInfo;
+use App\TVShow\RemoteData\RemoteRequest;
+use App\TVShow\RemoteData\SearchRemoteTVShow;
 use Spatie\LaravelData\DataCollection;
 use Tests\TestCase;
 

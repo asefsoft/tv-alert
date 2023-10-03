@@ -4,7 +4,7 @@ namespace App\TVShow\Crawling;
 
 use App\Jobs\CrawlMostPopularJob;
 use App\Jobs\CrawlNotRecentlyCrawledShowsJob;
-use App\TVSHow\CreateOrUpdateTVShow;
+use App\TVShow\CreateOrUpdateTVShow;
 use App\TVShow\RemoteData\GetRemoteTVShowInfo;
 
 class MainCrawler

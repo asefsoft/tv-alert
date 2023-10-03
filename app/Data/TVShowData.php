@@ -3,7 +3,7 @@
 namespace App\Data;
 
 use App\Data\Casts\TVShowStatusCast;
-use App\TVSHow\TVShowStatus;
+use App\TVShow\TVShowStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
