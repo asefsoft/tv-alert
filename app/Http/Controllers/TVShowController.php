@@ -15,6 +15,7 @@ class TVShowController extends Controller
 
     // timeline
     public function timeline(TVShow $tvshow) {
+        sendMail();
         return view('tvshow.timeline');
     }
 

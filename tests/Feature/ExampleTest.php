@@ -6,6 +6,8 @@ namespace Tests\Feature;
 use App\Data\TVShowData;
 use App\Models\TVShow;
 use App\TVShow\Crawling\MainCrawler;
+use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Mail;
 use TeamTNT\TNTSearch\TNTSearch;
 use Tests\TestCase;
 
@@ -23,6 +25,8 @@ class ExampleTest extends TestCase
 
     public function test_internals()
     {
+
+
 
         $this->markTestSkipped('temporarily test');
 

@@ -1,8 +1,19 @@
 <?php
 
 use Carbon\Carbon;
+use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Morilog\Jalali\Jalalian;
+
+function sendMail(){
+    $mail = new Mailable();
+    $mail->subject = "Test from here";
+    $mail->html("this is just a test email\n yes this is!");
+
+    Mail::to('asefsoft@gmail.com')->send($mail);
+}
+
 
 function logMe($fileName, $log, $addDateToLog = true, $addDateToFileName = true)
 {
