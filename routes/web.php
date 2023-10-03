@@ -18,6 +18,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/testMe', function () {
+    abort_if(auth()->guest(), 404);
+
+    sendMail();
+});
+
 Route::get('/show/{tvshow}', [TVShowController::class, "fullInfo"])->name('display-show-full-info');
 Route::get('/timeline', [TVShowController::class, "timeline"])->name('display-timeline')->middleware(['auth']);
 Route::get('/search', [TVShowController::class, "search"])->name('search-full-results');
