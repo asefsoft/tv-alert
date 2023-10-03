@@ -8,6 +8,7 @@ use Database\Seeders\TVShowSeeder;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 
 abstract class TestCase extends BaseTestCase
@@ -19,6 +20,8 @@ abstract class TestCase extends BaseTestCase
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
+
+        echo sprintf('env: %s', $app->environment());
 
         // using a trick to migrate database JUST ONCE per each whole test and not on each test
         $this->initializeDatabase();
