@@ -1,5 +1,5 @@
 <div x-data="{isLoading: @entangle('isLoadingShowInfo')}">
-    <div class="max-w-4xl mx-auto pb-4 bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="max-w-4xl mx-auto sm:pb-4 bg-white rounded-lg overflow-hidden">
 
         {{-- Loading Progress --}}
         <div class="md:flex" x-show="isLoading">

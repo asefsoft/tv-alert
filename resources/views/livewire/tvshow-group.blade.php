@@ -1,7 +1,7 @@
 <div class="px-3 my-2 shadow-md">
     {{-- Title --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2">
-        <h2 class="text-xl font-semibold mb-8 underline underline-offset-[14px] decoration-4 decoration-gray-300">
+    <div class="flex justify-between mb-8">
+        <h2 class="text-xl font-semibold underline underline-offset-[14px] decoration-4 decoration-gray-300">
             {{ $title }}
         </h2>
 
