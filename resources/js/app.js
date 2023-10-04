@@ -27,7 +27,7 @@ window.tvShowClicked = function tvShowClicked(wire, tvshowId) {
     // showing full info modal
     Livewire.getByName('modals.full-info-modal')[0].displayTvShowModal = true;
     // this will hide old data of current tv show
-    Livewire.getByName('tv-show-full-info')[0].isLoadingShowInfo = true;
+    Livewire.getByName('t-v-show-full-info')[0].isLoadingShowInfo = true;
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
