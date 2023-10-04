@@ -33,6 +33,14 @@ abstract class TestCase extends BaseTestCase
         return $app;
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // for github action we need to disable Vite
+        $this->withoutVite();
+    }
+
     private function initializeDatabase(): void
     {
         // tnt scout storage is set to test db not that one in the storage folder
