@@ -22,9 +22,9 @@ class SubscriptionTest extends TestCase
         $done = $user->addSubscription($show);
         self::assertTrue($done);
 
-        $subShow = $user->subscriptions()->get()->first();
+        $subscribedUsers = $show->subscribers()->get()->pluck('id')->toArray();
 
-        self::assertEquals($show->id, $subShow->id);
+        self::assertTrue(in_array($user->id, $subscribedUsers));
 
         self::assertDatabaseHas('subscriptions', [
             'user_id' => $user->id,
