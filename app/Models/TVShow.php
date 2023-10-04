@@ -94,7 +94,7 @@ class TVShow extends Model
         return $builder->whereNotNull('next_ep_date');
     }
 
-    // limit results to give show ids
+    // limit results to given show ids
     // usually use for filtering shows to current user subscribed shows
     public function scopeLimitToIDs(Builder $builder, array $showIDs)
     {
