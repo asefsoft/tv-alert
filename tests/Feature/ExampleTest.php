@@ -26,7 +26,7 @@ class ExampleTest extends TestCase
     public function test_internals()
     {
 
-
+        self::assertTrue(true);
 
         $this->markTestSkipped('temporarily test');
 
