@@ -119,7 +119,12 @@ class User extends Authenticatable
 
     public function getSubscribedShows($page = 1, $perPage = 20)
     {
-        return $this->subscriptions()->orderBy(\DB::raw('isnull(next_ep_date)'))
-            ->orderBy('next_ep_date')->paginate($perPage, ['*'], 'page', $page);
+        $sub = $this->subscriptions();
+
+        // in testing env we use sqlite and it's not support isnull
+        if(!isTesting())
+            $sub->orderBy(\DB::raw('isnull(next_ep_date)'));
+
+        return $sub->orderBy('next_ep_date')->paginate($perPage, ['*'], 'page', $page);
     }
 }

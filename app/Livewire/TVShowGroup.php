@@ -50,18 +50,16 @@ class TVShowGroup extends Component
     }
 
     // get shows base on group type
-    protected function getShowsByType()
-    {
-
-        $targetShows = $this->getSubscribedShows();
+    protected function getShowsByType(): void {
+        $userTvShows = $this->getSubscribedShows();
 
         switch ($this->type) {
             case 'recent-shows':
-                $this->shows = TVShow::getCloseAirDateShows($this->getPage(), $this->perPage, $targetShows);
+                $this->shows = TVShow::getCloseAirDateShows($this->getPage(), $this->perPage, $userTvShows);
                 break;
             case 'last-7-days-shows':
                 $this->displayLastEpDate = true;
-                $this->shows = TVShow::getShowsByAirDateDistance(-7, $this->getPage(), $this->perPage, $targetShows);
+                $this->shows = TVShow::getShowsByAirDateDistance(-7, $this->getPage(), $this->perPage, $userTvShows);
                 break;
             case 'subscribed-shows':
                 // unauthorized if user is not logged-in
@@ -78,6 +76,15 @@ class TVShowGroup extends Component
 
     protected function getSubscribedShows(): array
     {
-        return $this->displayOnlySubscribedShows ? User::getAuthUserSubscribedShows() : [];
+        $userTvShows = [];
+
+        if($this->displayOnlySubscribedShows) {
+            $userTvShows = User::getAuthUserSubscribedShows();
+            if(count($userTvShows) == 0){
+                $userTvShows = [-999]; // an invalid tvshow id
+            }
+        }
+
+        return  $userTvShows;
     }
 }
