@@ -1,5 +1,5 @@
 <div>
-    <x-dialog-modal max-width="lg" wire:model="displayRegisterModal">
+    <x-dialog-modal max-width="lg" wire:model="displayRegisterModal" modalClasses="z-[100]">
         <x-slot name="title">
             Registration Required
         </x-slot>
