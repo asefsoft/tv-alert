@@ -21,7 +21,11 @@ abstract class TestCase extends BaseTestCase
 
         $app->make(Kernel::class)->bootstrap();
 
-        echo sprintf('env: %s', $app->environment());
+        // app env MUST be 'testing' otherwise tests might break your db
+        if($app->environment() != 'testing') {
+            echo "App environment is not set to testing!\nCheck your phpunit.xml file";
+            abort(500);
+        }
 
         // using a trick to migrate database JUST ONCE per each whole test and not on each test
         $this->initializeDatabase();
