@@ -44,7 +44,6 @@ return [
             'password' => env('MAIL_PASSWORD'),
             'timeout' => 10,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
-            'scheme' => env('MAIL_SCHEME', 'smtps'),
         ],
 
         'ses' => [
