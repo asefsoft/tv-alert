@@ -5,7 +5,7 @@
         <x-slot name="trigger">
             <span class="inline-flex rounded-md items-center">
                 {{-- Search Form --}}
-                <form action="/search" class="w-60 sm:w-80">
+                <form action="/search" class="w-60 xs:w-80">
                     <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
