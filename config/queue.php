@@ -71,6 +71,14 @@ return [
             'after_commit' => false,
         ],
 
+        // by asef
+        'redis-long-running' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'default',
+            'retry_after' => 1200,
+        ],
+
     ],
 
     /*
