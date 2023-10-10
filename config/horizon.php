@@ -214,5 +214,7 @@ return [
     // by asef
     // set which user's email can have access to the horizon panel
     // we are using  this value in HorizonServiceProvider
-    'auth_acceptable_email' => env("HORIZON_PANEL_EMAIL", 'some-valid-users-email@mail.com')
+    'auth_acceptable_email' => env("HORIZON_PANEL_AUTH_EMAIL"),
+
+    'notification_email' => env("HORIZON_NOTIFICATION_EMAIL")
 ];
