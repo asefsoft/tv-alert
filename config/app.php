@@ -173,6 +173,7 @@ return [
 
         // asef
         TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
+        App\Providers\HorizonServiceProvider::class
     ])->toArray(),
 
     /*
