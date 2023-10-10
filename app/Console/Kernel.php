@@ -34,8 +34,8 @@ class Kernel extends ConsoleKernel
             echo now(), "\n";
             echo "Done in ", $t->longAbsoluteDiffForHumans(), "\n";
         })
-            ->name('crawling most popular shows every 5 min')
-            ->everyFiveMinutes();
+            ->name('crawling most popular shows every 4 min')
+            ->everyFourMinutes();
 
     }
 
