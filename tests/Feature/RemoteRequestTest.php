@@ -123,6 +123,12 @@ class RemoteRequestTest extends TestCase
     {
         $requester = new GetRemoteMostPopularTVShow();
         $searchData = $requester->getMostPopularShows();
+
+        // skip test if there is a connection error
+        if (is_null($searchData) && $requester->getErrorMessage()) {
+            $this->markTestSkipped("Test skipped due to err: " . $requester->getErrorMessage());
+        }
+
         $this->assertInstanceOf(SearchTVShowData::class, $searchData);
         $this->assertEquals(1, $searchData->page);
         $this->assertEmpty($requester->getErrorMessage());
@@ -130,6 +136,11 @@ class RemoteRequestTest extends TestCase
         // get page 2
         $requester = new GetRemoteMostPopularTVShow(page: 2);
         $searchData = $requester->getMostPopularShows();
+
+        if (is_null($searchData) && $requester->getErrorMessage()) {
+            $this->markTestSkipped("Test skipped due to err: " . $requester->getErrorMessage());
+        }
+
         $this->assertInstanceOf(SearchTVShowData::class, $searchData);
         $this->assertEquals(2, $searchData->page);
         $this->assertEmpty($requester->getErrorMessage());
