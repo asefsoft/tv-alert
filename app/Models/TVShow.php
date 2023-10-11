@@ -238,8 +238,10 @@ class TVShow extends Model
             whereIn('status', self::ActiveShows)
                 ->LimitToIDs($targetShows); // only return shows we want, usually user's subscribed shows
 
-        // for today and before today shows we use `last_ep_date` field. giving from X days ago until end of today
+        // for before today shows we use `last_ep_date` field. giving from X days ago until end of today
+        // for today we use both last_ep_date and next_ep_date fields
         // for tomorrow and beyond shows we use `next_ep_date` field. giving from start of tomorrow until end of X days after.
+
         if ($daysDistance < 0) {
             $q->whereBetween('last_ep_date', [now()->addDays($daysDistance)->startOfDay(), now()->subDay()->endOfDay()])
                 ->orderBy('last_ep_date', 'asc')
@@ -250,7 +252,6 @@ class TVShow extends Model
                 $query->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
                     ->orWhereBetween('next_ep_date', [now()->startOfDay(), now()->endOfDay()]);
             })
-
 //            $q->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
 //                ->orwhereBetween('next_ep_date', [now()->startOfDay(), now()->endOfDay()])
                 ->orderBy('last_ep_date', 'asc')

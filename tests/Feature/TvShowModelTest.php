@@ -68,8 +68,10 @@ class TvShowModelTest extends TestCase
         // check that date range is exactly in our desired range (yesterday, today, tomorrow)
         /** @var TVShow $show */
         foreach ($today as $show) {
-            self::assertTrue($show->last_ep_date->between(now()->startOfDay(), now()->endOfDay()),
-                'today has shows that last_ep_date is not in today date range');
+            self::assertTrue(
+                $show->last_ep_date->between(now()->startOfDay(), now()->endOfDay()) ||
+                $show->next_ep_date->between(now()->startOfDay(), now()->endOfDay()),
+                'today has shows that last_ep_date or next_ep_date is not in today date range');
         }
 
         foreach ($yesterday as $show) {
