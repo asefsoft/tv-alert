@@ -244,8 +244,14 @@ class TVShow extends Model
             $q->whereBetween('last_ep_date', [now()->addDays($daysDistance)->startOfDay(), now()->subDay()->endOfDay()])
                 ->orderBy('last_ep_date', 'asc')
                 ->orderBy('next_ep_date', 'asc');
-        } elseif ($daysDistance == 0) { // today
-            $q->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
+        }
+        elseif ($daysDistance == 0) { // today
+            $q->where(function ($query) {
+                $query->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
+                    ->orWhereBetween('next_ep_date', [now()->startOfDay(), now()->endOfDay()]);
+            })
+
+//            $q->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
 //                ->orwhereBetween('next_ep_date', [now()->startOfDay(), now()->endOfDay()])
                 ->orderBy('last_ep_date', 'asc')
                 ->orderBy('next_ep_date', 'asc');
@@ -253,12 +259,6 @@ class TVShow extends Model
             $q->whereBetween('next_ep_date', [now()->addDays(1)->startOfDay(), now()->addDays($daysDistance)->endOfDay()])
                 ->orderBy('next_ep_date', 'asc')
                 ->orderBy('last_ep_date', 'asc');
-        }
-
-        // is there any target show ids?
-        // we use this to filter shows that a user is subscribed to
-        if (count($targetShows)) {
-            $q->whereIn('id', $targetShows);
         }
 
         if(app()->runningInConsole()) {
