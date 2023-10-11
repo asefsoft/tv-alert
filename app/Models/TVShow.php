@@ -261,9 +261,13 @@ class TVShow extends Model
             $q->whereIn('id', $targetShows);
         }
 
-        //        $q->toSql(); $q->getBindings();
-        //        dd($q->getBindings());
-        //        dump($q->paginate($perPage, ['*'], 'page', $page)->toArray());
+        if(app()->runningInConsole()) {
+            dump($q->toSql(),$q->getBindings());
+//          $q->toSql(); $q->getBindings();
+//          dd($q->getBindings());
+//          dump($q->paginate($perPage, ['*'], 'page', $page)->toArray());
+        }
+
         return $q->paginate($perPage, ['*'], 'page', $page);
     }
 

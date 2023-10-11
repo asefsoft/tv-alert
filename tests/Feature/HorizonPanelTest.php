@@ -38,7 +38,7 @@ class HorizonPanelTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_is_authorized_for_invalid_user(): void
+    public function test_is_authorized_for_valid_user(): void
     {
         // set our acceptable email config
         config()->set('horizon.auth_acceptable_email', 'our-acceptable-email@email.com');
