@@ -26,7 +26,7 @@ class TimelineFormatter
                 "last_ep_date" : "next_ep_date";
         }
 
-        return $episodeField == 'next_ep' ?
+        return $episodeField == 'next_ep_date' ?
             $tvShow->getNextEpisodeDateText($format) :
             $tvShow->getLastEpisodeDateText($format);
     }

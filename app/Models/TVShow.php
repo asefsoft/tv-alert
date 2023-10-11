@@ -262,7 +262,7 @@ class TVShow extends Model
                 ->orderBy('last_ep_date', 'asc');
         }
 
-        if(app()->runningInConsole()) {
+        if(app()->runningInConsole() && ! isTesting()) {
             dump($q->toSql(),$q->getBindings());
 //          $q->toSql(); $q->getBindings();
 //          dd($q->getBindings());
