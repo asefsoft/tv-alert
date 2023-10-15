@@ -21,8 +21,8 @@ class EmailSubscription extends Model
         return $this->belongsTo(User::class);
     }
 
-    // add subscription record for give user for today
-    public static function addSubscriptionRecord(User $user) {
+    // add subscription record for given user for today
+    public static function addSubscriptionRecord(User $user): void {
         try {
             $user->emailSubscriptions()->create(['target_day' => now(), 'is_sent' => 0]);
         } catch (UniqueConstraintViolationException $e) {

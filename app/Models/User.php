@@ -69,6 +69,15 @@ class User extends Authenticatable
         return $builder->where('tvshows_updates_subscription' , '>=', 1);
     }
 
+    // toggle email subscription setting for user
+    public function toggleEmailSubscription(): void {
+        $this->tvshows_updates_subscription =
+            $this->tvshows_updates_subscription > 0 ? 0 : 1;
+
+        $this->save();
+    }
+
+    // add tvshow subscription
     public function addSubscription(TVShow|int $tvshow): bool
     {
         try {
