@@ -6,6 +6,7 @@ namespace Tests\Feature;
 use App\Data\TVShowData;
 use App\Models\TVShow;
 use App\TVShow\Crawling\MainCrawler;
+use App\TVShow\EmailSubscriptions\EmailSubscriptionManager;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 use TeamTNT\TNTSearch\TNTSearch;
@@ -25,6 +26,9 @@ class ExampleTest extends TestCase
 
     public function test_internals()
     {
+//        $s = new EmailSubscriptionManager();
+//
+//        $s->addTodayEmailSubscriptionRecords();
 
         self::assertTrue(true);
 

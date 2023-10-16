@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -64,6 +65,10 @@ class User extends Authenticatable
         return $this->hasMany(EmailSubscription::class, 'user_id');
     }
 
+    public function scopeEmailSubscribed(Builder $builder) {
+        return $builder->where('tvshows_updates_subscription' , '>=', 1);
+    }
+
     public function addSubscription(TVShow|int $tvshow): bool
     {
         try {
@@ -119,6 +124,10 @@ class User extends Authenticatable
     public function getRecentShows($page = 1, $perPage = 20): array
     {
         $shows = $this->subscriptions()->select('tvshow_id')->get()->pluck('tvshow_id')->toArray();
+
+        if(count($shows) == 0) {
+            $shows = [-9999]; // put an invalid show id tp prevent loading all tvshows
+        }
 
         return TVShow::getRecentShows($page, $perPage, $shows);
     }

@@ -34,6 +34,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
+            'tvshows_updates_subscription' => rand(0, 100) < 50 ? 0 : 1 // 50% chance (0 and 1)
         ];
     }
 
