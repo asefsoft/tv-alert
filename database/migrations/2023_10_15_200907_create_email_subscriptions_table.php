@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->date('target_day')->index();
             $table->boolean('is_sent')->default(false);
-            $table->tinyInteger('tries');
+            $table->tinyInteger('tries')->default(0);
             $table->timestamps();
 
             $table->unique(['user_id', 'target_day']);

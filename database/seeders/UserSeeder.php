@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\EmailSubscription;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -12,7 +13,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::truncate();
-        User::factory(10)->create();
+        if(isTesting()) {
+            User::truncate();
+        }
+
+        User::factory(10)
+            // include an email subscription relation
+            ->has(EmailSubscription::factory(1), 'emailSubscriptions')
+            ->create();
     }
 }

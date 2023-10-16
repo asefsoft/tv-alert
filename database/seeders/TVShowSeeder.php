@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\TVShow;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class TVShowSeeder extends Seeder
@@ -14,7 +15,10 @@ class TVShowSeeder extends Seeder
 
     public function run(): void
     {
-        TVShow::truncate();
+        if(isTesting()) {
+            TVShow::truncate();
+        }
+
         TVShow::factory(self::TOTAL_TVSHOWS_SEED)
             ->create();
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -56,6 +57,11 @@ class User extends Authenticatable
     public function subscriptions(): BelongsToMany
     {
         return $this->belongsToMany(TVShow::class, 'subscriptions', 'user_id', 'tvshow_id');
+    }
+
+    // email subscriptions that user had
+    public function emailSubscriptions(): HasMany {
+        return $this->hasMany(EmailSubscription::class, 'user_id');
     }
 
     public function addSubscription(TVShow|int $tvshow): bool
