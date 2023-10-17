@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\TVShowController;
+use App\Mail\TVShowsUpdatesNotif;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +23,12 @@ Route::get('/', function () {
 Route::get('/testMe', function () {
     abort_if(auth()->guest(), 404);
 
-    sendMail();
+    $user = User::whereId(20)->first();
+
+    $message = (new TVShowsUpdatesNotif($user))->render();
+
+    return $message;
+//    sendMail();
 });
 
 Route::get('/show/{tvshow}', [TVShowController::class, "fullInfo"])->name('display-show-full-info');

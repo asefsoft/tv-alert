@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Data\TVShowData;
+use App\Mail\TVShowsUpdatesNotif;
 use App\Models\TVShow;
+use App\Models\User;
 use App\TVShow\Crawling\MainCrawler;
 use App\TVShow\EmailSubscriptions\EmailSubscriptionManager;
 use Illuminate\Mail\Mailable;
@@ -26,6 +28,15 @@ class ExampleTest extends TestCase
 
     public function test_internals()
     {
+        config()->set('mail.default', 'smtp');
+
+        $user = User::whereId(1)->first();
+
+        $message = (new TVShowsUpdatesNotif($user))->onQueue('emails');
+
+
+        Mail::to('asefsoft@gmail.com')->queue($message);
+
 //        $s = new EmailSubscriptionManager();
 //
 //        $s->addTodayEmailSubscriptionRecords();
