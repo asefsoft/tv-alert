@@ -85,6 +85,7 @@ return [
 
     'waits' => [
         'redis:default' => 60,
+        'redis-long-running:long-running-queue' => 300,
     ],
 
     /*
@@ -182,7 +183,7 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['series-alert'],
+            'queue' => ['series-alert', 'emails'],
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
             'maxProcesses' => 1,

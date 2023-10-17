@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Data\TVShowData;
+use App\Jobs\SendEmailTVShowUpdate;
 use App\Mail\TVShowsUpdatesNotif;
+use App\Models\EmailSubscription;
 use App\Models\TVShow;
 use App\Models\User;
 use App\TVShow\Crawling\MainCrawler;
@@ -27,23 +29,24 @@ class ExampleTest extends TestCase
     }
 
     public function test_internals()
-    {
+    {        $this->markTestSkipped('temporarily test');
+
         config()->set('mail.default', 'smtp');
 
         $user = User::whereId(1)->first();
 
+        SendEmailTVShowUpdate::dispatch(EmailSubscription::first())->onQueue('emails')->onConnection('sync');
+
         $message = (new TVShowsUpdatesNotif($user))->onQueue('emails');
 
+        $s = new EmailSubscriptionManager();
 
-        Mail::to('asefsoft@gmail.com')->queue($message);
+        $s->sendEmailSubscriptions();
 
-//        $s = new EmailSubscriptionManager();
-//
-//        $s->addTodayEmailSubscriptionRecords();
+        $s->addTodayEmailSubscriptionRecords();
 
         self::assertTrue(true);
 
-        $this->markTestSkipped('temporarily test');
 
         $tnt =  new TNTSearch();
         $tnt->loadConfig([

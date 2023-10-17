@@ -3,7 +3,7 @@
 
 Hello dear {{ $user->name }}
 
-This is list of your subscribed tv shows with a new episode for today.
+There would be new episode for your subscribed tv shows today:
 
 @foreach($todayShows as $show)
 [{{ $show->name }} ({{ $show->start_date?->format("Y") }})]({{$show->getFullInfoUrl()}})<br>

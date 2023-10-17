@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TVShowsUpdatesNotif extends Mailable implements ShouldQueue
+class TVShowsUpdatesNotif extends Mailable
 {
     use Queueable, SerializesModels;
 
