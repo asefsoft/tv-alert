@@ -29,7 +29,8 @@ class ExampleTest extends TestCase
     }
 
     public function test_internals()
-    {        $this->markTestSkipped('temporarily test');
+    {
+        $this->markTestSkipped('temporarily test');
 
         config()->set('mail.default', 'smtp');
 

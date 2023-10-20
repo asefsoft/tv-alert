@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\TVShow\Crawling\MainCrawler;
+use App\TVShow\EmailSubscriptions\EmailSubscriptionManager;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,8 +15,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // main crawling task
-
-        // crawl not recently crawled shows
+        // crawl not-recently crawled shows
         $schedule->call(function () {
             $t = now();
             echo "\n", $t, "\n";
@@ -36,6 +36,30 @@ class Kernel extends ConsoleKernel
         })
             ->name('crawling most popular shows every 4 min')
             ->everyFourMinutes();
+
+        // add email subscription records for today
+        // run once a day
+        $schedule->call(function () {
+            $t = now();
+            echo "\n", $t, "\n";
+            $email = new EmailSubscriptionManager();
+            $email->addTodayEmailSubscriptionRecords();
+            echo now(), "\n";
+        })
+            ->name('adding email subscription records for today')
+            ->dailyAt('08:00');
+
+        // send email subscriptions
+        $schedule->call(function () {
+            $t = now();
+            echo "\n", $t, "\n";
+            // send 10 email everytime this called until it ends
+            $email = new EmailSubscriptionManager();
+            $email->sendEmailSubscriptions();
+            echo now(), "\n";
+        })
+            ->name('sending email subscriptions')
+            ->hourly();
 
     }
 

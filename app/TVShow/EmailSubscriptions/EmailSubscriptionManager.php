@@ -8,7 +8,7 @@ use App\Models\User;
 
 class EmailSubscriptionManager
 {
-    const DELAY_BETWEEN_EMAILS = 1;
+    const DELAY_BETWEEN_EMAILS = 5;
 
     // get all users that are subscribed to tvshows email updates system
     public function getSubscribedUsers() {
@@ -20,6 +20,8 @@ class EmailSubscriptionManager
 
         $users = $this->getSubscribedUsers();
 
+        $total = 0;
+
         /** @var User $user */
         foreach ($users as $user) {
 
@@ -28,9 +30,13 @@ class EmailSubscriptionManager
             // user has shows for today?
             // then create a subscription record in email subscriptions table
             if(count($recentShows['today'])) {
+                $total++;
                 EmailSubscription::addSubscriptionRecord($user);
             }
         }
+
+        // log info
+        logError(sprintf('%s email subscription records has been added for today', $total), 'info');
     }
 
     // run it frequently until it send all emails in email subscriptions table
