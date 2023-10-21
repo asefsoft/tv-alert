@@ -45,7 +45,10 @@ class EmailSubscriptionManager
 
         foreach ($subscriptions as $emailSub) {
             SendEmailTVShowUpdate::dispatch($emailSub)->onQueue('emails');
-            sleep(self::DELAY_BETWEEN_EMAILS);
+
+            if(! isTesting()) {
+                sleep(self::DELAY_BETWEEN_EMAILS);
+            }
         }
     }
 }

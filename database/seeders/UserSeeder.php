@@ -17,9 +17,9 @@ class UserSeeder extends Seeder
             User::truncate();
         }
 
-        User::factory(10)
+        User::factory(15)
             // include an email subscription relation
-            ->has(EmailSubscription::factory(1), 'emailSubscriptions')
+//            ->has(EmailSubscription::factory(1), 'emailSubscriptions')
             ->create();
     }
 }
