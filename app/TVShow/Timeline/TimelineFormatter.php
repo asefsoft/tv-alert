@@ -18,15 +18,16 @@ class TimelineFormatter
 
     public function getEpisodeDate(TVShow $tvShow, $format = 'diffForHumans'): string {
 
-        $episodeField = $this->timelineType->getEpisodeField();
+        // last ep or next ep
+        $episodeType = $this->timelineType->getEpisodeField();
 
         // for today we choose that field which is closer to NOW
         if($this->timelineType->getType() == TimelineType::Today) {
-            $episodeField = now()->diffInHours($tvShow->last_ep_date) < now()->diffInHours($tvShow->next_ep_date) ?
-                "last_ep_date" : "next_ep_date";
+            $episodeType = now()->diffInHours($tvShow->last_ep_date) < now()->diffInHours($tvShow->next_ep_date) ?
+                "last_ep" : "next_ep";
         }
 
-        return $episodeField == 'next_ep_date' ?
+        return $episodeType == 'next_ep' ?
             $tvShow->getNextEpisodeDateText($format) :
             $tvShow->getLastEpisodeDateText($format);
     }
