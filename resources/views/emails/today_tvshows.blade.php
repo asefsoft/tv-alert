@@ -3,7 +3,7 @@
 
 Hello dear {{ $user->name }}
 
-There is new episode(s) for your subscribed tv shows today:
+New episodes of your subscribed TV shows are available today:
 
 @foreach($todayShows as $show)
 [{{ $show->name }} ({{ $show->start_date?->format("Y") }})]({{$show->getFullInfoUrl()}})<br>
@@ -15,4 +15,6 @@ See Your Timeline
 
 Thanks,<br>
 {{ config('app.name') }}
+
+ <span style="font-size: 13px; color: #909090">You can unsubscribe from this type of email on [timeline]({{route('display-timeline')}}) page.</span>
 </x-mail::message>

@@ -40,7 +40,7 @@ class EmailSubscriptionManager
     }
 
     // run it frequently until it send all emails in email subscriptions table
-    public function sendEmailSubscriptions() {
+    public function sendEmailSubscriptions(): void {
         $subscriptions = EmailSubscription::getTodayEmailSubscriptions(10);
 
         foreach ($subscriptions as $emailSub) {

@@ -134,7 +134,7 @@ class EmailSubscriptionTest extends TestCase
         Mail::assertSent(TVShowsUpdatesNotif::class);
     }
 
-    public function test_email_content() {
+    public function test_email_content_is_ok() {
         $user = $this->getUserWithTodaySubscribedShow();
 
         $todayShows = $user->getRecentShows(1, 10)['today'];
@@ -148,6 +148,7 @@ class EmailSubscriptionTest extends TestCase
         $message->assertSeeInText($todayShows->first()->name);
         $message->assertSeeInText("See Your Timeline");
         $message->assertSeeInText(config('app.name'));
+        $message->assertSeeInText('You can unsubscribe from this type of email on');
         $message->assertSeeInHtml(route('display-timeline'));
         $message->assertSeeInHtml($todayShows->first()->getFullInfoUrl());
     }
