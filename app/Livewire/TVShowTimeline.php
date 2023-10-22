@@ -15,12 +15,36 @@ class TVShowTimeline extends Component
     public $lastPoll, $diffPoll;
 
     public int $daysToShow;
+
+    public bool $userEmailSubscribed;
     private $timeline;
 
     public function mount() {
+        $this->userEmailSubscribed = $this->isAuthUserEmailSubscribed();
         $this->daysToShow = self::DAYS_TO_SHOW_INIT;
         $this->getTimeline();
         $this->updatePollingStats();
+    }
+
+    public function updated($property) {
+        if ($property === 'userEmailSubscribed') {
+
+            // if it changed and should be update on db
+            if($this->userEmailSubscribed != $this->isAuthUserEmailSubscribed()) {
+
+                // toggle email subscription
+                auth()->user()->toggleEmailSubscription();
+
+                // show msg
+                $this->dispatch('swal', [
+                    'title' => $this->userEmailSubscribed ? "You'll get email notification for new episodes." : "You won't get email for new episodes anymore.",
+                    'timer' => 4000,
+                    'icon' => 'success',
+                    'toast' => true,
+                    'position' => 'top',
+                ]);
+            }
+        }
     }
 
     // show more days in timeline
@@ -41,5 +65,9 @@ class TVShowTimeline extends Component
 
     private function getTimeline(): void {
         $this->timeline = Timeline::makeTimeline($this->daysToShow);
+    }
+
+    private function isAuthUserEmailSubscribed() {
+        return auth()->user()->isEmailSubscribed();
     }
 }

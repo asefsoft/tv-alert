@@ -18,6 +18,8 @@ class TVShowTimelineTest extends TestCase
     {
         // preparation
         $user = User::first();
+        $user->tvshows_updates_subscription = 0;
+
         list($totalSubscription, $daysToShow, $pastTvShows, $todayTvShows, $futureTvShows, $pastTimePeriod,
             $todayTimePeriod, $futureTimePeriod)
             = $this->preparation($user);
@@ -26,7 +28,8 @@ class TVShowTimelineTest extends TestCase
         $test = Livewire::actingAs($user)->test(TVShowTimeline::class);
 
             $test->assertSeeText([sprintf("You have subscribed to %s TV shows.", $totalSubscription),
-                    'Past Episodes', "Today Episodes", "Future Episodes",
+                    'Past Episodes', "Today Episodes", "Future Episodes", "Send Email Notification?",
+                    "(whenever there is a new episode)"
                 ], false)
                 ->assertSeeText(sprintf("Show More Days >> (%s)", $daysToShow), false)
                 // checking that all series name appeared in the timeline
@@ -37,7 +40,19 @@ class TVShowTimelineTest extends TestCase
                 ->assertSeeText([$pastTimePeriod, $todayTimePeriod, $futureTimePeriod], false)
                 ->call('showMore') // click on show more days
                 ->assertSeeText(sprintf("Show More Days >> (%s)", $daysToShow + 30), false)
+                ->set('userEmailSubscribed', true) // click on email subscribe option to enable it
+                // dispatched show success message
+                ->assertDispatched('swal', [
+                    'title' => "You'll get email notification for new episodes.",
+                    'timer' => 4000,
+                    'icon' => 'success',
+                    'toast' => true,
+                    'position' => 'top',
+                ])
                 ->assertStatus(200);
+
+            // after test user is subscribed to email notification
+            self::assertTrue($user->isEmailSubscribed());
     }
 
     private function preparation(User $user): array {

@@ -72,9 +72,14 @@ class User extends Authenticatable
     // toggle email subscription setting for user
     public function toggleEmailSubscription(): void {
         $this->tvshows_updates_subscription =
-            $this->tvshows_updates_subscription > 0 ? 0 : 1;
+            $this->isEmailSubscribed() ? 0 : 1;
 
         $this->save();
+    }
+
+    // is user enabled email notification subscription
+    public function isEmailSubscribed(): bool {
+        return $this->tvshows_updates_subscription > 0;
     }
 
     // add tvshow subscription
