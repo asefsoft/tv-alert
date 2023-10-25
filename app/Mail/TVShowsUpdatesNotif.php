@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
 
 class TVShowsUpdatesNotif extends Mailable
@@ -43,6 +44,16 @@ class TVShowsUpdatesNotif extends Mailable
     {
         return new Content(
             markdown: 'emails.today_tvshows',
+        );
+    }
+
+    public function headers(): Headers
+    {
+        return new Headers(
+            // add category header for mailtrap.io
+            text: [
+                'X-MT-Category' => 'New Episode',
+            ],
         );
     }
 

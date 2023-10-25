@@ -36,9 +36,10 @@ class ExampleTest extends TestCase
 
         $user = User::whereId(1)->first();
 
-        SendEmailTVShowUpdate::dispatch(EmailSubscription::first())->onQueue('emails')->onConnection('sync');
+//        SendEmailTVShowUpdate::dispatch(EmailSubscription::first())->onQueue('emails')->onConnection('sync');
 
         $message = (new TVShowsUpdatesNotif($user))->onQueue('emails');
+        Mail::to($user->email)->send($message);
 
         $s = new EmailSubscriptionManager();
 
