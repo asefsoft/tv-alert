@@ -10,13 +10,18 @@ class TVShowController extends Controller
 {
     // full info of a tvshow
     public function fullInfo(TVShow $tvshow) {
-        return view('tvshow.full-info', ['tvshowId' => $tvshow->id]);
+        return view('tvshow.full-info', [
+            'tvshowId' => $tvshow->id,
+            'title' => $tvshow->name,
+            'description' => $tvshow->getShowDescription(150)
+        ]);
     }
 
     // timeline
     public function timeline(TVShow $tvshow) {
 //        sendMail();
-        return view('tvshow.timeline');
+        return view('tvshow.timeline', [
+            'title' => 'Your series timeline']);
     }
 
     // search results

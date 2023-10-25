@@ -1,4 +1,12 @@
-<x-app-layout>
+<x-app-layout :title="$title">
+    <x-slot name="title">
+        {{ $title }}
+    </x-slot>
+
+    <x-slot name="description">
+        {{ $description }}
+    </x-slot>
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Welcome
