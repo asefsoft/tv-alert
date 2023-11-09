@@ -6,7 +6,7 @@ Hello dear {{ $user->name }}
 New episodes of your subscribed TV shows are available today:
 
 @foreach($todayShows as $show)
-[{{ $show->name }} ({{ $show->start_date?->format("Y") }})]({{$show->getFullInfoUrl()}})<br>
+[{{ $show->name }} ({{ $show->start_date?->format("Y") }})]({{$show->getFullInfoUrl()}}) [{{ $show->ep_info }}]<br>
 @endforeach
 
 <x-mail::button :url="route('display-timeline')">

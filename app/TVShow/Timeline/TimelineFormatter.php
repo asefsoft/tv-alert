@@ -35,7 +35,7 @@ class TimelineFormatter
     public function getEpisodeInfo(TVShow $tvShow): string {
             $episode = $tvShow->{$this->timelineType->getEpisodeField()};
             return sprintf("Season: %s, Episode: %s", $episode['season'] ?? 'N/A', $episode['episode'] ?? 'N/A');
-        }
+    }
 
     public function getSectionCssClasses(): string {
             return match($this->timelineType->getType()) {

@@ -3,6 +3,8 @@
 namespace App\Mail;
 
 use App\Models\User;
+use App\TVShow\Timeline\TimelineFormatter;
+use App\TVShow\Timeline\Types\TodayTimeline;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -22,8 +24,7 @@ class TVShowsUpdatesNotif extends Mailable
      */
     public function __construct(public User $user)
     {
-        // get today shows of give user
-        $this->todayShows = $user->getRecentShows(1, 10)['today'];
+        $this->getTodayShowsOfGiveUser($user);
     }
 
     /**
@@ -65,5 +66,14 @@ class TVShowsUpdatesNotif extends Mailable
     public function attachments(): array
     {
         return [];
+    }
+
+    private function getTodayShowsOfGiveUser(User $user): void {
+        // get today shows of give user
+        $this->todayShows = $user->getRecentShows(1, 10)['today'];
+        $formatter = new TimelineFormatter(new TodayTimeline());
+        foreach ($this->todayShows as $tvShow) {
+            $tvShow->ep_info = $formatter->getEpisodeInfo($tvShow);
+        }
     }
 }
