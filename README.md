@@ -37,6 +37,11 @@ This is an example of your timeline in site:
 - PHPUnit: The codebase is rigorously tested with PHPUnit.
 - GitHub Actions: Automatic testing and continuous integration are enabled with GitHub Actions.
 
+## Deep inside the code
+In this article, I explain how I implemented Laravel Scout along with TNTSearch to enhance the project's search capabilities:
+
+[Blazingly fast search with laravel scout & TNTSearch](https://medium.com/p/8cf31ae10dcc)
+
 ## Thanks
 Thanks to [episodate.com](https://www.episodate.com) for their great api which allowed us to get updates info of tv-series.
 
