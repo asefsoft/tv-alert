@@ -19,21 +19,27 @@ class TimelineFormatter
     public function getEpisodeDate(TVShow $tvShow, $format = 'diffForHumans'): string {
 
         // last ep or next ep
-        $episodeType = $this->timelineType->getEpisodeField();
+        $episodeField = $this->getEpisodeField($tvShow);
 
-        // for today we choose that field which is closer to NOW
-        if($this->timelineType->getType() == TimelineType::Today) {
-            $episodeType = now()->diffInHours($tvShow->last_ep_date) < now()->diffInHours($tvShow->next_ep_date) ?
-                "last_ep" : "next_ep";
-        }
-
-        return $episodeType == 'next_ep' ?
+        return $episodeField == 'next_ep' ?
             $tvShow->getNextEpisodeDateText($format) :
             $tvShow->getLastEpisodeDateText($format);
     }
 
+    // for TODAY timeline we decide the target field base and closeness to NOW
+    private function getEpisodeField(TVShow $tvShow): string {
+        // for today we choose that field which is closer to NOW
+        if($this->timelineType->getType() == TimelineType::Today) {
+            return now()->diffInHours($tvShow->last_ep_date) < now()->diffInHours($tvShow->next_ep_date) ?
+                "last_aired_ep" : "next_ep";
+        }
+
+        return $this->timelineType->getEpisodeField();
+    }
+
     public function getEpisodeInfo(TVShow $tvShow): string {
-            $episode = $tvShow->{$this->timelineType->getEpisodeField()};
+        $episodeField = $this->getEpisodeField($tvShow);
+        $episode = $tvShow->$episodeField;
             return sprintf("Season: %s, Episode: %s", $episode['season'] ?? 'N/A', $episode['episode'] ?? 'N/A');
     }
 
