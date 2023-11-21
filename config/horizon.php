@@ -120,7 +120,7 @@ return [
     */
 
     'silenced' => [
-        // App\Jobs\ExampleJob::class,
+        Laravel\Scout\Jobs\MakeSearchable::class,
     ],
 
     /*
@@ -136,8 +136,8 @@ return [
 
     'metrics' => [
         'trim_snapshots' => [
-            'job' => 200,
-            'queue' => 200,
+            'job' => 300,
+            'queue' => 300,
         ],
     ],
 
