@@ -12,9 +12,6 @@ class TVShowGroup extends Component
 {
     use WithPagination;
 
-    protected $listeners = ['subscriptions-changed' => '$refresh'];
-
-
     // it will be passed to sub component 'TVShowBox'
     public bool $displayLastEpDate = false;
 
@@ -27,6 +24,8 @@ class TVShowGroup extends Component
     public string $type = 'recent-shows';
 
     public int $perPage = 6;
+
+    protected $listeners = ['subscriptions-changed' => '$refresh'];
 
     protected $shows;
 
@@ -50,7 +49,8 @@ class TVShowGroup extends Component
     }
 
     // get shows base on group type
-    protected function getShowsByType(): void {
+    protected function getShowsByType(): void
+    {
         $userTvShows = $this->getSubscribedShows();
 
         switch ($this->type) {
@@ -78,13 +78,13 @@ class TVShowGroup extends Component
     {
         $userTvShows = [];
 
-        if($this->displayOnlySubscribedShows) {
+        if ($this->displayOnlySubscribedShows) {
             $userTvShows = User::getAuthUserSubscribedShows();
-            if(count($userTvShows) == 0){
+            if (count($userTvShows) === 0) {
                 $userTvShows = [-999]; // an invalid tvshow id
             }
         }
 
-        return  $userTvShows;
+        return $userTvShows;
     }
 }

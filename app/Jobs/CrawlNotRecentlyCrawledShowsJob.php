@@ -18,7 +18,6 @@ class CrawlNotRecentlyCrawledShowsJob implements ShouldQueue
      */
     public function __construct(protected int $totalShows = 20)
     {
-        //
     }
 
     /**

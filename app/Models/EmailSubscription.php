@@ -13,16 +13,18 @@ use Illuminate\Database\UniqueConstraintViolationException;
 class EmailSubscription extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['target_day', 'is_sent'];
     protected const MAX_TRIES = 5; // how many times try to send an email
 
-    public function user() : BelongsTo {
+    protected $fillable = ['target_day', 'is_sent'];
+
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
     // add subscription record for given user for today
-    public static function addSubscriptionRecord(User $user): void {
+    public static function addSubscriptionRecord(User $user): void
+    {
         try {
             $user->emailSubscriptions()->create(['target_day' => now(), 'is_sent' => 0]);
         } catch (UniqueConstraintViolationException $e) {
@@ -30,8 +32,9 @@ class EmailSubscription extends Model
         }
     }
 
-    public static function getTodayEmailSubscriptions(int $max = 10) : Collection {
-        return static::where('target_day', now()->format("Y-m-d"))
+    public static function getTodayEmailSubscriptions(int $max = 10): Collection
+    {
+        return static::where('target_day', now()->format('Y-m-d'))
             ->with('user')
             ->where('is_sent', 0) // not sent emails
             ->where('tries', '<=', self::MAX_TRIES) // dont exceed tries
@@ -40,15 +43,16 @@ class EmailSubscription extends Model
     }
 
     // add new try for an email
-    public function addNewTry(bool $isSent): void {
+    public function addNewTry(bool $isSent): void
+    {
         $this->tries++;
         $this->is_sent = $isSent;
         $this->save();
     }
 
-
     // making sure when saving target_day field it is in Y-m-d format
-    protected function targetDay() : Attribute {
+    protected function targetDay(): Attribute
+    {
         return Attribute::set(function ($value) {
             return Carbon::parse($value)->format('Y-m-d');
         });

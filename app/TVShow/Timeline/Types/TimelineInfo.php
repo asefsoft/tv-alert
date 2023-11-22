@@ -11,28 +11,32 @@ class TimelineInfo
     ) {
     }
 
-    public function hasPastTimeline() : bool {
-        return !is_null($this->pastTimeline);
+    public function hasPastTimeline(): bool
+    {
+        return ! is_null($this->pastTimeline);
     }
 
-    public function hasTodayTimeline() : bool {
-        return !is_null($this->todayTimeline);
+    public function hasTodayTimeline(): bool
+    {
+        return ! is_null($this->todayTimeline);
     }
-    public function hasFutureTimeline() : bool {
-        return !is_null($this->futureTimeline);
+    public function hasFutureTimeline(): bool
+    {
+        return ! is_null($this->futureTimeline);
     }
 
-    public function getPastTimeline(): ?PastTimeline {
+    public function getPastTimeline(): ?PastTimeline
+    {
         return $this->pastTimeline;
     }
 
-    public function getTodayTimeline(): ?TodayTimeline {
+    public function getTodayTimeline(): ?TodayTimeline
+    {
         return $this->todayTimeline;
     }
 
-    public function getFutureTimeline(): ?FutureTimeline {
+    public function getFutureTimeline(): ?FutureTimeline
+    {
         return $this->futureTimeline;
     }
-
-
 }

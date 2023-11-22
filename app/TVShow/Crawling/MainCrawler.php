@@ -28,7 +28,7 @@ class MainCrawler
     }
 
     // resume crawl from last crawled page number
-    public static function crawlMostPopular($totalPages = 1, int $startPage = null, bool $onlyCrawlNewShows = false): void
+    public static function crawlMostPopular($totalPages = 1, ?int $startPage = null, bool $onlyCrawlNewShows = false): void
     {
         CrawlMostPopularJob::dispatch($totalPages, $startPage, $onlyCrawlNewShows)
             ->onQueue('long-running-queue');

@@ -13,7 +13,6 @@ class RemoteRequest
 
     public function __construct(protected string $url)
     {
-
     }
 
     public function sendRequest(): bool

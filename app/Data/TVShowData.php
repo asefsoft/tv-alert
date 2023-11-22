@@ -43,7 +43,6 @@ class TVShowData extends Data
         public ?array $pictures,
         #[DataCollectionOf(EpisodeData::class)]
         public DataCollection|Lazy|null $episodes,
-
     ) {
     }
 

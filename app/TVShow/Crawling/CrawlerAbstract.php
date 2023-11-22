@@ -22,10 +22,12 @@ abstract class CrawlerAbstract
 
     protected int $maxProcessedShows = -1;
 
-    public function __construct(protected int $startPage = 1,
-                                protected int $totalPages = 1,
-                                protected bool $onlyCrawlNewShows = false)
-    { }
+    public function __construct(
+        protected int $startPage = 1,
+        protected int $totalPages = 1,
+        protected bool $onlyCrawlNewShows = false
+    ) {
+    }
 
     abstract public function doCrawl($total = 20);
 
@@ -40,10 +42,34 @@ abstract class CrawlerAbstract
         $this->maxProcessedShows = $maxProcessedShows;
     }
 
+    public function getTotalFoundShows(): int
+    {
+        return $this->totalFoundShows;
+    }
+
+    public function getTotalCrawledShows(): int
+    {
+        return $this->totalCrawledShows;
+    }
+
+    public function getTotalCrawledPages(): int
+    {
+        return $this->totalCrawledPages;
+    }
+
+    public function getTotalSkippedShows(): int
+    {
+        return $this->totalSkippedShows;
+    }
+
+    public function getTotalInvalidShowData(): int
+    {
+        return $this->totalInvalidShowData;
+    }
+
     protected function storeTVShows(array $showPermalinks): void
     {
         foreach ($showPermalinks as $permalink) {
-
             $this->totalFoundShows++;
 
             // dont crawl too much
@@ -80,37 +106,12 @@ abstract class CrawlerAbstract
     }
 
     // should crawl or not
-    protected function shouldCrawl($permalink) : bool {
-        if($this->onlyCrawlNewShows) {
+    protected function shouldCrawl($permalink): bool
+    {
+        if ($this->onlyCrawlNewShows) {
             return ! TVShow::isShowExist($permalink);
         }
-        else {
-            return TVShow::shouldShowBeCrawled($permalink);
-        }
-    }
 
-    public function getTotalFoundShows(): int
-    {
-        return $this->totalFoundShows;
-    }
-
-    public function getTotalCrawledShows(): int
-    {
-        return $this->totalCrawledShows;
-    }
-
-    public function getTotalCrawledPages(): int
-    {
-        return $this->totalCrawledPages;
-    }
-
-    public function getTotalSkippedShows(): int
-    {
-        return $this->totalSkippedShows;
-    }
-
-    public function getTotalInvalidShowData(): int
-    {
-        return $this->totalInvalidShowData;
+        return TVShow::shouldShowBeCrawled($permalink);
     }
 }

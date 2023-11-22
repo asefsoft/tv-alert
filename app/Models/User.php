@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -61,16 +61,19 @@ class User extends Authenticatable
     }
 
     // email subscriptions that user had
-    public function emailSubscriptions(): HasMany {
+    public function emailSubscriptions(): HasMany
+    {
         return $this->hasMany(EmailSubscription::class, 'user_id');
     }
 
-    public function scopeEmailSubscribed(Builder $builder) {
-        return $builder->where('tvshows_updates_subscription' , '>=', 1);
+    public function scopeEmailSubscribed(Builder $builder)
+    {
+        return $builder->where('tvshows_updates_subscription', '>=', 1);
     }
 
     // toggle email subscription setting for user
-    public function toggleEmailSubscription(): void {
+    public function toggleEmailSubscription(): void
+    {
         $this->tvshows_updates_subscription =
             $this->isEmailSubscribed() ? 0 : 1;
 
@@ -78,7 +81,8 @@ class User extends Authenticatable
     }
 
     // is user enabled email notification subscription
-    public function isEmailSubscribed(): bool {
+    public function isEmailSubscribed(): bool
+    {
         return $this->tvshows_updates_subscription > 0;
     }
 
@@ -129,7 +133,8 @@ class User extends Authenticatable
         return $authUserSubscriptions;
     }
 
-    public static function getAuthUserTotalSubscribedShows(bool $forceCheck = false) : int {
+    public static function getAuthUserTotalSubscribedShows(bool $forceCheck = false): int
+    {
         return count(self::getAuthUserSubscribedShows($forceCheck));
     }
 
@@ -139,7 +144,7 @@ class User extends Authenticatable
     {
         $shows = $this->subscriptions()->select('tvshow_id')->get()->pluck('tvshow_id')->toArray();
 
-        if(count($shows) == 0) {
+        if (count($shows) === 0) {
             $shows = [-9999]; // put an invalid show id tp prevent loading all tvshows
         }
 
@@ -151,8 +156,9 @@ class User extends Authenticatable
         $sub = $this->subscriptions();
 
         // in testing env we use sqlite and it's not support isnull
-        if(!isTesting())
+        if (! isTesting()) {
             $sub->orderBy(\DB::raw('isnull(next_ep_date)'));
+        }
 
         return $sub->orderBy('next_ep_date')->paginate($perPage, ['*'], 'page', $page);
     }

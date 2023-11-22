@@ -33,12 +33,11 @@ class GetRemoteMostPopularTVShow
             }
 
             return $TVShowData;
-        } else {
-            // any server or client errors?
-            $this->errorMessage = $request->getErrorMessage();
-
-            return null;
         }
+        // any server or client errors?
+        $this->errorMessage = $request->getErrorMessage();
+
+        return null;
     }
 
     public function getErrorMessage(): string

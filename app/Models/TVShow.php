@@ -20,10 +20,10 @@ class TVShow extends Model
 {
     use HasFactory, WithData, Searchable;
 
+    public const ActiveShows = [TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries, TVShowStatus::TBD_OnTheBubble];
+
     // for tnt scout search
     public $asYouType = true;
-
-    public const ActiveShows = [TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries, TVShowStatus::TBD_OnTheBubble];
 
     protected $table = 'tv_shows';
 
@@ -75,13 +75,15 @@ class TVShow extends Model
         $this->subscribers()->toggle($user->id ?? $user);
     }
 
-    public function getShowDescription($maxLen = 0) {
+    public function getShowDescription($maxLen = 0)
+    {
         $description = strip_tags($this->description);
         return $maxLen > 0 ? substr($description, 0, $maxLen) . ' ...' : $description;
     }
 
-    public function isRunning(): bool {
-        return strtolower($this->status) == 'running';
+    public function isRunning(): bool
+    {
+        return strtolower($this->status) === 'running';
     }
 
     public function scopeActiveShows(Builder $builder)
@@ -101,15 +103,18 @@ class TVShow extends Model
         return count($showIDs) ? $builder->whereIn('id', $showIDs) : $builder;
     }
 
-    public function getFullInfoUrl() {
-        return route("display-show-full-info", $this);
+    public function getFullInfoUrl()
+    {
+        return route('display-show-full-info', $this);
     }
 
-    public function hasNexEpDate() : bool {
+    public function hasNexEpDate(): bool
+    {
         return ! empty($this->next_ep_date);
     }
 
-    public function hasLastEpDate() : bool {
+    public function hasLastEpDate(): bool
+    {
         return ! empty($this->next_ep_date);
     }
 
@@ -119,11 +124,11 @@ class TVShow extends Model
             return 'N/A';
         }
 
-        if (empty($format) || $format == 'default') {
+        if (empty($format) || $format === 'default') {
             $format = 'Y/m/d H:i';
         }
 
-        return $format == 'diffForHumans' ? $this->next_ep_date->diffForHumans() : $this->next_ep_date->format($format);
+        return $format === 'diffForHumans' ? $this->next_ep_date->diffForHumans() : $this->next_ep_date->format($format);
     }
 
     public function getLastEpisodeDateText($format = 'diffForHumans'): string
@@ -132,14 +137,15 @@ class TVShow extends Model
             return 'N/A';
         }
 
-        if (empty($format) || $format == 'default') {
+        if (empty($format) || $format === 'default') {
             $format = 'Y/m/d H:i';
         }
 
-        return $format == 'diffForHumans' ? $this->last_ep_date->diffForHumans() : $this->last_ep_date->format($format);
+        return $format === 'diffForHumans' ? $this->last_ep_date->diffForHumans() : $this->last_ep_date->format($format);
     }
 
-    public function getGenresText($max = -1): string {
+    public function getGenresText($max = -1): string
+    {
         $genres = $max > 0 ? array_slice($this->genres, 0, $max) : $this->genres;
         return implode(', ', $genres ?? []);
     }
@@ -153,7 +159,7 @@ class TVShow extends Model
     // is tvshow exists on db
     public static function isShowExist(string $permalink): bool
     {
-        return TVShow::where('permalink', $permalink)->count() == 1;
+        return TVShow::where('permalink', $permalink)->count() === 1;
     }
 
     public static function getShowByPermalink(string $permalink): ?TVShow
@@ -246,8 +252,7 @@ class TVShow extends Model
             $q->whereBetween('last_ep_date', [now()->addDays($daysDistance)->startOfDay(), now()->subDay()->endOfDay()])
                 ->orderBy('last_ep_date', 'asc')
                 ->orderBy('next_ep_date', 'asc');
-        }
-        elseif ($daysDistance == 0) { // today
+        } elseif ($daysDistance === 0) { // today
             $q->where(function ($query) {
                 $query->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
                     ->orWhereBetween('next_ep_date', [now()->startOfDay(), now()->endOfDay()]);
@@ -262,8 +267,8 @@ class TVShow extends Model
                 ->orderBy('last_ep_date', 'asc');
         }
 
-        if(app()->runningInConsole() && ! isTesting()) {
-            dump($q->toSql(),$q->getBindings());
+        if (app()->runningInConsole() && ! isTesting()) {
+            dump($q->toSql(), $q->getBindings());
 //          $q->toSql(); $q->getBindings();
 //          dd($q->getBindings());
 //          dump($q->paginate($perPage, ['*'], 'page', $page)->toArray());
@@ -281,15 +286,11 @@ class TVShow extends Model
 
     public function toSearchableArray()
     {
-        $array = [
+        return [
             'id' => $this->id,
             'name' => $this->name,
             'network' => $this->network,
-            'genre' => implode(" ", $this->genres ?? []),
+            'genre' => implode(' ', $this->genres ?? []),
         ];
-
-        // Customize array...
-
-        return $array;
     }
 }

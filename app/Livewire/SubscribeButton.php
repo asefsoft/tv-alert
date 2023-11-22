@@ -40,16 +40,15 @@ class SubscribeButton extends Component
         }
     }
 
+    public function render()
+    {
+        return view('livewire.subscribe-button');
+    }
 
     private function checkSubscription(bool $subscriptionsUpdated = false): void
     {
         if (auth()->check()) {
             $this->isSubscribed = User::isAuthUserSubscribedFor($this->tvShow, $subscriptionsUpdated);
         }
-    }
-
-    public function render()
-    {
-        return view('livewire.subscribe-button');
     }
 }

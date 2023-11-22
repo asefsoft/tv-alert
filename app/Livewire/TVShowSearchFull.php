@@ -12,8 +12,8 @@ class TVShowSearchFull extends Component
 {
     use WithPagination;
 
-    const PER_PAGE = 10;
-    const MAX_RESULTS = 200;
+    public const PER_PAGE = 10;
+    public const MAX_RESULTS = 200;
     #[Url]
     public string $term = '';
 
@@ -21,12 +21,14 @@ class TVShowSearchFull extends Component
     public int $page = 1;
     private $shows;
 
-    public function mount($term = "") {
+    public function mount($term = '')
+    {
         $this->setPage(request()->get('page', 1));
         $this->getSearchResults();
     }
 
-    public function updated($property) {
+    public function updated($property)
+    {
         if ($property === 'term') {
             $this->resetPage();
             $this->getSearchResults();
@@ -36,26 +38,27 @@ class TVShowSearchFull extends Component
     // livewire paginator hook
     public function updatedPage($page)
     {
-        $pageChanged = $this->page != $page;
+        $pageChanged = $this->page !== $page;
         $this->page = $page;
 
-        if($pageChanged) {
+        if ($pageChanged) {
             $this->getSearchResults();
-        }
-    }
-
-    // get search results
-    private function getSearchResults(): void {
-        if(!empty($this->term)) {
-            $this->shows = SearchTVShow::fastSearch($this->term, self::PER_PAGE, $this->getPage(), self::MAX_RESULTS, $searcher);
-        }else {
-            // empty
-            $this->shows = new LengthAwarePaginator(collect(), 0, self::PER_PAGE);
         }
     }
 
     public function render()
     {
         return view('livewire.tvshow-search-full', ['shows' => $this->shows]);
+    }
+
+    // get search results
+    private function getSearchResults(): void
+    {
+        if (! empty($this->term)) {
+            $this->shows = SearchTVShow::fastSearch($this->term, self::PER_PAGE, $this->getPage(), self::MAX_RESULTS, $searcher);
+        } else {
+            // empty
+            $this->shows = new LengthAwarePaginator(collect(), 0, self::PER_PAGE);
+        }
     }
 }

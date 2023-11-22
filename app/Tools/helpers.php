@@ -6,22 +6,24 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Morilog\Jalali\Jalalian;
 
-function sendMail(){
+function sendMail()
+{
     $mail = new Mailable();
-    $mail->subject = "Test from here";
+    $mail->subject = 'Test from here';
     $mail->html("this is just a test email\n yes this is!");
 
     Mail::to('asefsoft@gmail.com')->send($mail);
 }
-
 
 function logMe($fileName, $log, $addDateToLog = true, $addDateToFileName = true)
 {
     try {
         $prependDate = $addDateToLog ? now()->format('Y/m/d H:i:s').' ' : '';
         $fileNameDate = $addDateToFileName ? '-'.now()->toDateString() : '';
-        File::append(storage_path()."/logs/$fileName".$fileNameDate.'.log',
-            $prependDate.$log."\n");
+        File::append(
+            storage_path()."/logs/{$fileName}".$fileNameDate.'.log',
+            $prependDate.$log."\n"
+        );
     } catch (Exception $e) {
         echo sprintf("Error on log_me func: %s, log: %s<br>\n", $e->getMessage(), $log);
     }
@@ -41,10 +43,9 @@ function isAdmin(): bool
 
     if (! empty($isAdmin) && $booted) {
         return $isAdmin;
-    } else {
-        // todo: add this functionality
-        return $isAdmin = auth()->user() != null && auth()->user()->can('manage');
     }
+    // todo: add this functionality
+    return $isAdmin = auth()->user() !== null && auth()->user()->can('manage');
 }
 
 function isLocal(): bool
@@ -133,9 +134,10 @@ function getDateString($date, $type = 'remaining', $format = 'd F, Y H:i:s')
 
 // highlighted texts has <hl> and </hl> in it
 // so we will skip that tah
-function strLimitHighlighted(string $text, int $length = 0, $end= "...") : string {
-    $addition = substr_count($text, "<hl>") * 3;
-    $addition += substr_count($text, "</hl>") * 4;
+function strLimitHighlighted(string $text, int $length = 0, $end = '...'): string
+{
+    $addition = substr_count($text, '<hl>') * 3;
+    $addition += substr_count($text, '</hl>') * 4;
     return strip_tags(Str::limit($text, $length + $addition, $end), ['hl']);
 }
 
@@ -155,7 +157,6 @@ function onlyFields($models, array $fields, $limit_string = 80, array $headers =
         $string = [];
 
         foreach ($fields as $field) {
-
             // nested relation value
             $segments = explode('.', $field);
 
@@ -178,9 +179,7 @@ function onlyFields($models, array $fields, $limit_string = 80, array $headers =
     });
 
     $strings = collect($headers)->merge($strings);
-    $strings = $strings->merge($footers);
-
-    return $strings;
+    return $strings->merge($footers);
 }
 
 function logException($exception, $methodName, $extra = '')
@@ -201,7 +200,9 @@ function strLimit($text, $limit = 100, $end = '...')
 function loadTime()
 {
     $load_time = getTook();
-    echo sprintf("<took style='display: none'>%.2f sec</took>\n<query style='display: none'>%s ms, count: %s, slow: %s</query>", $load_time,
+    echo sprintf(
+        "<took style='display: none'>%.2f sec</took>\n<query style='display: none'>%s ms, count: %s, slow: %s</query>",
+        $load_time,
         number_format($GLOBALS['STAT_QUERY_TIME'] ?? -1),
         number_format($GLOBALS['STAT_QUERY_COUNT'] ?? -1),
         number_format($GLOBALS['STAT_QUERY_COUNT_SLOW'] ?? -1)
@@ -211,7 +212,8 @@ function loadTime()
     if ($load_time >= 2) {
         $user = auth()->check() ? 'user: '.auth()->user()->name.', ' : '';
 
-        $q = sprintf("Slow Page Load, time: %.2f sec, %s%s\nSLOW_QUERY_COUNT: %s\nQUERY_TIME: %s ms.\n",
+        $q = sprintf(
+            "Slow Page Load, time: %.2f sec, %s%s\nSLOW_QUERY_COUNT: %s\nQUERY_TIME: %s ms.\n",
             $load_time,
             $user,
             rawurldecode(request()->fullUrl()),

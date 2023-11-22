@@ -17,7 +17,6 @@ class TVShowUpdated
      */
     public function __construct(public TVShow $TVShow)
     {
-        //
     }
 
     /**

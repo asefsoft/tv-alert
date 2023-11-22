@@ -9,13 +9,11 @@ class CrawlNotRecentlyCrawledShows extends CrawlerAbstract
 {
     public function doCrawl($total = 20)
     {
-
         //        for ($currentPage = $this->startPage; $currentPage < ($this->startPage + $this->totalPages); $currentPage++) {
         $shows = TVShow::getNotRecentlyCrawledShows($total);
 
         $this->storeTVShows($shows->pluck('permalink')->toArray());
         $this->totalCrawledPages++;
         //        }
-
     }
 }

@@ -8,8 +8,7 @@ class CrawlMostPopular extends CrawlerAbstract
 {
     public function doCrawl($total = 20)
     {
-
-        for ($currentPage = $this->startPage; $currentPage < ($this->startPage + $this->totalPages); $currentPage++) {
+        for ($currentPage = $this->startPage; $currentPage < $this->startPage + $this->totalPages; $currentPage++) {
             $crawler = new GetRemoteMostPopularTVShow($currentPage);
             $searchData = $crawler->getMostPopularShows();
 
@@ -24,6 +23,5 @@ class CrawlMostPopular extends CrawlerAbstract
             // cache last crawled page
             MainCrawler::setLastPopularPage($currentPage);
         }
-
     }
 }

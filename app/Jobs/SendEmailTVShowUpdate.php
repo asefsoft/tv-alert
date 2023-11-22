@@ -4,9 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\TVShowsUpdatesNotif;
 use App\Models\EmailSubscription;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,7 +20,6 @@ class SendEmailTVShowUpdate implements ShouldQueue
      */
     public function __construct(protected EmailSubscription $subscription)
     {
-
     }
 
     /**
@@ -39,11 +36,9 @@ class SendEmailTVShowUpdate implements ShouldQueue
         try {
             Mail::to($this->subscription->user->email)->send($message);
             $isSent = true;
-        }
-        catch (\Exception $exception) {
-            logException($exception, "Send Email Subscription JOB");
-        }
-        finally {
+        } catch (\Exception $exception) {
+            logException($exception, 'Send Email Subscription JOB');
+        } finally {
             $this->subscription->addNewTry($isSent);
 
             // if is not sent then throw exception to fail the job
@@ -52,7 +47,5 @@ class SendEmailTVShowUpdate implements ShouldQueue
 //                throw $exception;
 //            }
         }
-
-
     }
 }

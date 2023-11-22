@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
             echo "\n", $t, "\n";
             MainCrawler::crawlNotRecentlyCrawledShows(70);
             echo now(), "\n";
-            echo "Done in ", $t->longAbsoluteDiffForHumans(), "\n";
+            echo 'Done in ', $t->longAbsoluteDiffForHumans(), "\n";
         })
             ->name('crawling not recently crawled shows every 5 min')
             ->everyFiveMinutes();
@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
             echo "\n", $t, "\n";
             MainCrawler::crawlMostPopular(totalPages: 5, startPage: null, onlyCrawlNewShows: true);
             echo now(), "\n";
-            echo "Done in ", $t->longAbsoluteDiffForHumans(), "\n";
+            echo 'Done in ', $t->longAbsoluteDiffForHumans(), "\n";
         })
             ->name('crawling most popular shows every 4 min')
             ->everyFourMinutes();
@@ -60,7 +60,6 @@ class Kernel extends ConsoleKernel
         })
             ->name('sending email subscriptions')
             ->hourly();
-
     }
 
     /**

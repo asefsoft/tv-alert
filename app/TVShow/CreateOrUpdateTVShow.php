@@ -19,7 +19,6 @@ class CreateOrUpdateTVShow
 
     public function __construct(protected array|TVShowData $tvShowInfo)
     {
-
         if (is_array($this->tvShowInfo)) {
             // parse array into tvshow data
             try {
@@ -37,9 +36,18 @@ class CreateOrUpdateTVShow
         $this->createOrUpdate($tvShowInfo);
     }
 
+    public function getCreationStatus(): CreateOrUpdateStatus
+    {
+        return $this->status;
+    }
+
+    public function getShowOnDB(): TVShow
+    {
+        return $this->showOnDB;
+    }
+
     private function createOrUpdate(TVShowData $showData)
     {
-
         $this->updateNextEpisodeDate($showData);
         $this->updateLastAiredEpisode($showData);
 
@@ -65,23 +73,14 @@ class CreateOrUpdateTVShow
     private function prepareDataBeforeSave(&$showDataTobeSaved): void
     {
         $maxLenRules = ['name' => 150, 'network' => 30, 'country' => 30, 'permalink' => 150,
-            'description' => 2500, 'status' => 30, 'thumb_url' => 255, 'image_url' => 255];
+            'description' => 2500, 'status' => 30, 'thumb_url' => 255, 'image_url' => 255,
+        ];
 
         foreach ($maxLenRules as $field => $maxLen) {
             if (isset($showDataTobeSaved[$field]) && Str::length($showDataTobeSaved[$field]) > $maxLen) {
                 $showDataTobeSaved[$field] = Str::limit($showDataTobeSaved[$field], $maxLen, '');
             }
         }
-    }
-
-    public function getCreationStatus(): CreateOrUpdateStatus
-    {
-        return $this->status;
-    }
-
-    public function getShowOnDB(): TVShow
-    {
-        return $this->showOnDB;
     }
 
     // get info of next ep date and put it on next_ep_date field
@@ -106,7 +105,7 @@ class CreateOrUpdateTVShow
         // found a next ep date, then release event
         if (! empty($foundDate)) {
             $showData->next_ep_date = $foundDate;
-            if ($origDate != $foundDate) {
+            if ($origDate !== $foundDate) {
                 NextEpisodeDateUpdated::dispatch($this->showOnDB, $origDate, $foundDate);
             }
         }
@@ -115,7 +114,6 @@ class CreateOrUpdateTVShow
     // get info of last ep and put it on last_aired_ep and last_ep_date field
     private function updateLastAiredEpisode(TVShowData &$showData)
     {
-
         if (isset($showData->episodes) && count($showData->episodes)) {
             $last_aired_ep = $showData->episodes->toCollection()->reverse()->firstWhere('air_date', '<=', now()->endOfDay());
 
@@ -127,7 +125,7 @@ class CreateOrUpdateTVShow
                 $showData->last_ep_date = $foundDate;
 
                 // event
-                if ($foundDate != $origDate) {
+                if ($foundDate !== $origDate) {
                     LastAiredEpisodeDateUpdated::dispatch($this->showOnDB, $origDate, $foundDate);
                 }
             }

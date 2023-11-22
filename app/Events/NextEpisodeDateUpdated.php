@@ -20,14 +20,16 @@ class NextEpisodeDateUpdated
     public function __construct(
         public ?TVShow $TVShow,
         public ?CarbonImmutable $oldDate,
-        public ?Carbon $newDate)
-    {
-        //
-        $isTesting = isTesting() ? "<TESTING ENV> " : "";
+        public ?Carbon $newDate
+    ) {
+        $isTesting = isTesting() ? '<TESTING ENV> ' : '';
 
-        logMe('new_ep_date_changes.log', sprintf('%sShow: %s, Old: %s, New: %s, Diff: %s',
+        logMe('new_ep_date_changes.log', sprintf(
+            '%sShow: %s, Old: %s, New: %s, Diff: %s',
             $isTesting,
-            $this->TVShow?->name, $this->oldDate ?? 'N/A', $this->newDate,
+            $this->TVShow?->name,
+            $this->oldDate ?? 'N/A',
+            $this->newDate,
             $this->newDate->diffForHumans($this->oldDate)
         ), true, false);
     }

@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    new aa;
     return view('welcome');
 });
 
@@ -26,15 +25,13 @@ Route::get('/testMe', function () {
 
     $user = User::whereId(20)->first();
 
-    $message = (new TVShowsUpdatesNotif($user))->render();
-
-    return $message;
+    return (new TVShowsUpdatesNotif($user))->render();
 //    sendMail();
 });
 
-Route::get('/show/{tvshow}', [TVShowController::class, "fullInfo"])->name('display-show-full-info');
-Route::get('/timeline', [TVShowController::class, "timeline"])->name('display-timeline')->middleware(['auth']);
-Route::get('/search', [TVShowController::class, "search"])->name('search-full-results');
+Route::get('/show/{tvshow}', [TVShowController::class, 'fullInfo'])->name('display-show-full-info');
+Route::get('/timeline', [TVShowController::class, 'timeline'])->name('display-timeline')->middleware(['auth']);
+Route::get('/search', [TVShowController::class, 'search'])->name('search-full-results');
 
 Route::middleware([
     'auth:sanctum',

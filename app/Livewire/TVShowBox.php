@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\TVShow;
-use App\Models\User;
 use Livewire\Component;
 
 class TVShowBox extends Component
@@ -18,5 +17,4 @@ class TVShowBox extends Component
     {
         return view('livewire.tvshow-box');
     }
-
 }

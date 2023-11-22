@@ -16,6 +16,5 @@ class SearchTVShowData extends Data
         #[DataCollectionOf(TVShowData::class)]
         public ?DataCollection $tv_shows,
     ) {
-
     }
 }

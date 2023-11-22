@@ -17,10 +17,15 @@ class TVShowCreated
      */
     public function __construct(public TVShow $TVShow)
     {
-        $isTesting = isTesting() ? "<TESTING ENV> " : "";
-        logMe('new_tv_series_found.log', sprintf('%sShow: %s, Start Date: %s, Country: %s, Status: %s, ID: %s',
+        $isTesting = isTesting() ? '<TESTING ENV> ' : '';
+        logMe('new_tv_series_found.log', sprintf(
+            '%sShow: %s, Start Date: %s, Country: %s, Status: %s, ID: %s',
             $isTesting,
-            $this->TVShow->name, $this->TVShow->start_date?->format('Y/m'), $this->TVShow->country, $this->TVShow->status, $this->TVShow->id
+            $this->TVShow->name,
+            $this->TVShow->start_date?->format('Y/m'),
+            $this->TVShow->country,
+            $this->TVShow->status,
+            $this->TVShow->id
         ), true, false);
     }
 

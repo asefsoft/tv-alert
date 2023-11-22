@@ -21,7 +21,6 @@ enum TVShowStatus: string
         try {
             return self::from($value);
         } catch (\Throwable $e) {
-
             $value = Str::title(trim($value));
 
             try {

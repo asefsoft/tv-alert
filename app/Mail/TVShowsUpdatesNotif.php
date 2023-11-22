@@ -6,7 +6,6 @@ use App\Models\User;
 use App\TVShow\Timeline\TimelineFormatter;
 use App\TVShow\Timeline\Types\TodayTimeline;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -34,7 +33,7 @@ class TVShowsUpdatesNotif extends Mailable
     {
         return new Envelope(
             to: $this->user->email,
-            subject: sprintf('Series Alert: Your today TV shows (%s)', now()->format("Y/m/d")),
+            subject: sprintf('Series Alert: Your today TV shows (%s)', now()->format('Y/m/d')),
         );
     }
 
@@ -68,7 +67,8 @@ class TVShowsUpdatesNotif extends Mailable
         return [];
     }
 
-    private function getTodayShowsOfGiveUser(User $user): void {
+    private function getTodayShowsOfGiveUser(User $user): void
+    {
         // get today shows of give user
         $this->todayShows = $user->getRecentShows(1, 10)['today'];
         $formatter = new TimelineFormatter(new TodayTimeline());

@@ -25,8 +25,9 @@ class TVShowFullInfo extends Component
         $this->fetchTvShowByID($tvshowId);
     }
 
-    public function mount() {
-        if(!empty($this->tvShowId)) {
+    public function mount()
+    {
+        if (! empty($this->tvShowId)) {
             $this->fetchTvShowByID($this->tvShowId);
         }
     }
@@ -36,7 +37,8 @@ class TVShowFullInfo extends Component
         return view('livewire.tvshow-full-info');
     }
 
-    private function fetchTvShowByID($tvshowId): void {
+    private function fetchTvShowByID($tvshowId): void
+    {
         $this->tvShow = TVShow::whereId($tvshowId)->first();
         // this will show tvshow info and hides "Loading..." indicator
         $this->isLoadingShowInfo = false;
