@@ -21,7 +21,7 @@ class TVShowSearchFull extends Component
     public int $page = 1;
     private $shows;
 
-    public function mount($term = '')
+    public function mount()
     {
         $this->setPage(request()->get('page', 1));
         $this->getSearchResults();

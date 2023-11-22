@@ -65,8 +65,8 @@ class SearchTVShow
 
     public function highlightResults(string $term): void
     {
-        /** @var TVShow $tvShow */
         $tnt = new TNTSearch();
+        /** @var TVShow $tvShow */
         foreach ($this->searchResults as $tvShow) {
             $tvShow->name = $tnt->highlight($tvShow->name, $term, 'hl', ['wholeWord' => false]);
             $tvShow->network = $tnt->highlight($tvShow->network, $term, 'hl', ['wholeWord' => false]);

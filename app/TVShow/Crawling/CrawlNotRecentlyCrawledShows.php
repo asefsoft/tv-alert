@@ -5,7 +5,7 @@ namespace App\TVShow\Crawling;
 use App\Models\TVShow;
 
 // crawl from db, shows that not crawled recently
-class CrawlNotRecentlyCrawledShows extends CrawlerAbstract
+class CrawlNotRecentlyCrawledShows extends SeriesCrawler
 {
     public function doCrawl($total = 20)
     {

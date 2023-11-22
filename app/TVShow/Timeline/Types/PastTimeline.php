@@ -4,7 +4,7 @@ namespace App\TVShow\Timeline\Types;
 
 use Carbon\Carbon;
 
-class PastTimeline extends AbstractTimelineType
+class PastTimeline extends Timeline
 {
     public function getStart(): Carbon
     {

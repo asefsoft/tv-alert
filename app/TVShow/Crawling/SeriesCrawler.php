@@ -6,7 +6,7 @@ use App\Models\TVShow;
 use App\TVShow\CreateOrUpdateTVShow;
 use App\TVShow\RemoteData\GetRemoteTVShowInfo;
 
-abstract class CrawlerAbstract
+abstract class SeriesCrawler
 {
     protected int $totalFoundShows = 0;
 

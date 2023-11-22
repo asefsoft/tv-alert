@@ -20,7 +20,9 @@ class TVShow extends Model
 {
     use HasFactory, WithData, Searchable;
 
-    public const ActiveShows = [TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries, TVShowStatus::TBD_OnTheBubble];
+    public const ACTIVE_SHOWS = [
+        TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries, TVShowStatus::TBD_OnTheBubble,
+    ];
 
     // for tnt scout search
     public $asYouType = true;
@@ -88,7 +90,7 @@ class TVShow extends Model
 
     public function scopeActiveShows(Builder $builder)
     {
-        return $builder->whereIn('status', self::ActiveShows);
+        return $builder->whereIn('status', self::ACTIVE_SHOWS);
     }
 
     public function scopeHasNextEpisodeDate(Builder $builder)
@@ -183,18 +185,15 @@ class TVShow extends Model
     // get on-air tvshows which the air date is close
     public static function getCloseAirDateShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator
     {
-        $q = static::
-            // only active shows, not ENDED shows
-            activeShows()
-                ->LimitToIDs($targetShows) // only return shows we want, usually user's subscribed shows
+        $q = static::activeShows() // only active shows, not ENDED shows
+            ->LimitToIDs($targetShows) // only return shows we want, usually user's subscribed shows
             // get shows with close air-date
-                ->hasNextEpisodeDate()
-                ->whereBetween('next_ep_date', [now(), now()->addDays(2)]) // only next 2 days shows
-                ->orderBy('next_ep_date', 'asc');
-        //            ->orderBy('updated_at', 'asc')
-        //            ->select(['name', 'next_ep_date', 'updated_at']);
-        $q->toSql();
-        //        dd($q->paginate($perPage, ['*'], 'page', $page)->toArray(), $q->getBindings());
+            ->hasNextEpisodeDate()
+            ->whereBetween('next_ep_date', [now(), now()->addDays(2)]) // only next 2 days shows
+            ->orderBy('next_ep_date', 'asc');
+        //  ->select(['name', 'next_ep_date', 'updated_at']);
+        //  $q->toSql();
+        //  dd($q->paginate($perPage, ['*'], 'page', $page)->toArray(), $q->getBindings());
         return $q->paginate($perPage, ['*'], 'page', $page);
     }
 
@@ -203,7 +202,7 @@ class TVShow extends Model
     {
         $q = static::select(['id', 'permalink', 'name', 'last_check_date'])
             // only active shows, not ENDED shows
-            ->whereIn('status', self::ActiveShows)
+            ->whereIn('status', self::ACTIVE_SHOWS)
             ->where('last_check_date', '<', now()->subHours(6)) // dont include recently updated shows
             // not recently crawled shows
             ->orderBy('last_check_date', 'asc')
@@ -239,39 +238,12 @@ class TVShow extends Model
 
     public static function getShowsByAirDateDistance(int $daysDistance = 0, $page = 1, $perPage = 20, $targetShows = [])
     {
-        $q = static::
-        // only active shows, not ENDED shows
-            whereIn('status', self::ActiveShows)
-                ->LimitToIDs($targetShows); // only return shows we want, usually user's subscribed shows
+        $q = static::whereIn('status', self::ACTIVE_SHOWS)->LimitToIDs($targetShows); // only return shows we want, usually user's subscribed shows
 
-        // for before today shows we use `last_ep_date` field. giving from X days ago until end of today
-        // for today we use both last_ep_date and next_ep_date fields
-        // for tomorrow and beyond shows we use `next_ep_date` field. giving from start of tomorrow until end of X days after.
-
-        if ($daysDistance < 0) {
-            $q->whereBetween('last_ep_date', [now()->addDays($daysDistance)->startOfDay(), now()->subDay()->endOfDay()])
-                ->orderBy('last_ep_date', 'asc')
-                ->orderBy('next_ep_date', 'asc');
-        } elseif ($daysDistance === 0) { // today
-            $q->where(function ($query) {
-                $query->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
-                    ->orWhereBetween('next_ep_date', [now()->startOfDay(), now()->endOfDay()]);
-            })
-//            $q->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
-//                ->orwhereBetween('next_ep_date', [now()->startOfDay(), now()->endOfDay()])
-                ->orderBy('last_ep_date', 'asc')
-                ->orderBy('next_ep_date', 'asc');
-        } else {
-            $q->whereBetween('next_ep_date', [now()->addDays(1)->startOfDay(), now()->addDays($daysDistance)->endOfDay()])
-                ->orderBy('next_ep_date', 'asc')
-                ->orderBy('last_ep_date', 'asc');
-        }
+        self::applyDayDistance($daysDistance, $q);
 
         if (app()->runningInConsole() && ! isTesting()) {
             dump($q->toSql(), $q->getBindings());
-//          $q->toSql(); $q->getBindings();
-//          dd($q->getBindings());
-//          dump($q->paginate($perPage, ['*'], 'page', $page)->toArray());
         }
 
         return $q->paginate($perPage, ['*'], 'page', $page);
@@ -292,5 +264,28 @@ class TVShow extends Model
             'network' => $this->network,
             'genre' => implode(' ', $this->genres ?? []),
         ];
+    }
+
+    private static function applyDayDistance(int $daysDistance, $q): void
+    {
+        // for before today shows we use `last_ep_date` field. giving from X days ago until end of today
+        // for today we use both last_ep_date and next_ep_date fields
+        // for tomorrow and beyond shows we use `next_ep_date` field. giving from start of tomorrow until end of X days after.
+        if ($daysDistance < 0) {
+            $q->whereBetween('last_ep_date', [now()->addDays($daysDistance)->startOfDay(), now()->subDay()->endOfDay()])
+                ->orderBy('last_ep_date', 'asc')
+                ->orderBy('next_ep_date', 'asc');
+        } elseif ($daysDistance === 0) { // today
+            $q->where(function ($query) {
+                $query->whereBetween('last_ep_date', [now()->startOfDay(), now()->endOfDay()])
+                    ->orWhereBetween('next_ep_date', [now()->startOfDay(), now()->endOfDay()]);
+            })
+                ->orderBy('last_ep_date', 'asc')
+                ->orderBy('next_ep_date', 'asc');
+        } else {
+            $q->whereBetween('next_ep_date', [now()->addDays(1)->startOfDay(), now()->addDays($daysDistance)->endOfDay()])
+                ->orderBy('next_ep_date', 'asc')
+                ->orderBy('last_ep_date', 'asc');
+        }
     }
 }

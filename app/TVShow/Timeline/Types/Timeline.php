@@ -2,7 +2,7 @@
 
 namespace App\TVShow\Timeline\Types;
 
-abstract class AbstractTimelineType implements HasDuration, HasEpisodeField
+abstract class Timeline implements HasDuration, HasEpisodeField
 {
     protected int $length = 1;
     public function __construct(int $length = 1)

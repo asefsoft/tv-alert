@@ -14,6 +14,31 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        $this->mainCrawlingTasks($schedule);
+
+        // crawl most popular shows to find NEW tvshows
+        $this->crawlMostPopularShows($schedule);
+
+        // add email subscription records for today
+        // run once a day
+        $this->addEmailSubscriptionsForToday($schedule);
+
+        // send email subscriptions
+        $this->sendEmailSubscriptions($schedule);
+    }
+
+    /**
+     * Register the commands for the application.
+     */
+    protected function commands(): void
+    {
+        $this->load(__DIR__.'/Commands');
+
+        require base_path('routes/console.php');
+    }
+
+    private function mainCrawlingTasks(Schedule $schedule): void
+    {
         // main crawling task
         // crawl not-recently crawled shows
         $schedule->call(function () {
@@ -25,8 +50,10 @@ class Kernel extends ConsoleKernel
         })
             ->name('crawling not recently crawled shows every 5 min')
             ->everyFiveMinutes();
+    }
 
-        // crawl most popular shows to find NEW tvshows
+    private function crawlMostPopularShows(Schedule $schedule): void
+    {
         $schedule->call(function () {
             $t = now();
             echo "\n", $t, "\n";
@@ -36,9 +63,10 @@ class Kernel extends ConsoleKernel
         })
             ->name('crawling most popular shows every 4 min')
             ->everyFourMinutes();
+    }
 
-        // add email subscription records for today
-        // run once a day
+    private function addEmailSubscriptionsForToday(Schedule $schedule): void
+    {
         $schedule->call(function () {
             $t = now();
             echo "\n", $t, "\n";
@@ -48,8 +76,10 @@ class Kernel extends ConsoleKernel
         })
             ->name('adding email subscription records for today')
             ->dailyAt('08:00');
+    }
 
-        // send email subscriptions
+    private function sendEmailSubscriptions(Schedule $schedule): void
+    {
         $schedule->call(function () {
             $t = now();
             echo "\n", $t, "\n";
@@ -60,15 +90,5 @@ class Kernel extends ConsoleKernel
         })
             ->name('sending email subscriptions')
             ->hourly();
-    }
-
-    /**
-     * Register the commands for the application.
-     */
-    protected function commands(): void
-    {
-        $this->load(__DIR__.'/Commands');
-
-        require base_path('routes/console.php');
     }
 }

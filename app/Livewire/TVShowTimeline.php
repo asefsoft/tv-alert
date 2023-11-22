@@ -7,7 +7,6 @@ use Livewire\Component;
 
 class TVShowTimeline extends Component
 {
-
     // how many days include in timeline at start of component
     public const DAYS_TO_SHOW_INIT = 60;
     public $lastPoll;

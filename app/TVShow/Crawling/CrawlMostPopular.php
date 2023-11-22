@@ -4,7 +4,7 @@ namespace App\TVShow\Crawling;
 
 use App\TVShow\RemoteData\GetRemoteMostPopularTVShow;
 
-class CrawlMostPopular extends CrawlerAbstract
+class CrawlMostPopular extends SeriesCrawler
 {
     public function doCrawl($total = 20)
     {

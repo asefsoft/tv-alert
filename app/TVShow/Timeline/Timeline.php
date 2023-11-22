@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 
 class Timeline
 {
-    public const MaxDisplayShows = 20;
+    public const MAX_DISPLAY_SHOWS = 20;
     protected Collection $sections;
 
     public function __construct(protected TimelineInfo $timelineInfo)
@@ -38,17 +38,17 @@ class Timeline
 
         if ($this->timelineInfo->hasPastTimeline()) {
             $totalDays = -1 * $this->timelineInfo->getPastTimeline()->getLength();
-            $tvShows = TVShow::getShowsByAirDateDistance($totalDays, 1, self::MaxDisplayShows, $userTvShows);
+            $tvShows = TVShow::getShowsByAirDateDistance($totalDays, 1, self::MAX_DISPLAY_SHOWS, $userTvShows);
             $this->sections->add(new TimelineSection('Past Episodes', $tvShows, $this->timelineInfo->getPastTimeline()));
         }
 
         if ($this->timelineInfo->hasTodayTimeline()) {
-            $tvShows = TVShow::getShowsByAirDateDistance(0, 1, self::MaxDisplayShows, $userTvShows);
+            $tvShows = TVShow::getShowsByAirDateDistance(0, 1, self::MAX_DISPLAY_SHOWS, $userTvShows);
             $this->sections->add(new TimelineSection('Today Episodes', $tvShows, $this->timelineInfo->getTodayTimeline()));
         }
 
         if ($this->timelineInfo->hasFutureTimeline()) {
-            $tvShows = TVShow::getShowsByAirDateDistance($this->timelineInfo->getFutureTimeline()->getLength(), 1, self::MaxDisplayShows, $userTvShows);
+            $tvShows = TVShow::getShowsByAirDateDistance($this->timelineInfo->getFutureTimeline()->getLength(), 1, self::MAX_DISPLAY_SHOWS, $userTvShows);
             $this->sections->add(new TimelineSection('Future Episodes', $tvShows, $this->timelineInfo->getFutureTimeline()));
         }
     }

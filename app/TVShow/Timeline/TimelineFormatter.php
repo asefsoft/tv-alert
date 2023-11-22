@@ -3,12 +3,12 @@
 namespace App\TVShow\Timeline;
 
 use App\Models\TVShow;
-use App\TVShow\Timeline\Types\AbstractTimelineType;
+use App\TVShow\Timeline\Types\Timeline;
 use App\TVShow\Timeline\Types\TimelineType;
 
 class TimelineFormatter
 {
-    public function __construct(protected AbstractTimelineType $timelineType)
+    public function __construct(protected Timeline $timelineType)
     {
     }
 

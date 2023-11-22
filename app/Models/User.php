@@ -122,7 +122,7 @@ class User extends Authenticatable
     {
         static $authUserSubscriptions;
 
-        if (! auth()->check()) {
+        if (! self::authorized()) {
             return [];
         }
 
@@ -161,5 +161,10 @@ class User extends Authenticatable
         }
 
         return $sub->orderBy('next_ep_date')->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    private static function authorized(): bool
+    {
+        return auth()->check();
     }
 }

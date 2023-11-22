@@ -35,12 +35,6 @@ class TVShowGroup extends Component
         $this->canToggleSubscribedShowsFilter = auth()->check();
     }
 
-    public function updated($property)
-    {
-        if ($property === 'displayOnlySubscribedShows') {
-        }
-    }
-
     public function render()
     {
         $this->getShowsByType();
