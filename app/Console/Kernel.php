@@ -25,6 +25,10 @@ class Kernel extends ConsoleKernel
 
         // send email subscriptions
         $this->sendEmailSubscriptions($schedule);
+
+        // horizon
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+        $schedule->command('horizon:terminate')->dailyAt('02:10');
     }
 
     /**
