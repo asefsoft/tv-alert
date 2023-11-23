@@ -24,7 +24,7 @@ You can see live version of this app here: [Series Alert](https://series-alert.i
 - **Fast Search:** Leveraging Laravel Scout, the system offers high-speed searching for TV shows and episodes.
 - **Automate TV Show updates:** Fully automatically scan for new shows and get info of current shows in the background.
 - **Data Transfer Objects:** Utilizes the Laravel Data package to efficiently manage data transfer objects.
-- **Tested Codebase:** The project is fully tested with PHPUnit, ensuring reliability and stability.
+- **Tested Codebase:** The project is fully tested with PHPUnit and analyzed by PHPInsights, ensuring reliability and stability.
 
 ### Timeline
 This is an example of your timeline in site:
@@ -36,7 +36,7 @@ This is an example of your timeline in site:
 - Laravel: The project is built using the robust Laravel framework.
 - Livewire 3: Real-time interactions are powered by Livewire 3.
 - Tailwind CSS: The user interface is styled with the utility-first Tailwind CSS framework.
-- Laravel Scout: Provides efficient and high-speed searching capabilities.
+- Laravel Scout: Provides efficient and high-speed searching capabilities. [Document](https://medium.com/p/8cf31ae10dcc)
 - Laravel Data: Offers a structured approach to Data Transfer Objects (DTOs).
 - PHPUnit: The codebase is rigorously tested with PHPUnit.
 - GitHub Actions: Automatic testing and continuous integration are enabled with GitHub Actions.
