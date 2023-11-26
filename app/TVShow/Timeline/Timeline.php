@@ -25,7 +25,7 @@ class Timeline
         return new Timeline(new TimelineInfo(new PastTimeline($duration), new TodayTimeline(), new FutureTimeline($duration)));
     }
 
-    public function buildSections()
+    public function buildSections(): void
     {
         $this->sections = collect();
 

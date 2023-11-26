@@ -28,9 +28,6 @@ class RemoteRequest
         }
     }
 
-    /**
-     * @return mixed
-     */
     public function getResponse(): Response
     {
         return $this->response;

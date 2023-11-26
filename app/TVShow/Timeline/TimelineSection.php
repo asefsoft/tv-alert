@@ -9,12 +9,12 @@ class TimelineSection
 {
     public TimelineFormatter $fm;
 
-    public function __construct(protected $title, protected Paginator $tvShows, protected Timeline $timelineType)
+    public function __construct(protected string $title, protected Paginator $tvShows, protected Timeline $timelineType)
     {
         $this->fm = new TimelineFormatter($this->timelineType);
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }

@@ -44,6 +44,7 @@ class EmailSubscriptionManager
     {
         $subscriptions = EmailSubscription::getTodayEmailSubscriptions(10);
 
+        /** @var EmailSubscription $emailSub */
         foreach ($subscriptions as $emailSub) {
             SendEmailTVShowUpdate::dispatch($emailSub)->onQueue('emails');
 

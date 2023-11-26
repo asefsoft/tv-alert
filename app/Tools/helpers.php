@@ -3,18 +3,10 @@
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
-function sendMail()
-{
-    $mail = new Mailable();
-    $mail->subject = 'Test from here';
-    $mail->html("this is just a test email\n yes this is!");
-
-    Mail::to('asefsoft@gmail.com')->send($mail);
-}
-
-function logMe($fileName, $log, $addDateToLog = true, $addDateToFileName = true)
-{
+function logMe($fileName, $log, $addDateToLog = true, $addDateToFileName = true): void {
     try {
         $prependDate = $addDateToLog ? now()->format('Y/m/d H:i:s').' ' : '';
         $fileNameDate = $addDateToFileName ? '-'.now()->toDateString() : '';
@@ -31,7 +23,7 @@ function logMe($fileName, $log, $addDateToLog = true, $addDateToFileName = true)
     }
 }
 
-function flashBanner($message, $type = 'success')
+function flashBanner($message, $type = 'success'): void
 {
     request()->session()->flash('flash.banner', $message);
     request()->session()->flash('flash.bannerStyle', $type);
@@ -65,7 +57,7 @@ function isProduction(): bool
     return app()->environment('production');
 }
 
-function ifProduction($productionValue, $notProductionValue)
+function ifProduction($productionValue, $notProductionValue): mixed
 {
     return isProduction() ? $productionValue : $notProductionValue;
 }
@@ -82,7 +74,7 @@ function strLimitHighlighted(
     return strip_tags(Str::limit($text, $length + $addition, $end), ['hl']);
 }
 
-function logException($exception, $methodName, $extra = '')
+function logException($exception, $methodName, $extra = ''): void
 {
     logError(sprintf(
         'Error on %s, %s, %s',
@@ -97,7 +89,7 @@ function logError($error, $level = 'warning'): void
     Log::log($level, $error);
 }
 
-function strLimit($text, $limit = 100, $end = '...')
+function strLimit($text, $limit = 100, $end = '...'): string
 {
     return Str::limit($text, $limit, $end);
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
@@ -74,8 +75,7 @@ class User extends Authenticatable
     // toggle email subscription setting for user
     public function toggleEmailSubscription(): void
     {
-        $this->tvshows_updates_subscription =
-            $this->isEmailSubscribed() ? 0 : 1;
+        $this->tvshows_updates_subscription = ! $this->isEmailSubscribed();
 
         $this->save();
     }
@@ -127,7 +127,7 @@ class User extends Authenticatable
         }
 
         if ($forceCheck || ! isset($authUserSubscriptions)) {
-            $authUserSubscriptions = auth()->user()->subscriptions()->get()->pluck('id')->toArray();
+            $authUserSubscriptions = auth()->user()->subscriptions()->pluck('tvshow_id')->toArray();
         }
 
         return $authUserSubscriptions;
@@ -157,7 +157,7 @@ class User extends Authenticatable
 
         // in testing env we use sqlite and it's not support isnull
         if (! isTesting()) {
-            $sub->orderBy(\DB::raw('isnull(next_ep_date)'));
+            $sub->orderBy(DB::raw('isnull(next_ep_date)'));
         }
 
         return $sub->orderBy('next_ep_date')->paginate($perPage, ['*'], 'page', $page);

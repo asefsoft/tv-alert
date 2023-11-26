@@ -32,7 +32,7 @@ class TVShowsUpdatesNotif extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            to: $this->user->email,
+            to: [$this->user->email],
             subject: sprintf('Series Alert: Your today TV shows (%s)', now()->format('Y/m/d')),
         );
     }

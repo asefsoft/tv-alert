@@ -9,7 +9,7 @@ use App\Events\TVShowCreated;
 use App\Events\TVShowUpdated;
 use App\Models\TVShow;
 use Carbon\Carbon;
-use Str;
+use Illuminate\Support\Str;
 
 class CreateOrUpdateTVShow
 {

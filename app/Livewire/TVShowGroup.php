@@ -27,7 +27,7 @@ class TVShowGroup extends Component
 
     protected $listeners = ['subscriptions-changed' => '$refresh'];
 
-    protected $shows;
+    protected mixed $shows;
 
     public function mount()
     {

@@ -15,7 +15,7 @@ class SearchTVShow
 
     protected bool $usedFuzzy = false;
 
-    protected LengthAwarePaginator $searchResults;
+    protected $searchResults;
 
     public function __construct(protected int $perPage = 10, protected int $page = 1, protected int $maxResults = 200)
     {
