@@ -1,0 +1,13 @@
+src/.env
+src/node_modules
+src/vendor
+src/storage/logs
+src/storage/app/livewire-tmp
+src/storage/faramwork/cache
+src/storage/faramwork/sessions
+src/storage/faramwork/testing
+src/storage/faramwork/views
+src/storage/tv_shows.index
+src/tests/test.db
+src/tests/tv_shows.index
+src/.phpunit.result.cache
