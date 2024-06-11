@@ -23,6 +23,7 @@ services:
       - ./src/composer.lock:/usr/src/composer.lock
 #      - ./src/.env:/usr/src/.env
       - ./deployment/config/php-fpm/php-dev.ini:/usr/local/etc/php/conf.d/php.ini
+      - app-tntsearch-db:/usr/src/storage/tntdb/
     restart: unless-stopped
     environment:
      DB_HOST: mysql
@@ -41,10 +42,10 @@ services:
      MAIL_VERIFY_PEER: ${MAIL_VERIFY_PEER}
      SESSION_DOMAIN: ${SESSION_DOMAIN}
      SESSION_DRIVER: ${SESSION_DRIVER}
-#    depends_on:
-#     - mysql
+    depends_on:
+     - mysql
 
-  # nginx for php backend
+  # nginx for php
   nginx:
     build:
       context: .
@@ -78,8 +79,47 @@ services:
 #    volumes:
 #      - webapp-redis-data:/data
 
+  scheduler:
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+      target: scheduler
+    restart: unless-stopped
+    volumes:
+      - ./src/app:/usr/src/app
+      - ./src/config:/usr/src/config
+      - ./src/database:/usr/src/database
+      - ./src/routes:/usr/src/routes
+      - ./src/storage/factories:/usr/src/storage/factories
+      - ./src/storage/migrations:/usr/src/storage/migrations
+      - ./src/storage/seeders:/usr/src/storage/seeders
+      - ./src/tests:/usr/src/tests
+      - ./src/public:/usr/src/public
+      - ./src/composer.json:/usr/src/composer.json
+      - ./src/composer.lock:/usr/src/composer.lock
+      - app-tntsearch-db:/usr/src/storage/tntdb/
+    environment:
+      DB_HOST: mysql
+      DB_PASSWORD: ${DB_PASSWORD}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_URL: ${APP_URL}
+      APP_ENV: ${APP_ENV}
+      MAIL_MAILER: ${MAIL_MAILER}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      MAIL_VERIFY_PEER: ${MAIL_VERIFY_PEER}
+      SESSION_DOMAIN: ${SESSION_DOMAIN}
+      SESSION_DRIVER: ${SESSION_DRIVER}
+    depends_on:
+      - mysql
 
 
 volumes:
   mysql-data:
+  app-tntsearch-db:
 #  webapp-redis-data:

@@ -37,6 +37,8 @@ RUN composer install --no-scripts
 RUN php artisan storage:link && \
     cp .env.example .env && \
     php artisan key:generate && \
+    mkdir "storage/logs" && \
+    mkdir "storage/tntdb" && \
     chmod -R 775 ./storage ./bootstrap/cache && \
     chown -R www-data:root /usr/src
 
@@ -47,5 +49,5 @@ RUN php artisan storage:link && \
 #COPY ./deployment/config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisor.conf
 #CMD ["/bin/sh", "-c", "supervisord -c /etc/supervisor/conf.d/supervisor.conf"]
 #
-#FROM backend AS scheduler
-#CMD ["/bin/sh", "-c", "nice -n 10 sleep 60 && php /usr/src/artisan schedule:run --verbose --no-interaction"]
+FROM app AS scheduler
+CMD ["/bin/sh", "-c", "nice -n 10 sleep 60 && php /usr/src/artisan schedule:run --verbose --no-interaction"]

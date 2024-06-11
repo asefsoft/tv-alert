@@ -24,7 +24,7 @@ class LastAiredEpisodeDateUpdated
     ) {
         $isTesting = isTesting() ? '<TESTING ENV> ' : '';
 
-        logMe('last_ep_date_changes.log', sprintf(
+        logMe('last_ep_date_changes', sprintf(
             '%sShow: %s, Old: %s, New: %s, Diff: %s',
             $isTesting,
             $this->TVShow?->name,
