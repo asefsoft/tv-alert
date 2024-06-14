@@ -3,34 +3,29 @@
 namespace App\Events;
 
 use App\Models\TVShow;
-use Carbon\Carbon;
-use Carbon\CarbonImmutable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class LastAiredEpisodeDateUpdated
+class TVShowCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public ?TVShow $TVShow,
-        public ?CarbonImmutable $oldDate,
-        public ?Carbon $newDate
-    ) {
+    public function __construct(public TVShow $TVShow)
+    {
         $isTesting = isTesting() ? '<TESTING ENV> ' : '';
-
-        logMe('last_ep_date_changes.log', sprintf(
-            '%sShow: %s, Old: %s, New: %s, Diff: %s',
+        logMe('new_tv_series_found', sprintf(
+            '%sShow: %s, Start Date: %s, Country: %s, Status: %s, ID: %s',
             $isTesting,
-            $this->TVShow?->name,
-            $this->oldDate ?? 'N/A',
-            $this->newDate,
-            $this->newDate->diffForHumans($this->oldDate)
+            $this->TVShow->name,
+            $this->TVShow->start_date?->format('Y/m'),
+            $this->TVShow->country,
+            $this->TVShow->status,
+            $this->TVShow->id
         ), true, false);
     }
 

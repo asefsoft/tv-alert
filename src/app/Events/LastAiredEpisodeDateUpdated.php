@@ -10,7 +10,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NextEpisodeDateUpdated
+class LastAiredEpisodeDateUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -24,7 +24,7 @@ class NextEpisodeDateUpdated
     ) {
         $isTesting = isTesting() ? '<TESTING ENV> ' : '';
 
-        logMe('new_ep_date_changes.log', sprintf(
+        logMe('last_ep_date_changes', sprintf(
             '%sShow: %s, Old: %s, New: %s, Diff: %s',
             $isTesting,
             $this->TVShow?->name,

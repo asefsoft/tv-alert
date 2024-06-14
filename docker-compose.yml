@@ -1,0 +1,125 @@
+version: "3.8"
+
+services:
+
+  # website app
+  app:
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+      target: app
+    command: sh -c "./wait-for-it.sh mysql:3306 -t 30 && php /usr/src/artisan migrate && php-fpm"
+    volumes:
+      - ./src/app:/usr/src/app
+      - ./src/config:/usr/src/config
+      - ./src/database:/usr/src/database
+      - ./src/routes:/usr/src/routes
+      - ./src/storage/factories:/usr/src/storage/factories
+      - ./src/storage/migrations:/usr/src/storage/migrations
+      - ./src/storage/seeders:/usr/src/storage/seeders
+      - ./src/tests:/usr/src/tests
+      - ./src/public:/usr/src/public
+      - ./src/composer.json:/usr/src/composer.json
+      - ./src/composer.lock:/usr/src/composer.lock
+#      - ./src/.env:/usr/src/.env
+      - ./deployment/config/php-fpm/php-dev.ini:/usr/local/etc/php/conf.d/php.ini
+      - app-tntsearch-db:/usr/src/storage/tntdb/
+    restart: unless-stopped
+    environment:
+     DB_HOST: mysql
+     DB_PASSWORD: ${DB_PASSWORD}
+     APP_DEBUG: ${APP_DEBUG}
+     APP_URL: ${APP_URL}
+     APP_ENV: ${APP_ENV}
+     MAIL_MAILER: ${MAIL_MAILER}
+     MAIL_HOST: ${MAIL_HOST}
+     MAIL_PORT: ${MAIL_PORT}
+     MAIL_USERNAME: ${MAIL_USERNAME}
+     MAIL_PASSWORD: ${MAIL_PASSWORD}
+     MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
+     MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+     MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+     MAIL_VERIFY_PEER: ${MAIL_VERIFY_PEER}
+     SESSION_DOMAIN: ${SESSION_DOMAIN}
+     SESSION_DRIVER: ${SESSION_DRIVER}
+    depends_on:
+     - mysql
+
+  # nginx for php
+  nginx:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.nginx
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3838:80"
+    volumes:
+      - ./src:/usr/src
+      - ./deployment/config/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app
+
+  # mysql
+  mysql:
+    build:
+      args:
+        password: ${DB_PASSWORD}
+      context: .
+      dockerfile: ./Dockerfile.mysql
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "33065:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+
+#  redis:
+#    image: redis:latest
+#    volumes:
+#      - webapp-redis-data:/data
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+      target: scheduler
+    restart: unless-stopped
+    volumes:
+      - ./src/app:/usr/src/app
+      - ./src/config:/usr/src/config
+      - ./src/database:/usr/src/database
+      - ./src/routes:/usr/src/routes
+      - ./src/storage/factories:/usr/src/storage/factories
+      - ./src/storage/migrations:/usr/src/storage/migrations
+      - ./src/storage/seeders:/usr/src/storage/seeders
+      - ./src/tests:/usr/src/tests
+      - ./src/public:/usr/src/public
+      - ./src/composer.json:/usr/src/composer.json
+      - ./src/composer.lock:/usr/src/composer.lock
+      - app-tntsearch-db:/usr/src/storage/tntdb/
+    environment:
+      DB_HOST: mysql
+      DB_PASSWORD: ${DB_PASSWORD}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_URL: ${APP_URL}
+      APP_ENV: ${APP_ENV}
+      MAIL_MAILER: ${MAIL_MAILER}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      MAIL_VERIFY_PEER: ${MAIL_VERIFY_PEER}
+      SESSION_DOMAIN: ${SESSION_DOMAIN}
+      SESSION_DRIVER: ${SESSION_DRIVER}
+    depends_on:
+      - mysql
+
+
+volumes:
+  mysql-data:
+  app-tntsearch-db:
+#  webapp-redis-data:

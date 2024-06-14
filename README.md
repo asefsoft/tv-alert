@@ -25,6 +25,7 @@ You can see live version of this app here: [Series Alert](https://series-alert.i
 - **Automate TV Show updates:** Fully automatically scan for new shows and get info of current shows in the background.
 - **Data Transfer Objects:** Utilizes the Laravel Data package to efficiently manage data transfer objects.
 - **Tested Codebase:** The project is fully tested with PHPUnit and analyzed by PHPInsights, ensuring reliability and stability.
+- **Dockerized:** The project is dockerized and can become up and running very fast.
 
 ### Timeline
 This is an example of your timeline in site:
@@ -40,6 +41,28 @@ This is an example of your timeline in site:
 - Laravel Data: Offers a structured approach to Data Transfer Objects (DTOs).
 - PHPUnit: The codebase is rigorously tested with PHPUnit.
 - GitHub Actions: Automatic testing and continuous integration are enabled with GitHub Actions.
+
+## Docker run
+This project is Dockerized, allowing you to easily run it with the following command:
+
+``docker-compose up``
+
+This will make the project accessible at `localhost:3838`.
+
+### Configuration
+Before running the project with Docker, consider customizing the `.env` file located in the project root directory. This file allows you to configure settings based on your needs.
+
+Also, you can have more settings in the `.env.example` file in the `src` directory.
+
+### Deployment
+For deployment purposes, refer to the `deployment` directory. This directory contains various configuration files for MySQL, Nginx, and PHP-fpm.
+
+### Docker Services
+The `docker-compose.yml` file defines several services that work together to run this application:
+* app: The laravel backend app, built on a PHP-FPM Docker image.
+* scheduler: This service is essentially a copy of the app service, but its purpose is solely to run the Laravel scheduler. This allows the scheduler to crawl for TV series data without interfering with the main app functionality.
+* mysql: Database service that stores the application's data. It utilizes a separate storage volume named `mysql-data` for persistence.
+* nginx: Web server that handles incoming web requests and directs them to the app service.
 
 ## Deep inside the code
 In this article, I explain how I implemented Laravel Scout along with TNTSearch to enhance the project's search capabilities:
