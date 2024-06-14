@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
     supervisor \
     default-mysql-client \
     nano \
-    procps
+    procps \
+    nodejs npm
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -42,6 +43,9 @@ RUN php artisan storage:link && \
     chmod -R 775 ./storage ./bootstrap/cache && \
     chown -R www-data:root /usr/src
 
+# build frontend assets
+RUN npm install
+RUN npm run build
 
 #USER webappuser
 
