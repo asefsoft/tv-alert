@@ -40,6 +40,7 @@ RUN php artisan storage:link && \
     php artisan key:generate && \
     mkdir "storage/logs" && \
     mkdir "storage/tntdb" && \
+    chmod +x ./wait-for-it.sh && \
     chmod -R 775 ./storage ./bootstrap/cache && \
     chown -R www-data:root /usr/src
 
