@@ -22,3 +22,4 @@ yarn-error.log
 /tv-alert.rar
 /storage/*.index
 analyse.json
+/phpunit-local-db.xml

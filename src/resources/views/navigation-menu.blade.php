@@ -26,6 +26,13 @@
                     </x-nav-link>
                 </div>
 
+                {{-- User subscribed series --}}
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link href="{{ route('user-series') }}" :active="request()->routeIs('user-series')">
+                        {{ __('Your Series') }}
+                    </x-nav-link>
+                </div>
+                
                 <!-- Search -->
                 <div class="flex items-center ml-5 sm:ml-10">
                     <livewire:TVShow-Search></livewire:TVShow-Search>
@@ -55,7 +62,6 @@
                                     <div class="block px-4 py-2 text-xs text-gray-400">
                                         {{ __('Manage Team') }}
                                     </div>
-
                                     <!-- Team Settings -->
                                     <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
                                         {{ __('Team Settings') }}

@@ -29,10 +29,19 @@ Route::get('/testMe', function () {
 //    sendMail();
 });
 
+// full info of tvshow
 Route::get('/show/{tvshow}', [TVShowController::class, 'fullInfo'])
     ->name('display-show-full-info');
+
+// timeline of current user
 Route::get('/timeline', [TVShowController::class, 'timeline'])
     ->name('display-timeline')->middleware(['auth']);
+
+// subscribed tvshows of current user
+Route::get('/user-series', [TVShowController::class, 'userSeries'])
+    ->name('user-series')->middleware(['auth']);
+
+// search
 Route::get('/search', [TVShowController::class, 'search'])
     ->name('search-full-results');
 

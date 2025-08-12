@@ -24,6 +24,14 @@ class TVShowController extends Controller
         ]);
     }
 
+    // display subscribed series of current user
+    public function userSeries()
+    {
+        return view('tvshow.user-subscribed', [
+            'title' => 'Your subscribed tv series',
+        ]);
+    }
+
     // search results
     public function search()
     {
