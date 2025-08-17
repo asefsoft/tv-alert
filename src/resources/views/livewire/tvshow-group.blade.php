@@ -24,7 +24,7 @@
     {{-- Sort TV shows by date --}}
     @if($canSort)
 {{--        <div class="flex">field: // {{ $sortField }} //</div>--}}
-{{--        <div class="flex">query: <br>{{ $query }} </div>--}}
+{{--        <div class="flex">query: <br>{{ $this->getQuery() }} </div>--}}
         <div class="flex justify-start pb-4">
             <div class="break-words"><div class="flex items-center grow">
                 {{--  Sort Icon--}}
@@ -46,16 +46,6 @@
                 </span>
             @endforeach
             </div>
-
-{{--            <div class="mr-2 text-sm">--}}
-{{--                <label for="helper-checkbox-{{$type}}" class="font-medium text-gray-900 cursor-pointer">Only Subscribed Shows?</label>--}}
-{{--            </div>--}}
-{{--            <div class="flex items-center h-5">--}}
-{{--                <input id="helper-checkbox-{{$type}}" aria-describedby="helper-checkbox-text" type="checkbox"--}}
-{{--                       wire:model.live="displayOnlySubscribedShows"--}}
-{{--                       wire:key="{{$type}}"--}}
-{{--                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">--}}
-{{--            </div>--}}
         </div>
     @endif
 

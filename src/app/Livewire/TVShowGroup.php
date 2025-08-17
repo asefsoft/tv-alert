@@ -14,7 +14,7 @@ class TVShowGroup extends Component
 
     const VALID_SORT_FIELDS = [
         ['id' => 1, 'text' => 'Release Soon', 'name' => 'next_ep_date', 'order' => 'asc', 'putBeforeTodayToEnd'=> true ],
-        ['id' => 2, 'text' => 'Recently Released', 'name' => 'last_ep_date', 'order' => 'asc'],
+        ['id' => 2, 'text' => 'Recently Released', 'name' => 'last_ep_date', 'order' => 'desc', 'putBeforeTodayToEnd'=> true],
         ['id' => 3, 'text' => 'Newest', 'name' => 'start_date', 'order' => 'desc'],
         ['id' => 4, 'text' => 'Oldest', 'name' => 'start_date', 'order' => 'asc'],
 //        ['id' => 5, 'text' => 'Recently Ended', 'name' => 'end_date', 'order' => 'asc']
@@ -34,6 +34,7 @@ class TVShowGroup extends Component
     public string $sortOrder = 'asc';
     private bool $putBeforeTodayToEnd = true;
     private ?string $query = '';
+
 
     public string $title = 'Group Title';
 
@@ -97,6 +98,9 @@ class TVShowGroup extends Component
         }
     }
 
+    public function getQuery(): ?string {
+        return $this->query;
+    }
     protected function getSubscribedShows(): array
     {
         $userTvShows = [];
