@@ -122,7 +122,7 @@ class TVShow extends Model
 
     public function getNextEpisodeDateText($format = 'diffForHumans'): string
     {
-        if (! $this->hasNexEpDate()) {
+        if (! $this->hasNexEpDate() || $this->next_ep_date->isPast()) {
             return 'N/A';
         }
 
