@@ -24,6 +24,7 @@
     {{-- Sort TV shows by date --}}
     @if($canSort)
 {{--        <div class="flex">field: // {{ $sortField }} //</div>--}}
+{{--        <div class="flex">query: <br>{{ $query }} </div>--}}
         <div class="flex justify-start pb-4">
             <div class="break-words"><div class="flex items-center grow">
                 {{--  Sort Icon--}}

@@ -151,16 +151,26 @@ class User extends Authenticatable
         return TVShow::getRecentShows($page, $perPage, $shows);
     }
 
-    public function getSubscribedShows($page = 1, $perPage = 20, $sortField = 'next_ep_date', $sortOrder = 'asc')
+    public function getSubscribedShows($page = 1, $perPage = 20, $sortField = 'next_ep_date', $sortOrder = 'asc',
+                                       $putBeforeTodayToEnd = false, &$query='')
     {
         $sub = $this->subscriptions();
 
-        // in testing env we use sqlite and it's not support isnull
-        if (! isTesting()) {
-            $sub->orderBy(DB::raw("isnull($sortField)"), $sortOrder);
+        // for 'soon be released' sort order we put before today shows to the end
+        if ($putBeforeTodayToEnd) {
+            $sub->orderBy(DB::raw("$sortField > now()"), 'desc');
         }
 
-        return $sub->orderBy($sortField, $sortOrder)->paginate($perPage, ['*'], 'page', $page);
+        // in testing env we use sqlite, and it's not support isnull
+        if (! isTesting()) {
+            // By ordering by this expression, we can control whether rows with NULL values in $sortField appear first or last
+            // in the results, depending on the value of $sortOrder (asc or desc). we use asc to put null values last
+            $sub->orderBy(DB::raw("isnull($sortField)"), 'asc');
+        }
+
+        $orderBy = $sub->orderBy($sortField, $sortOrder);
+        $query=$orderBy->toSql();
+        return $orderBy->paginate($perPage, ['*'], 'page', $page);
     }
 
     private static function authorized(): bool

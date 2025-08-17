@@ -13,11 +13,11 @@ class TVShowGroup extends Component
     use WithPagination;
 
     const VALID_SORT_FIELDS = [
-        ['id' => 1, 'text' => 'Release Soon', 'name' => 'next_ep_date', 'order' => 'asc'],
+        ['id' => 1, 'text' => 'Release Soon', 'name' => 'next_ep_date', 'order' => 'asc', 'putBeforeTodayToEnd'=> true ],
         ['id' => 2, 'text' => 'Recently Released', 'name' => 'last_ep_date', 'order' => 'asc'],
         ['id' => 3, 'text' => 'Newest', 'name' => 'start_date', 'order' => 'desc'],
         ['id' => 4, 'text' => 'Oldest', 'name' => 'start_date', 'order' => 'asc'],
-        ['id' => 5, 'text' => 'Recently Ended', 'name' => 'end_date', 'order' => 'asc']
+//        ['id' => 5, 'text' => 'Recently Ended', 'name' => 'end_date', 'order' => 'asc']
     ];
 
     // it will be passed to sub component 'TVShowBox'
@@ -30,8 +30,10 @@ class TVShowGroup extends Component
     public bool $canSort = false;
 
     // Sorting properties
-    public ?string $sortField = 'next_ep_date';
-    public ?string $sortOrder = 'asc';
+    public string $sortField = 'next_ep_date';
+    public string $sortOrder = 'asc';
+    private bool $putBeforeTodayToEnd = true;
+    private ?string $query = '';
 
     public string $title = 'Group Title';
 
@@ -64,9 +66,8 @@ class TVShowGroup extends Component
         if ($fieldData) {
             $this->sortField = $fieldData['name'];
             $this->sortOrder = $fieldData['order'];
+            $this->putBeforeTodayToEnd = $fieldData['putBeforeTodayToEnd'] ?? false;
         }
-        // $this->sortField = $fieldName;
-//        $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage, $this->sortField);
     }
 
     // get shows base on group type
@@ -88,7 +89,8 @@ class TVShowGroup extends Component
 
                 // in this type we show subscribed shows, then it is meaningless to toggle subscribed shows
                 $this->canToggleSubscribedShowsFilter = false;
-                $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage, $this->sortField, $this->sortOrder);
+                $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage,
+                    $this->sortField, $this->sortOrder, $this->putBeforeTodayToEnd, $this->query);
                 break;
             default:
                 throw new Exception("Invalid 'type' is set for tvshow-group: ".$this->type);
