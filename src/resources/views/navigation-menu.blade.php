@@ -32,7 +32,7 @@
                         {{ __('Your Series') }}
                     </x-nav-link>
                 </div>
-                
+
                 <!-- Search -->
                 <div class="flex items-center ml-5 sm:ml-10">
                     <livewire:TVShow-Search></livewire:TVShow-Search>

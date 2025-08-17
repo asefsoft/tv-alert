@@ -12,12 +12,26 @@ class TVShowGroup extends Component
 {
     use WithPagination;
 
+    const VALID_SORT_FIELDS = [
+        ['id' => 1, 'text' => 'Release Soon', 'name' => 'next_ep_date', 'order' => 'asc'],
+        ['id' => 2, 'text' => 'Recently Released', 'name' => 'last_ep_date', 'order' => 'asc'],
+        ['id' => 3, 'text' => 'Newest', 'name' => 'start_date', 'order' => 'desc'],
+        ['id' => 4, 'text' => 'Oldest', 'name' => 'start_date', 'order' => 'asc'],
+        ['id' => 5, 'text' => 'Recently Ended', 'name' => 'end_date', 'order' => 'asc']
+    ];
+
     // it will be passed to sub component 'TVShowBox'
     public bool $displayLastEpDate = false;
 
     public bool $displayOnlySubscribedShows = false;
 
     public bool $canToggleSubscribedShowsFilter = false;
+
+    public bool $canSort = false;
+
+    // Sorting properties
+    public ?string $sortField = 'next_ep_date';
+    public ?string $sortOrder = 'asc';
 
     public string $title = 'Group Title';
 
@@ -37,9 +51,22 @@ class TVShowGroup extends Component
 
     public function render()
     {
-        $this->getShowsByType();
+            $this->getShowsByType();
+            return view('livewire.tvshow-group', [
+                'shows' => $this->shows,
+                'sortField' => $this->sortField,
+                'validSortFields' => self::VALID_SORT_FIELDS
+            ]);
+    }
 
-        return view('livewire.tvshow-group', ['shows' => $this->shows]);
+    public function changeSortField($fieldId) {
+        $fieldData = collect(self::VALID_SORT_FIELDS)->firstWhere('id', $fieldId);
+        if ($fieldData) {
+            $this->sortField = $fieldData['name'];
+            $this->sortOrder = $fieldData['order'];
+        }
+        // $this->sortField = $fieldName;
+//        $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage, $this->sortField);
     }
 
     // get shows base on group type
@@ -61,7 +88,7 @@ class TVShowGroup extends Component
 
                 // in this type we show subscribed shows, then it is meaningless to toggle subscribed shows
                 $this->canToggleSubscribedShowsFilter = false;
-                $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage);
+                $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage, $this->sortField, $this->sortOrder);
                 break;
             default:
                 throw new Exception("Invalid 'type' is set for tvshow-group: ".$this->type);

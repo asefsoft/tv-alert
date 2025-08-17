@@ -151,16 +151,16 @@ class User extends Authenticatable
         return TVShow::getRecentShows($page, $perPage, $shows);
     }
 
-    public function getSubscribedShows($page = 1, $perPage = 20)
+    public function getSubscribedShows($page = 1, $perPage = 20, $sortField = 'next_ep_date', $sortOrder = 'asc')
     {
         $sub = $this->subscriptions();
 
         // in testing env we use sqlite and it's not support isnull
         if (! isTesting()) {
-            $sub->orderBy(DB::raw('isnull(next_ep_date)'));
+            $sub->orderBy(DB::raw("isnull($sortField)"), $sortOrder);
         }
 
-        return $sub->orderBy('next_ep_date')->paginate($perPage, ['*'], 'page', $page);
+        return $sub->orderBy($sortField, $sortOrder)->paginate($perPage, ['*'], 'page', $page);
     }
 
     private static function authorized(): bool

@@ -146,6 +146,13 @@ class TVShow extends Model
         return $format === 'diffForHumans' ? $this->last_ep_date->diffForHumans() : $this->last_ep_date->format($format);
     }
 
+    public function getShowYearRange(): string
+    {
+        $startYear = $this->start_date ? $this->start_date->format('Y') : '';
+        $endYear = $this->end_date ? $this->end_date->format('Y') : '';
+        return sprintf('%s-%s', $startYear, $endYear);
+    }
+
     public function getGenresText($max = -1): string
     {
         $genres = $max > 0 ? array_slice($this->genres, 0, $max) : $this->genres;

@@ -13,7 +13,9 @@
             <!-- TV Show Name -->
             <h2 class="text-base font-semibold mb-2">
                 <a href="{{$tvShow->getFullInfoUrl()}}" x-on:click.prevent="tvShowClicked($wire, tvshowId)">{{ $tvShow->name }}</a>
+                <span class="text-sm">({{ $tvShow->getShowYearRange() }})</span>
             </h2>
+
 
             <!-- Next Episode Date -->
             <p class="text-gray-600 mb-3" title="Next Episode: {{$tvShow->getNextEpisodeDateText('default')}}">Next: {{ $tvShow->getNextEpisodeDateText() }}</p>
@@ -28,7 +30,6 @@
 
                 <!-- Other Info -->
                 <div class="flex justify-between flex-col text-gray-600 mb-3">
-{{--                    <span>Rating: 9.5</span>--}}
                     <span>Status: {{ $tvShow?->status }}</span>
                 </div>
             </div>
