@@ -13,28 +13,28 @@
                 <!-- Navigation Links -->
 
                 {{-- Dashboard --}}
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <div class="hidden space-x-6 sm:-my-px sm:ml-8 sm:flex">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
 
                 {{-- Timeline --}}
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <div class="hidden space-x-6 sm:-my-px sm:ml-8 sm:flex">
                     <x-nav-link href="{{ route('display-timeline') }}" :active="request()->routeIs('display-timeline')">
                         {{ __('Timeline') }}
                     </x-nav-link>
                 </div>
 
                 {{-- User subscribed series --}}
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <div class="hidden space-x-6 sm:-my-px sm:ml-8 sm:flex truncate">
                     <x-nav-link href="{{ route('user-series') }}" :active="request()->routeIs('user-series')">
                         {{ __('Your Series') }}
                     </x-nav-link>
                 </div>
 
                 <!-- Search -->
-                <div class="flex items-center ml-5 sm:ml-10">
+                <div class="flex items-center ml-5 sm:ml-8">
                     <livewire:TVShow-Search></livewire:TVShow-Search>
                 </div>
             </div>
