@@ -1,37 +1,37 @@
 <div x-data='{ tvshowId: {{$tvShow->id}} }'>
-    <div class="max-w-[200px] h-full flex flex-col text-sm bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-
+    <div class="max-w-[220px] h-full flex flex-col bg-white border border-gray-200 shadow-xl rounded-xl overflow-hidden transition-transform duration-200 hover:scale-105 hover:shadow-2xl">
         <!-- TV Show Poster -->
         @if($displayPoster)
-            <a href="{{$tvShow->getFullInfoUrl()}}" style="background-image: url('{{ $tvShow?->thumb_url }}');" alt="TV Show Poster"
+            <a href="{{$tvShow->getFullInfoUrl()}}"
+               style="background-image: url('{{ $tvShow?->thumb_url }}');"
+               alt="TV Show Poster"
                x-on:click.prevent="tvShowClicked($wire, tvshowId)"
-                 class="w-full h-[220px] bg-contain bg-center">
+               class="w-full h-[220px] bg-contain bg-center transition-all duration-200 hover:brightness-90">
             </a>
         @endif
 
-        <div class="px-2 py-2 flex flex-col flex-grow">
+        <div class="px-3 py-2 flex flex-col flex-grow">
             <!-- TV Show Name -->
-            <h2 class="text-base font-semibold mb-2">
-                <a href="{{$tvShow->getFullInfoUrl()}}" x-on:click.prevent="tvShowClicked($wire, tvshowId)">{{ $tvShow->name }}</a>
-                <span class="text-sm">({{ $tvShow->getShowYearRange() }})</span>
+            <h2 class="text-base font-semibold mb-1 text-gray-900 truncate" title="{{ $tvShow->name }} ({{ $tvShow->getShowYearRange() }})">
+                <a href="{{$tvShow->getFullInfoUrl()}}" x-on:click.prevent="tvShowClicked($wire, tvshowId)" class="hover:text-blue-600 transition-colors duration-150">{{ $tvShow->name }}</a>
+                <span class="text-xs text-gray-500">({{ $tvShow->getShowYearRange() }})</span>
             </h2>
 
-
             <!-- Next Episode Date -->
-            <p class="text-gray-600 mb-3" title="Next Episode: {{$tvShow->getNextEpisodeDateText('default')}}">Next: {{ $tvShow->getNextEpisodeDateText() }}</p>
+            <p class="text-xs text-blue-700 mb-2" title="Next Episode: {{$tvShow->getNextEpisodeDateText('default')}}">
+                <span class="font-medium">Next:</span> {{ $tvShow->getNextEpisodeDateText() }}
+            </p>
 
             <!-- Last Episode Date -->
             @if($displayLastEpDate)
-                <p class="text-gray-600 mb-3" title="Last Episode: {{$tvShow->getLastEpisodeDateText('default')}}">Last: {{ $tvShow->getLastEpisodeDateText() }}</p>
+                <p class="text-xs text-gray-700 mb-2" title="Last Episode: {{$tvShow->getLastEpisodeDateText('default')}}">
+                    <span class="font-medium">Last:</span> {{ $tvShow->getLastEpisodeDateText() }}
+                </p>
             @endif
 
-            <!-- Watch Later and Other Info -->
-            <div class="flex justify-between flex-col flex-grow">
-
-                <!-- Other Info -->
-                <div class="flex justify-between flex-col text-gray-600 mb-3">
-                    <span>Status: {{ $tvShow?->status }}</span>
-                </div>
+            <!-- Status & Info -->
+            <div class="flex items-center justify-between text-xs text-gray-600 mb-2">
+                <span class="inline-flex items-center py-1 font-semibold">Status: {{ $tvShow?->status }}</span>
             </div>
 
             <!-- Subscribe Button -->
