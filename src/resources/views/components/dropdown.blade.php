@@ -6,7 +6,7 @@ switch ($align) {
         $alignmentClasses = 'origin-top-left left-0';
         break;
     case 'custom-left':
-        $alignmentClasses = 'origin-top-left left-0 sm:left-[-150px] md:left-[-50px]';
+        $alignmentClasses = 'origin-top-left left-[-50px] sm:left-[-300px] md:left-[-170px] lg:left-0';
         break;
     case 'top':
         $alignmentClasses = 'origin-top';
