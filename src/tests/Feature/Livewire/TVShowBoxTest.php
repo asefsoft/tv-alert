@@ -19,11 +19,11 @@ class TVShowBoxTest extends TestCase
 
         $test = Livewire::actingAs($user)
             ->test(TVShowBox::class, ['tvShow' => $tvShow])
-            ->assertSee([$tvShow->name, 'Next: '.$tvShow->getNextEpisodeDateText(), 'Next Episode: '.
-                    $tvShow->getNextEpisodeDateText('default'), $tvShow->thumb_url, 'Subscribe'], $tvShow->getFullInfoUrl()) // see contents
-            ->assertDontSee(['Last: '.$tvShow->getLastEpisodeDateText()]) // should not display last ep date by default
+            ->assertSeeText([$tvShow->name, 'Next: '.$tvShow->getNextEpisodeDateText()]) // see contents
+            ->assertSee(['Next Episode: '. $tvShow->getNextEpisodeDateText('default'), $tvShow->thumb_url, 'Subscribe', $tvShow->getFullInfoUrl()])
+            ->assertDontSeeText(['Last: ' . $tvShow->getLastEpisodeDateText()]) // should not display last ep date by default
             ->set('displayLastEpDate', true) // now we say display it
-            ->assertSee(['Last: '.$tvShow->getLastEpisodeDateText()]) // now it should be seen
+            ->assertSeeText(['Last: '.$tvShow->getLastEpisodeDateText()]) // now it should be seen
             ->assertStatus(200);
 
     }
