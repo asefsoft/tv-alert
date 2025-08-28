@@ -19,6 +19,7 @@ class TVShowFactory extends Factory
         $name = fake()->unique()->tvShow();
         $startDate = $fake->dateTimeBetween('-10 years', '+1 year');
 
+    $hasImdbInfo = $fake->boolean();
         return [
             'name' => $name,
             'permalink' => Str::slug($name),
@@ -32,6 +33,8 @@ class TVShowFactory extends Factory
             'last_check_date' => $fake->dateTimeBetween('-2 days', 'now'),
             'network' => $fake->tvNetwork(),
             'genres' => $fake->tvGenres(rand(1, 4)),
+            'has_imdb_info' => $hasImdbInfo,
+            'last_imdb_check_date' => $hasImdbInfo ? $fake->dateTimeBetween('-10 days', 'now') : null,
         ];
     }
 }

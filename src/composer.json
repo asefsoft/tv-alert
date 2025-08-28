@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
+        "imdbphp/imdbphp": "8.3",
         "laravel/framework": "^10.10",
         "laravel/horizon": "^5.21",
         "laravel/jetstream": "^4.2",

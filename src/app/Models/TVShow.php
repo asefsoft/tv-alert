@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Tools\TVShowImdbFinder;
 use App\Data\SearchTVShowData;
 use App\Data\TVShowData;
 use App\TVShow\TVShowStatus;
@@ -19,6 +20,8 @@ use Spatie\LaravelData\WithData;
 class TVShow extends Model
 {
     use HasFactory, WithData, Searchable;
+
+    private ?TVShowImdbFinder $finder = null;
 
     public const ACTIVE_SHOWS = [
         TVShowStatus::Running, TVShowStatus::InDevelopment, TVShowStatus::NewSeries, TVShowStatus::TBD_OnTheBubble,
@@ -39,18 +42,76 @@ class TVShow extends Model
         'next_ep_date' => 'immutable_datetime:Y-m-d H:i:s',
         'last_ep_date' => 'immutable_datetime',
         'last_check_date' => 'immutable_datetime',
+        'last_imdb_check_date' => 'immutable_datetime',
         'last_aired_ep' => 'array',
         'genres' => 'array',
         'pictures' => 'array',
         'episodes' => 'array',
         'next_ep' => 'array',
         'last_ep' => 'array',
+        'has_imdb_info' => 'boolean',
     ];
 
     // users that subscribed to tvshow
     public function subscribers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'subscriptions', 'tvshow_id', 'user_id');
+    }
+
+    // IMDb info relation
+    public function imdbInfo()
+    {
+        return $this->hasOne(TVShowImdbInfo::class, 'tv_show_id');
+    }
+
+    /**
+     * Update or create IMDb information for the current TV show
+     * @return TVShowImdbInfo|null Returns null if show not found on IMDb or not a TV series
+     */
+    public function setImdbFinder(TVShowImdbFinder $finder): void
+    {
+        $this->finder = $finder;
+    }
+
+    protected function getFinder(): TVShowImdbFinder
+    {
+        if (!$this->finder) {
+            $this->finder = new TVShowImdbFinder();
+        }
+        return $this->finder;
+    }
+
+    public function updateImdbInfo(): ?TVShowImdbInfo
+    {
+        try {
+            $imdbInfo = $this->getFinder()->findSeries($this->name);
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        // Update the TV show's IMDb check status
+        $this->has_imdb_info = $this->has_imdb_info == true || $imdbInfo['found'] && $imdbInfo['is_tv_series'];
+        $this->last_imdb_check_date = now();
+        $this->save();
+
+        if (!$this->has_imdb_info) {
+            return null;
+        }
+
+        return $this->imdbInfo()->updateOrCreate(
+            ['tv_show_id' => $this->id,'imdb_id' => $imdbInfo['imdb_id']],
+            [
+                'imdb_url' => $imdbInfo['imdb_url'],
+                'seasons' => $imdbInfo['seasons'],
+                'lang' => $imdbInfo['lang'],
+                'year' => $imdbInfo['year'],
+                'yearspan' => $imdbInfo['yearspan'],
+                'endyear' => $imdbInfo['endyear'],
+                'keywords' => $imdbInfo['keywords'],
+                'rating' => $imdbInfo['rating'],
+                'votes' => $imdbInfo['votes'],
+            ]
+        );
     }
 
     // add

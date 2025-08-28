@@ -1,3 +1,7 @@
 /.idea
 /.vscode
 .git
+/src/.junie/
+/src/CLAUDE.md
+/src/.github/
+/src/.cursor/
