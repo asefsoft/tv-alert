@@ -1,8 +1,8 @@
 <?php
-namespace App\Tools;
+namespace App\TVShow;
 
-use Imdb\TitleSearch;
 use Imdb\Config;
+use Imdb\TitleSearch;
 
 class TVShowImdbFinder
 {
@@ -26,8 +26,9 @@ class TVShowImdbFinder
         $resultCount = count($results);
 
         foreach ($results as $result) {
-            $isTvSeries = ($result->movietype() === 'TV Series');
+            $isTvSeries = in_array($result->movietype(), ['TV Series', 'TV Mini Series', 'TV Short']);
             // Check if the title matches and is a TV series
+            $similar = similar_text($result->title(), $title, $perc);
             if (strcasecmp($result->title(), $title) === 0 && $isTvSeries) {
 
                 return [
@@ -44,7 +45,7 @@ class TVShowImdbFinder
                     'yearspan' => $result->yearspan(),
                     'endyear' => $result->endyear(),
                     'keywords' => $result->keywords(),
-                    'rating' => $result->rating(),
+                    'rating' => doubleval($result->rating()),
                     'votes' => $result->votes(),
                     'result' => $result
                 ];

@@ -4,10 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\TVShow;
 use App\Models\TVShowImdbInfo;
-use App\Tools\TVShowImdbFinder;
-use Tests\TestCase;
-use Mockery;
+use App\TVShow\TVShowImdbFinder;
 use Illuminate\Support\Str;
+use Mockery;
+use Tests\TestCase;
 
 class TVShowImdbTest extends TestCase
 {

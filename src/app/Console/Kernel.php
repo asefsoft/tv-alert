@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\UpdateImdbInfoOfTvShows;
 use App\TVShow\Crawling\MainCrawler;
 use App\TVShow\EmailSubscriptions\EmailSubscriptionManager;
 use Illuminate\Console\Scheduling\Schedule;
@@ -25,6 +26,9 @@ class Kernel extends ConsoleKernel
 
         // send email subscriptions
         $this->sendEmailSubscriptions($schedule);
+
+        // update imdb info of tvshows
+        $this->updateImdbInfoOfTvShows($schedule);
 
         // horizon
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
@@ -94,5 +98,17 @@ class Kernel extends ConsoleKernel
         })
             ->name('sending email subscriptions')
             ->hourly();
+    }
+
+    private function updateImdbInfoOfTvShows(Schedule $schedule): void {
+        $schedule->call(function () {
+            $t = now();
+            echo "\n", $t, "\n";
+            UpdateImdbInfoOfTvShows::dispatch()->onQueue('long-running-queue');
+            echo now(), "\n";
+            echo 'Done in ', $t->longAbsoluteDiffForHumans(), "\n";
+        })
+            ->name('update imdb info of tv shows every 5 min')
+            ->everyFiveMinutes();
     }
 }

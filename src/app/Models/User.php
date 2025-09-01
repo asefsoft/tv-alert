@@ -161,7 +161,7 @@ class User extends Authenticatable
             $sub->orderBy(DB::raw("$sortField > now()"), 'desc');
         }
 
-        // in testing env we use sqlite, and it's not support isnull
+        // in testing env we use sqlite, and does not support isnull
         if (! isTesting()) {
             // By ordering by this expression, we can control whether rows with NULL values in $sortField appear first or last
             // in the results, depending on the value of $sortOrder (asc or desc). we use asc to put null values last

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Tools\TVShowImdbFinder;
 use App\Data\SearchTVShowData;
 use App\Data\TVShowData;
+use App\TVShow\TVShowImdbFinder;
 use App\TVShow\TVShowStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -94,24 +94,29 @@ class TVShow extends Model
         $this->last_imdb_check_date = now();
         $this->save();
 
-        if (!$this->has_imdb_info) {
+        if (!$this->has_imdb_info || $imdbInfo['found'] == false) {
             return null;
         }
 
-        return $this->imdbInfo()->updateOrCreate(
-            ['tv_show_id' => $this->id,'imdb_id' => $imdbInfo['imdb_id']],
-            [
-                'imdb_url' => $imdbInfo['imdb_url'],
-                'seasons' => $imdbInfo['seasons'],
-                'lang' => $imdbInfo['lang'],
-                'year' => $imdbInfo['year'],
-                'yearspan' => $imdbInfo['yearspan'],
-                'endyear' => $imdbInfo['endyear'],
-                'keywords' => $imdbInfo['keywords'],
-                'rating' => $imdbInfo['rating'],
-                'votes' => $imdbInfo['votes'],
-            ]
-        );
+        try {
+            return $this->imdbInfo()->updateOrCreate(
+                ['tv_show_id' => $this->id, 'imdb_id' => $imdbInfo['imdb_id']],
+                [
+                    'imdb_url' => $imdbInfo['imdb_url'],
+                    'seasons' => $imdbInfo['seasons'],
+                    'lang' => $imdbInfo['lang'],
+                    'year' => $imdbInfo['year'],
+                    'yearspan' => $imdbInfo['yearspan'],
+                    'endyear' => $imdbInfo['endyear'],
+                    'keywords' => $imdbInfo['keywords'],
+                    'rating' => $imdbInfo['rating'],
+                    'votes' => $imdbInfo['votes'],
+                ]
+            );
+        } catch (\Exception $e) {
+            logException($e ,"Error on updateImdbInfo" . $e->getMessage());
+            return null;
+        }
     }
 
     // add
