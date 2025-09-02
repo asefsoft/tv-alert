@@ -15,7 +15,7 @@
         <!-- Results List -->
         <div class="flex flex-col -mx-4">
             <div class="px-5 pb-6">
-                {{ $shows?->onEachSide(1)->links() }}
+                {{ $shows?->onEachSide(1)->links(data: ['scrollTo' => false]) }}
             </div>
 
             <!-- Result Item (TV Show) -->

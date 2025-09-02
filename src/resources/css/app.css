@@ -6,7 +6,8 @@
     display: none;
 }
 
-[aria-current] .select-none{
+/* highlight current page of livewire paginator*/
+[aria-current] span {
     font-weight: bold;
     background-color: #3b82f6;
     color: white;

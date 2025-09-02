@@ -6,11 +6,12 @@ use App\Models\TVShow;
 use App\Models\User;
 use Exception;
 use Livewire\Component;
+use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
 class TVShowGroup extends Component
 {
-    use WithPagination;
+    use WithPagination, WithoutUrlPagination;
 
     const VALID_SORT_FIELDS = [
         ['id' => 1, 'text' => 'Release Soon', 'name' => 'next_ep_date', 'order' => 'asc', 'putBeforeTodayToEnd'=> true ],
@@ -68,6 +69,7 @@ class TVShowGroup extends Component
             $this->sortField = $fieldData['name'];
             $this->sortOrder = $fieldData['order'];
             $this->putBeforeTodayToEnd = $fieldData['putBeforeTodayToEnd'] ?? false;
+            $this->resetPage();
         }
     }
 
@@ -96,6 +98,7 @@ class TVShowGroup extends Component
             default:
                 throw new Exception("Invalid 'type' is set for tvshow-group: ".$this->type);
         }
+//        $this->shows->setPageName($this->type);
     }
 
     public function getQuery(): ?string {

@@ -2,7 +2,7 @@
     <a href="{{ $tvShow?->imdbinfo?->imdb_url }}"
        rel="noopener noreferrer"
        target="_blank"
-       class="inline-flex items-center space-x-1 border border-gray-400 rounded pr-1 text-sm hover:bg-gray-100 transition"
+       class="inline-flex items-center space-x-1 border border-gray-300 rounded pr-1 text-sm hover:bg-gray-100 transition"
        title="Votes: {{ number_format($tvShow?->imdbinfo?->votes) }}">
 
         <!-- IMDb badge -->

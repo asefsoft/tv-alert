@@ -1,7 +1,7 @@
-<div class="px-3 my-2 shadow-md">
+<div class="px-3 my-2">
     {{-- Title --}}
     <div class="flex justify-between mb-8">
-        <h2 class="text-xl font-semibold underline underline-offset-[14px] decoration-4 decoration-gray-300">
+        <h2 class="text-xl font-semibold underline underline-offset-[14px] decoration-4 decoration-indigo-400">
             {{ $title }}
         </h2>
 
@@ -52,7 +52,7 @@
 
     @if(! empty($shows) && $shows->count() > 0)
         {{-- TVShow List --}}
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 gap-y-6">
             @foreach($shows as $show)
                 <livewire:TVShow-Box wire:key="{{$show->id}}"
                                      :tv-show="$show"
@@ -62,7 +62,7 @@
         </div>
 
         <div class="py-5 px-3">
-            {{ $shows->onEachSide(1)->links() }}
+            {{ $shows->onEachSide(1)->links(data: ['scrollTo' => false]) }}
         </div>
     @else
         {{-- Empty State --}}
