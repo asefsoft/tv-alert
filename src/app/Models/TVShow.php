@@ -178,7 +178,7 @@ class TVShow extends Model
 
     public function hasNexEpDate(): bool
     {
-        return ! empty($this->next_ep_date);
+        return ! empty($this->next_ep_date) && ! $this->next_ep_date->isPast();
     }
 
     public function hasLastEpDate(): bool
@@ -217,6 +217,13 @@ class TVShow extends Model
         $startYear = $this->start_date ? $this->start_date->format('Y') : '';
         $endYear = $this->end_date ? $this->end_date->format('Y') : '';
         return sprintf('%s-%s', $startYear, $endYear);
+    }
+
+    public function getImdbRating(): string {
+        if($this->has_imdb_info){
+            return sprintf('%.1f', $this->imdbInfo?->rating);
+        }
+        return '';
     }
 
     public function getGenresText($max = -1): string
@@ -260,6 +267,7 @@ class TVShow extends Model
     {
         $q = static::activeShows() // only active shows, not ENDED shows
             ->LimitToIDs($targetShows) // only return shows we want, usually user's subscribed shows
+            ->with('imdbinfo')
             // get shows with close air-date
             ->hasNextEpisodeDate()
             ->whereBetween('next_ep_date', [now(), now()->addDays(2)]) // only next 2 days shows
@@ -311,7 +319,9 @@ class TVShow extends Model
 
     public static function getShowsByAirDateDistance(int $daysDistance = 0, $page = 1, $perPage = 20, $targetShows = [])
     {
-        $q = static::whereIn('status', self::ACTIVE_SHOWS)->LimitToIDs($targetShows); // only return shows we want, usually user's subscribed shows
+        $q = static::whereIn('status', self::ACTIVE_SHOWS)
+            ->LimitToIDs($targetShows) // only return shows we want, usually user's subscribed shows
+            ->with('imdbinfo');
 
         self::applyDayDistance($daysDistance, $q);
 

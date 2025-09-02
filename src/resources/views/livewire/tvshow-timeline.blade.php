@@ -47,7 +47,10 @@
                             {{-- Show Name--}}
                             <div class="text-md font-semibold text-gray-900 group-hover:text-m-red">
                                 {{$tvShow->name}}
-                                <div class="text-sm text-gray-400 overflow-hidden">{{$tvShow->start_date?->format('Y')}}, {{$tvShow->network}}, {{$tvShow->country}}</div>
+                                <div class="flex items-center justify-between text-sm text-gray-400 overflow-hidden">
+                                    {{$tvShow->start_date?->format('Y')}}, {{$tvShow->network}}, {{$tvShow->country}}
+                                    @include('livewire.partials.imdb-link')
+                                </div>
                             </div>
                             <ol class="mt-1 divide-y divider-gray-200 ">
                                 <li>

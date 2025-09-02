@@ -40,10 +40,11 @@
                                     {!! strLimitHighlighted($tvShow->name, 70) !!}
                                 </a>
                                 <!-- Other Info -->
-                                <p class="flex space-x-2 truncate">
+                                <p class="flex items-center space-x-2 truncate">
                                     <span>{{ sprintf("%s%s%s", $tvShow->start_date?->format('Y'), (empty($tvShow->end_date) ? "" : "-"), $tvShow->end_date?->format('Y')) }},</span>
                                     <span>{!! strLimitHighlighted($tvShow->network, 20, '') !!}, </span>
-                                    <span>{{ $tvShow->country }}</span>
+                                    <span>{{ $tvShow->country }}@if($tvShow?->has_imdb_info), @endif</span>
+                                    @include('livewire.partials.imdb-link')
                                 </p>
                                 <p><span class="font-semibold">Genre</span>: <span>{{ $tvShow->getGenresText(6) }}</span></p>
                                 <p class="mt-2">{{ $tvShow->getShowDescription(130) }}</p>

@@ -51,23 +51,24 @@
                         <p class="font-semibold">Start Date:</p>
                         <p>{{ $tvShow?->start_date?->format('Y/m/d') }}</p>
                     </div>
-                    @if($tvShow?->hasNexEpDate())
-                        <div>
-                            <p class="font-semibold">Next Episode:</p>
-                            <p title="{{ $tvShow?->getNextEpisodeDateText('default') }}">
-                                {{ $tvShow?->getNextEpisodeDateText() }}
-                            </p>
-                        </div>
-                    @endif
+                    <div>
+                        <p class="font-semibold">IMDb Info:</p>
+                        <p>@include('livewire.partials.imdb-link')</p>
+                    </div>
 
-                    @if($tvShow?->hasLastEpDate())
-                        <div>
-                            <p class="font-semibold">Last Episode:</p>
-                            <p title="{{ $tvShow?->getLastEpisodeDateText('default') }}">
-                                {{ $tvShow?->getLastEpisodeDateText() }}
-                            </p>
+                    <div>
+                        <p class="font-semibold">Next Episode:</p>
+                        <p title="{{ $tvShow?->getNextEpisodeDateText('default') }}">
+                            {{ $tvShow?->getNextEpisodeDateText() }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-semibold">Last Episode:</p>
+                        <p title="{{ $tvShow?->getLastEpisodeDateText('default') }}">
+                            {{ $tvShow?->getLastEpisodeDateText() }}
+                        </p>
                         </div>
-                    @endif
                 </div>
                 {{-- Subscribe button --}}
                 @if($tvShow)

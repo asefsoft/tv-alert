@@ -32,6 +32,7 @@
             <!-- Status & Info -->
             <div class="flex items-center justify-between text-xs text-gray-600 mb-2">
                 <span class="inline-flex items-center py-1 font-semibold">Status: {{ $tvShow?->status }}</span>
+                @include('livewire.partials.imdb-link')
             </div>
 
             <!-- Subscribe Button -->

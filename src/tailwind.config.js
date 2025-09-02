@@ -20,7 +20,9 @@ export default {
                 xs: '480px'
             },
             colors:{
-                'm-red':'#e4002b'
+                'm-red':'#e4002b',
+                'imdb': "#d4a90b",
+                'imdb-hover': "#b38600",
             }
         },
     },

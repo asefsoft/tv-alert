@@ -39,7 +39,7 @@ class TVShowFullInfo extends Component
 
     private function fetchTvShowByID($tvshowId): void
     {
-        $this->tvShow = TVShow::whereId($tvshowId)->first();
+        $this->tvShow = TVShow::whereId($tvshowId)->with('imdbinfo')->first();
         // this will show tvshow info and hides "Loading..." indicator
         $this->isLoadingShowInfo = false;
     }

@@ -88,7 +88,7 @@ class TVShowGroup extends Component
                 // unauthorized if user is not logged-in
                 abort_if(! auth()->check(), 403);
 
-                // in this type we show subscribed shows, then it is meaningless to toggle subscribed shows
+                // in this type we show subscribed shows, so it is meaningless to toggle subscribed shows
                 $this->canToggleSubscribedShowsFilter = false;
                 $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage,
                     $this->sortField, $this->sortOrder, $this->putBeforeTodayToEnd, $this->query);

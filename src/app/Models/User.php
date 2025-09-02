@@ -154,7 +154,7 @@ class User extends Authenticatable
     public function getSubscribedShows($page = 1, $perPage = 20, $sortField = 'next_ep_date', $sortOrder = 'asc',
                                        $putBeforeTodayToEnd = false, &$query='')
     {
-        $sub = $this->subscriptions();
+        $sub = $this->subscriptions()->with('imdbinfo');
 
         // for 'soon be released' sort order we put before today shows to the end
         if ($putBeforeTodayToEnd) {

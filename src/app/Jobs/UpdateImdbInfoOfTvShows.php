@@ -26,7 +26,7 @@ class UpdateImdbInfoOfTvShows implements ShouldQueue
      */
     public function handle(): void
     {
-        $updater = new UpdateTVShowsImdbInfo(5);
+        $updater = new UpdateTVShowsImdbInfo(20);
         $stats = $updater->update();
         dump($stats);
     }

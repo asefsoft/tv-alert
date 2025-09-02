@@ -5,8 +5,8 @@
         </x-slot>
 
         <x-slot name="content">
-            <p>Please register on our site first to unlock this feature.</p>
-            <p>If you already have an account, click on login otherwise user register button.</p>
+            <p>Please register on our site to unlock this feature.</p>
+            <p>If you already have an account, click the Login button. Otherwise, use the Register button.</p>
         </x-slot>
 
         <x-slot name="footer">

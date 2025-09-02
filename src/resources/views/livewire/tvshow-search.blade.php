@@ -51,10 +51,11 @@
                                     {!! strLimitHighlighted($tvShow->name, 35) !!}
                                 </p>
                                 {{-- Date, Country ... --}}
-                                <p class="flex space-x-2 text-sm text-gray-500 truncate">
+                                <p class="space-x-2 text-sm text-gray-500 truncate">
                                     <span>{{ $tvShow->start_date?->format('Y') }},</span>
                                     <span>{!! strLimitHighlighted($tvShow->network, 20, '') !!}, </span>
-                                    <span>{{ $tvShow->country }}</span>
+                                    <span>{{ $tvShow->country }}@if($tvShow?->has_imdb_info), @endif</span>
+                                    @include('livewire.partials.imdb-link')
                                 </p>
                             </div>
                             <div class="hidden sm:inline-flex items-center text-xs text-gray-800">

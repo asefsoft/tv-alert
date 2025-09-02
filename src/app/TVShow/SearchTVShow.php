@@ -50,6 +50,8 @@ class SearchTVShow
             $this->possibleResults = $result['hits'] ?? [];
 
             return $result;
+        })->query(function ($builder) {
+            $builder->with('imdbinfo'); //eager load imdbinfo relation
         });
 
         $this->searchResults = $result->paginate($this->perPage, 'page', $this->page);
