@@ -25,7 +25,7 @@
     @if($canSort)
 {{--        <div class="flex">field: // {{ $sortField }} //</div>--}}
 {{--        <div class="flex">query: <br>{{ $this->getQuery() }} </div>--}}
-        <div class="flex justify-start pb-5">
+        <div class="flex justify-start pb-5 flex-col sm:flex-row">
             <div class="break-words"><div class="flex items-center grow">
                 {{--  Sort Icon--}}
                 <div class="flex shrink-0 mr-2" >
@@ -52,7 +52,7 @@
 
     @if(! empty($shows) && $shows->count() > 0)
         {{-- TVShow List --}}
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 gap-y-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 gap-y-6">
             @foreach($shows as $show)
                 <livewire:TVShow-Box wire:key="{{$show->id}}"
                                      :tv-show="$show"

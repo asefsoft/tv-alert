@@ -1,13 +1,18 @@
 <div x-data='{ tvshowId: {{$tvShow->id}} }'>
-    <div class="max-w-[220px] h-full flex flex-col bg-white border border-gray-200 shadow-xl rounded-xl overflow-hidden transition-transform duration-200 hover:scale-105 hover:shadow-2xl">
+    <div class="flex flex-col max-w-[220px] h-full bg-white border border-gray-200 shadow-xl rounded-xl overflow-hidden transition-transform duration-200 hover:scale-105 hover:shadow-2xl">
         <!-- TV Show Poster -->
         @if($displayPoster)
-            <a href="{{$tvShow->getFullInfoUrl()}}"
-               style="background-image: url('{{ $tvShow?->thumb_url }}');"
-               alt="TV Show Poster"
-               x-on:click.prevent="tvShowClicked($wire, tvshowId)"
-               class="w-full h-[220px] bg-contain bg-center transition-all duration-200 hover:brightness-90">
-            </a>
+            <div class="flex flex-col relative">
+                <a href="{{$tvShow->getFullInfoUrl()}}"
+                   style="background-image: url('{{ $tvShow?->thumb_url }}');"
+                   alt="TV Show Poster"
+                   x-on:click.prevent="tvShowClicked($wire, tvshowId)"
+                   class="w-full h-[220px] bg-contain bg-center transition-all duration-200 hover:brightness-90">
+                </a>
+                <div class="absolute top-2 right-2">
+                    @include('livewire.partials.imdb-link')
+                </div>
+            </div>
         @endif
 
         <div class="px-3 py-2 flex flex-col flex-grow">
@@ -29,10 +34,9 @@
                 </p>
             @endif
 
-            <!-- Status & Info -->
-            <div class="flex items-center justify-between text-xs text-gray-600 mb-2">
+            <!-- Status -->
+            <div class="flex items-center text-xs text-gray-600 mb-2">
                 <span class="inline-flex items-center py-1 font-semibold">Status: {{ $tvShow?->status }}</span>
-                @include('livewire.partials.imdb-link')
             </div>
 
             <!-- Subscribe Button -->

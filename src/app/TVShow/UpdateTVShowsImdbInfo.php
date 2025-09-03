@@ -58,13 +58,14 @@ class UpdateTVShowsImdbInfo
         return $stats;
     }
 
-
-
+    /**
+     * Get the shows that need their IMDb information updated.
+     * Prioritizes shows that haven't been checked in the longest time.
+     */
     protected function getShowsToUpdate(): Collection
     {
-        $query = TVShow::query();
-
-        return $query->orderBy('last_imdb_check_date', 'asc')
+        return TVShow::query()
+            ->orderBy('last_imdb_check_date', 'asc')
             ->take($this->batchSize)
             ->get();
     }

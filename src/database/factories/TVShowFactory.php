@@ -22,7 +22,7 @@ class TVShowFactory extends Factory
     $hasImdbInfo = $fake->boolean();
         return [
             'name' => $name,
-            'permalink' => Str::slug($name),
+            'permalink' => Str::slug($name) . Str::random(15),
             'description' => strLimit(fake()->overview(), 2500, ''),
             'status' => TVShowStatus::cases()[array_rand(TVShowStatus::cases())],
             'country' => $fake->countryCode(),
