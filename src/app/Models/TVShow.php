@@ -178,17 +178,17 @@ class TVShow extends Model
 
     public function hasNexEpDate(): bool
     {
-        return ! empty($this->next_ep_date) && ! $this->next_ep_date->isPast();
+        return ! empty($this->next_ep_date);
     }
 
     public function hasLastEpDate(): bool
     {
-        return ! empty($this->next_ep_date);
+        return ! empty($this->last_ep_date);
     }
 
     public function getNextEpisodeDateText($format = 'diffForHumans'): string
     {
-        if (! $this->hasNexEpDate() || $this->next_ep_date->isPast()) {
+        if (! $this->hasNexEpDate() ) {
             return 'N/A';
         }
 
@@ -201,7 +201,7 @@ class TVShow extends Model
 
     public function getLastEpisodeDateText($format = 'diffForHumans'): string
     {
-        if (! $this->last_ep_date) {
+        if (! $this->hasLastEpDate()) {
             return 'N/A';
         }
 

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UpdateImdbInfoOfTvShows implements ShouldQueue
 {
@@ -26,8 +27,10 @@ class UpdateImdbInfoOfTvShows implements ShouldQueue
      */
     public function handle(): void
     {
-        $updater = new UpdateTVShowsImdbInfo(20);
+        $t = now();
+        $updater = new UpdateTVShowsImdbInfo(25);
         $stats = $updater->update();
         dump($stats);
+        Log::info(sprintf("UpdateTVShowsImdbInfo Done in %s\n%s" , $t->longAbsoluteDiffForHumans(), json_encode($stats, JSON_PRETTY_PRINT)));
     }
 }
