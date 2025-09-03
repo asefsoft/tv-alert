@@ -19,7 +19,7 @@ class TVShowFullInfoTest extends TestCase
 
         Livewire::test(TVShowFullInfo::class, ['tvShowId' => $tvShow->id])
             ->assertSee([$tvShow->name, $tvShow->image_url, $tvShow->status, $tvShow?->network,
-                $tvShow?->getNextEpisodeDateText(), 'Loading...', $tvShow->getShowDescription()])
+                $tvShow?->getNextEpisodeDateText(shouldBeFuture: true), 'Loading...', $tvShow->getShowDescription()])
             ->assertSee($tvShow->genres)
             ->assertDontSee('Read More')
             ->assertSet('isLoadingShowInfo', false)

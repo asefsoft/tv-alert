@@ -151,7 +151,7 @@ class TVShow extends Model
 
     public function isRunning(): bool
     {
-        return strtolower($this->status) === 'running';
+        return $this->status == TVShowStatus::Running || strtolower($this->status) === 'running';
     }
 
     public function scopeActiveShows(Builder $builder)
@@ -186,9 +186,13 @@ class TVShow extends Model
         return ! empty($this->last_ep_date);
     }
 
-    public function getNextEpisodeDateText($format = 'diffForHumans'): string
+    public function getNextEpisodeDateText($format = 'diffForHumans', bool $shouldBeFuture = false): string
     {
         if (! $this->hasNexEpDate() ) {
+            return 'N/A';
+        }
+
+        if ($shouldBeFuture && $this->next_ep_date->isPast()) {
             return 'N/A';
         }
 

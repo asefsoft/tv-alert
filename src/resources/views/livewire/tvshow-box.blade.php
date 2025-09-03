@@ -18,8 +18,8 @@
             </h2>
 
             <!-- Next Episode Date -->
-            <p class="text-xs text-blue-700 mb-2" title="Next Episode: {{$tvShow->getNextEpisodeDateText('default')}}">
-                <span class="font-medium">Next:</span> {{ $tvShow->getNextEpisodeDateText() }}
+            <p class="text-xs text-blue-700 mb-2" title="Next Episode: {{$tvShow->getNextEpisodeDateText('default', shouldBeFuture: true)}}">
+                <span class="font-medium">Next:</span> {{ $tvShow->getNextEpisodeDateText(shouldBeFuture: true) }}
             </p>
 
             <!-- Last Episode Date -->

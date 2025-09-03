@@ -58,8 +58,8 @@
 
                     <div>
                         <p class="font-semibold">Next Episode:</p>
-                        <p title="{{ $tvShow?->getNextEpisodeDateText('default') }}">
-                            {{ $tvShow?->getNextEpisodeDateText() }}
+                        <p title="{{ $tvShow?->getNextEpisodeDateText('default', shouldBeFuture: true) }}">
+                            {{ $tvShow?->getNextEpisodeDateText(shouldBeFuture: true) }}
                         </p>
                     </div>
 

@@ -12,6 +12,7 @@ use App\TVShow\CreateOrUpdateTVShow;
 use App\TVShow\TVShowStatus;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Str;
 use Spatie\LaravelData\DataCollection;
 use Tests\TestCase;
 
@@ -107,5 +108,26 @@ class TVShowDataTest extends TestCase
         $this->assertCount(20, $searchResult->tv_shows);
         $this->assertInstanceOf(DataCollection::class, $searchResult->tv_shows);
         $this->assertInstanceOf(TVShowData::class, $searchResult->tv_shows->first());
+    }
+
+    public function test_episode_dates_must_be_valid() {
+        $show = TVShow::factory()->create([
+            'next_ep_date' => now()->subDays(5), // set next ep to the past
+            'last_ep_date' => now()->subDays(10),
+        ]);
+
+        // we expect dont give past date when shouldBeFuture is set to true
+        $this->assertEquals("N/A", $show->getNextEpisodeDateText(shouldBeFuture: true));
+        $this->assertEquals($show->next_ep_date->diffForHumans(), $show->getNextEpisodeDateText(shouldBeFuture: false));
+
+        $this->assertEquals($show->last_ep_date->diffForHumans(), $show->getLastEpisodeDateText());
+    }
+
+    public function test_is_running_status_is_working() {
+        $show = TVShow::factory()->create([
+            'status' => TVShowStatus::Running
+        ]);
+
+        $this->assertTrue($show->isRunning());
     }
 }
