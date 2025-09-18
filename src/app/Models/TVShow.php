@@ -156,6 +156,11 @@ class TVShow extends Model
         return $this->status == TVShowStatus::Running || strtolower($this->status) === 'running';
     }
 
+    public function isEnded(): bool {
+        return $this->status == TVShowStatus::Ended || strtolower($this->status) === 'ended';
+
+    }
+
     public function scopeActiveShows(Builder $builder)
     {
         return $builder->whereIn('status', self::ACTIVE_SHOWS);
@@ -225,7 +230,8 @@ class TVShow extends Model
     public function getShowYearRange(): string
     {
         $startYear = $this->start_date ? $this->start_date->format('Y') : '';
-        $endYear = $this->end_date ? $this->end_date->format('Y') : '';
+        $endYear = $this->end_date ? $this->end_date->format('Y') :
+            ($this->imdbInfo?->endyear ? $this->imdbInfo->endyear : '');
         return sprintf('%s-%s', $startYear, $endYear);
     }
 
@@ -410,4 +416,5 @@ class TVShow extends Model
 
         return $result;
     }
+
 }
