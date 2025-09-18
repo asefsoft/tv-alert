@@ -193,7 +193,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
-        @endauth
+
 
         {{-- Timeline --}}
         <div class="pt-2 pb-3 space-y-1">
@@ -201,6 +201,14 @@
                 {{ __('Timeline') }}
             </x-responsive-nav-link>
         </div>
+
+        {{-- Timeline --}}
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link href="{{ route('user-series') }}" :active="request()->routeIs('user-series')">
+                {{ __('Your Series') }}
+            </x-responsive-nav-link>
+        </div>
+        @endauth
 
         @guest()
         {{-- Login --}}

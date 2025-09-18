@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Data\EpisodeData;
 use App\Data\SearchTVShowData;
 use App\Data\TVShowData;
 use App\TVShow\TVShowImdbFinder;
 use App\TVShow\TVShowStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -146,7 +148,7 @@ class TVShow extends Model
     public function getShowDescription($maxLen = 0)
     {
         $description = strip_tags($this->description);
-        return $maxLen > 0 ? substr($description, 0, $maxLen) . ' ...' : $description;
+        return $maxLen > 0 ? substr($description, 0, $maxLen) : $description;
     }
 
     public function isRunning(): bool
@@ -203,9 +205,13 @@ class TVShow extends Model
         return $format === 'diffForHumans' ? $this->next_ep_date->diffForHumans() : $this->next_ep_date->format($format);
     }
 
-    public function getLastEpisodeDateText($format = 'diffForHumans'): string
+    public function getLastEpisodeDateText($format = 'diffForHumans', bool $shouldBePast = false): string
     {
         if (! $this->hasLastEpDate()) {
+            return 'N/A';
+        }
+
+        if ($shouldBePast && $this->last_ep_date->isFuture()) {
             return 'N/A';
         }
 
@@ -374,5 +380,34 @@ class TVShow extends Model
                 ->orderBy('next_ep_date', 'asc')
                 ->orderBy('last_ep_date', 'asc');
         }
+    }
+
+    // group tvshows by season and also make episode data
+    public function getGroupedEpisodesList() : \Illuminate\Support\Collection {
+
+        $t= now();
+        $allEpisodes = collect($this->episodes);
+        // convert array to episode data
+        $allEpisodes = $allEpisodes->map(function ($episode) {
+            $episode['air_date'] = date_create($episode['air_date']);// Carbon::make($episode['air_date']);
+            return (object)($episode);
+            return EpisodeData::from($episode);
+        });
+
+        $result =  $allEpisodes->groupBy('season')
+            // add start date of each season
+            ->map(function ($season) {
+            $season->start_date = $season->first()->air_date;
+            $season->end_date = $season->last()->air_date;
+            return $season;
+        });
+
+        $result->total_episodes = $allEpisodes->count();
+
+        $t = $t->diffInMilliseconds();
+        $result->took = $t;
+//        dd($t);
+
+        return $result;
     }
 }
