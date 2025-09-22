@@ -132,14 +132,14 @@
                                 x-transition:enter-start="opacity-0 transform -translate-y-2"
                                 x-transition:enter-end="opacity-100 transform translate-y-0"
                                 class="divide-y divide-gray-100">
-                                @foreach($episodes as $episode)
-                                    <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
+                                @foreach($episodes as $n => $episode)
+                                    <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150 {{$n%2==0 ? 'bg-sky-50':'bg-sky-100'}}">
                                         <div class="flex justify-between items-center">
                                             <div class="flex items-center space-x-3">
                                                 <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-md font-medium text-sm">E{{ str_pad($episode->episode, 2, '0', STR_PAD_LEFT) }}</span>
                                                 <span class="font-medium text-gray-800">{{ $episode->name }}</span>
                                             </div>
-                                            <div class="text-sm font-medium text-gray-500">
+                                            <div class="text-sm font-medium text-gray-500" title="{{ $episode->air_date->format('Y/m/d')}}">
                                                 {{ $episode->air_date->format('M d, Y') }}
                                             </div>
                                         </div>
