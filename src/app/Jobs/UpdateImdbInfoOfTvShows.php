@@ -28,7 +28,7 @@ class UpdateImdbInfoOfTvShows implements ShouldQueue
     public function handle(): void
     {
         $t = now();
-        $updater = new UpdateTVShowsImdbInfo(25);
+        $updater = new UpdateTVShowsImdbInfo(20);
         $stats = $updater->update();
         dump($stats);
         Log::info(sprintf("UpdateTVShowsImdbInfo Done in %s\n%s" , $t->longAbsoluteDiffForHumans(), json_encode($stats, JSON_PRETTY_PRINT)));

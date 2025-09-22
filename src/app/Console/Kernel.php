@@ -108,7 +108,7 @@ class Kernel extends ConsoleKernel
             echo now(), "\n";
             echo 'Done in ', $t->longAbsoluteDiffForHumans(), "\n";
         })
-            ->name('update imdb info of tv shows every 5 min')
-            ->everyFiveMinutes();
+            ->name('update imdb info of tv shows every 10 min')
+            ->everyTenMinutes();
     }
 }

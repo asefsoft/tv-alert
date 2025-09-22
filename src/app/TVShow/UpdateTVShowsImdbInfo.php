@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateTVShowsImdbInfo
 {
-    const DELAY_BETWEEN_UPDATED = 5;
+    const DELAY_BETWEEN_UPDATED = 10;
 
     /**
      * Create a new instance of the updater.
