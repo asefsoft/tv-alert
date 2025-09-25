@@ -31,6 +31,7 @@ class TVShowImdbInfoFactory extends Factory
             'keywords' => $this->faker->words(5),
             'rating' => $this->faker->randomFloat(1, 1, 10),
             'votes' => $this->faker->numberBetween(1000, 2000000),
+            'popularity_score' => 0,
         ];
     }
 

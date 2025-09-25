@@ -92,6 +92,11 @@ class UpdateTVShowsImdbInfoTest extends TestCase
         $this->assertTrue($oldestShow->has_imdb_info);
         $this->assertTrue($middleShow->has_imdb_info);
         $this->assertFalse($newestShow->has_imdb_info);
+
+        // assert popularity_score is updated
+        $this->assertDatabaseMissing('tv_show_imdb_info', [
+            'popularity_score' => null
+        ]);
     }
 
     /** @test */

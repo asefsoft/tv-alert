@@ -101,7 +101,7 @@ class TVShow extends Model
         }
 
         try {
-            return $this->imdbInfo()->updateOrCreate(
+            $imdbInfo =  $this->imdbInfo()->updateOrCreate(
                 ['tv_show_id' => $this->id, 'imdb_id' => $imdbInfo['imdb_id']],
                 [
                     'imdb_url' => $imdbInfo['imdb_url'],
@@ -115,6 +115,11 @@ class TVShow extends Model
                     'votes' => $imdbInfo['votes'],
                 ]
             );
+
+            $imdbInfo->updatePopularityScore();
+            $imdbInfo->save();
+
+            return $imdbInfo;
         } catch (\Exception $e) {
             logException($e ,"Error on updateImdbInfo" . $e->getMessage());
             return null;
