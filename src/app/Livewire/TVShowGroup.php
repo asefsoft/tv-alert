@@ -18,7 +18,8 @@ class TVShowGroup extends Component
         ['id' => 2, 'text' => 'Recently Released', 'name' => 'last_ep_date', 'order' => 'desc', 'putBeforeTodayToEnd'=> true],
         ['id' => 3, 'text' => 'Newest', 'name' => 'start_date', 'order' => 'desc'],
         ['id' => 4, 'text' => 'Oldest', 'name' => 'start_date', 'order' => 'asc'],
-//        ['id' => 5, 'text' => 'Recently Ended', 'name' => 'end_date', 'order' => 'asc']
+        ['id' => 5, 'text' => 'Most Popular', 'name' => 'popularity_score', 'order' => 'desc'],
+        ['id' => 6, 'text' => 'Top Rated', 'name' => 'rating', 'order' => 'desc']
     ];
 
     // it will be passed to sub component 'TVShowBox'
@@ -76,7 +77,7 @@ class TVShowGroup extends Component
     // get shows base on group type
     protected function getShowsByType(): void
     {
-        $userTvShows = $this->getSubscribedShows();
+        $userTvShows = $this->getUserSubscribedShowsIDs();
 
         switch ($this->type) {
             case 'recent-shows':
@@ -95,16 +96,42 @@ class TVShowGroup extends Component
                 $this->shows = auth()->user()->getSubscribedShows($this->getPage(), $this->perPage,
                     $this->sortField, $this->sortOrder, $this->putBeforeTodayToEnd, $this->query);
                 break;
+            case 'recent-popular-shows':
+            case 'ongoing-popular-shows':
+            case 'popular-shows':
+            $this->canToggleSubscribedShowsFilter = false;
+            $query = $this->getPopularShows($this->type);
+                $this->shows = $query->paginate($this->perPage);
+                break;
             default:
                 throw new Exception("Invalid 'type' is set for tvshow-group: ".$this->type);
         }
 //        $this->shows->setPageName($this->type);
     }
 
+    private function getPopularShows($type) {
+        $query = TVShow::with('imdbInfo')
+            ->popular()
+            ->sortOrderBy($this->sortField, $this->sortOrder);
+
+        switch ($type) {
+            case 'recent-popular-shows':
+                $query = $query->recentlyStarted();
+                break;
+            case 'ongoing-popular-shows':
+                $query = $query->activeShows();
+                break;
+        }
+
+        return $query;
+    }
+
+    // just for debug and test
     public function getQuery(): ?string {
         return $this->query;
     }
-    protected function getSubscribedShows(): array
+
+    protected function getUserSubscribedShowsIDs(): array
     {
         $userTvShows = [];
 

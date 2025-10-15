@@ -20,6 +20,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/popular', function () {
+    return view('tvshow.popular');
+})->name('popular-shows');
+
 Route::get('/testMe', function () {
     abort_if(auth()->guest(), 404);
 

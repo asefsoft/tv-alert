@@ -27,6 +27,7 @@
             <!-- Next Episode Date -->
             <p class="text-xs  mb-2 {{ $tvShow->isEnded() ? '' : 'text-blue-700' }}" title="Next Episode: {{$tvShow->getNextEpisodeDateText('default', shouldBeFuture: true)}}">
                 <span class="font-medium">Next:</span> {{ $tvShow->getNextEpisodeDateText(shouldBeFuture: true) }}
+{{--                <span> {{$tvShow->imdbInfo?->popularity_score}}</span>--}}
             </p>
 
             <!-- Last Episode Date -->

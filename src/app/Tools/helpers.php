@@ -93,3 +93,47 @@ function strLimit($text, $limit = 100, $end = '...'): string
 {
     return Str::limit($text, $limit, $end);
 }
+
+function numFormat($n, $add_plus = true, $rtl = false) {
+    $n_format = floor($n);
+    $suffix   = '';
+    $plus     = '';
+    if ($n > 0 && $n < 1000) {
+        // 1 - 999
+        $n_format = floor($n);
+        $suffix   = '';
+        $plus     = '';
+    }
+    else if ($n >= 1000 && $n < 1000000) {
+        // 1k-999k
+        $n_format = floor($n / 1000);
+        $suffix   = 'K';
+        $plus     = '+';
+    }
+    else if ($n >= 1000000 && $n < 1000000000) {
+        // 1m-999m
+        $n_format = floor($n / 1000000);
+        $suffix   = 'M';
+        $plus     = '+';
+    }
+    else if ($n >= 1000000000 && $n < 1000000000000) {
+        // 1b-999b
+        $n_format = floor($n / 1000000000);
+        $suffix   = 'G';
+        $plus     = '+';
+    }
+    else if ($n >= 1000000000000) {
+        // 1t+
+        $n_format = floor($n / 1000000000000);
+        $suffix   = 'T';
+        $plus     = '+';
+    }
+
+    if ( ! $add_plus) {
+        $plus = '';
+    }
+
+    $r = $rtl ? $plus . $n_format . $suffix : $n_format . $suffix . $plus;
+
+    return ! empty($n_format . $suffix) ? $r : 0;
+}

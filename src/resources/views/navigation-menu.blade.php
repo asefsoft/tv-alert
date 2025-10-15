@@ -13,28 +13,35 @@
                 <!-- Navigation Links -->
 
                 {{-- Dashboard --}}
-                <div class="hidden space-x-6 sm:-my-px sm:ml-8 sm:flex">
+                <div class="hidden  sm:ml-4 md:ml-6 sm:flex">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('Home') }}
+                    </x-nav-link>
+                </div>
+
+                {{-- Popular --}}
+                <div class="hidden  truncate  sm:ml-4 md:ml-6 sm:flex">
+                    <x-nav-link href="{{ route('popular-shows') }}" :active="request()->routeIs('popular-shows')">
+                        {{ __('Popular Shows') }}
                     </x-nav-link>
                 </div>
 
                 {{-- Timeline --}}
-                <div class="hidden space-x-6 sm:-my-px sm:ml-8 sm:flex">
+                <div class="hidden   sm:ml-4 md:ml-6 sm:flex">
                     <x-nav-link href="{{ route('display-timeline') }}" :active="request()->routeIs('display-timeline')">
                         {{ __('Timeline') }}
                     </x-nav-link>
                 </div>
 
                 {{-- User subscribed series --}}
-                <div class="hidden space-x-6 sm:-my-px sm:ml-8 sm:flex truncate">
+                <div class="hidden   sm:ml-4 md:ml-6 sm:flex truncate">
                     <x-nav-link href="{{ route('user-series') }}" :active="request()->routeIs('user-series')">
                         {{ __('Your Series') }}
                     </x-nav-link>
                 </div>
 
                 <!-- Search -->
-                <div class="flex items-center ml-5 sm:ml-8">
+                <div class="flex items-center ml-5 sm:ml-4 md:ml-6">
                     <livewire:TVShow-Search></livewire:TVShow-Search>
                 </div>
             </div>
@@ -188,22 +195,28 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
 
         @auth()
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="sm:ml-4 md:ml-6space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
 
+        {{-- popular-shows --}}
+        <div class="sm:ml-4 md:ml-6space-y-1">
+            <x-responsive-nav-link href="{{ route('popular-shows') }}" :active="request()->routeIs('popular-shows')">
+                {{ __('Popular Shows') }}
+            </x-responsive-nav-link>
+        </div>
 
         {{-- Timeline --}}
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="sm:ml-4 md:ml-6space-y-1">
             <x-responsive-nav-link href="{{ route('display-timeline') }}" :active="request()->routeIs('display-timeline')">
                 {{ __('Timeline') }}
             </x-responsive-nav-link>
         </div>
 
-        {{-- Timeline --}}
-        <div class="pt-2 pb-3 space-y-1">
+        {{-- User Shows --}}
+        <div class="sm:ml-4 md:ml-6space-y-1">
             <x-responsive-nav-link href="{{ route('user-series') }}" :active="request()->routeIs('user-series')">
                 {{ __('Your Series') }}
             </x-responsive-nav-link>
@@ -212,14 +225,14 @@
 
         @guest()
         {{-- Login --}}
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="sm:ml-4 md:ml-6space-y-1">
             <x-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
                 {{ __('Login') }}
             </x-responsive-nav-link>
         </div>
 
         {{-- Register --}}
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="sm:ml-4 md:ml-6space-y-1">
             <x-responsive-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
                 {{ __('Register') }}
             </x-responsive-nav-link>

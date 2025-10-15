@@ -156,20 +156,22 @@ class User extends Authenticatable
     {
         $sub = $this->subscriptions()->with('imdbinfo');
 
-        // for 'soon be released' sort order we put before today shows to the end
-        if ($putBeforeTodayToEnd) {
-            $sub->orderBy(DB::raw("$sortField > now()"), 'desc');
+        if(! in_array($sortField, ['popularity_score', 'rating'])) {
+            // for 'soon be released' sort order we put before today shows to the end
+            if ($putBeforeTodayToEnd) {
+                $sub->orderBy(DB::raw("$sortField > now()"), 'desc');
+            }
+
+            // in testing env we use sqlite, and does not support isnull
+            if (!isTesting()) {
+                // By ordering by this expression, we can control whether rows with NULL values in $sortField appear first or last
+                // in the results, depending on the value of $sortOrder (asc or desc). we use asc to put null values last
+                $sub->orderBy(DB::raw("isnull($sortField)"), 'asc');
+            }
         }
 
-        // in testing env we use sqlite, and does not support isnull
-        if (! isTesting()) {
-            // By ordering by this expression, we can control whether rows with NULL values in $sortField appear first or last
-            // in the results, depending on the value of $sortOrder (asc or desc). we use asc to put null values last
-            $sub->orderBy(DB::raw("isnull($sortField)"), 'asc');
-        }
-
-        $orderBy = $sub->orderBy($sortField, $sortOrder);
-        $query=$orderBy->toSql();
+        $orderBy = $sub->sortOrderBy($sortField, $sortOrder);
+        $query = $orderBy->toSql();
         return $orderBy->paginate($perPage, ['*'], 'page', $page);
     }
 

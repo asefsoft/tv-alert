@@ -54,6 +54,62 @@ class TVShow extends Model
         'has_imdb_info' => 'boolean',
     ];
 
+
+    public function scopeActiveShows(Builder $builder)
+    {
+        return $builder->whereIn('status', self::ACTIVE_SHOWS);
+    }
+
+    public function scopeHasNextEpisodeDate(Builder $builder)
+    {
+        return $builder->whereNotNull('next_ep_date');
+    }
+
+    // limit results to given show ids
+    // usually use for filtering shows to current user subscribed shows
+    public function scopeLimitToIDs(Builder $builder, array $showIDs)
+    {
+        return count($showIDs) ? $builder->whereIn('id', $showIDs) : $builder;
+    }
+
+    /**
+     * Scope for popular shows based on IMDb info
+     */
+    public function scopePopular($query, float $minScore = 70.0)
+    {
+        return $query->whereHas('imdbInfo', function ($q) use ($minScore) {
+            $q->where('popularity_score', '>=', $minScore);//->orderBy('popularity_score', 'desc');
+        });
+        return $query->with([
+            'imdbInfo' => function ($q) use ($minScore) {
+                $q->where('popularity_score', '>=', $minScore);
+        }]);
+    }
+
+    /**
+     * Scope for recently started shows (within last 5 years)
+     */
+    public function scopeRecentlyStarted(Builder $builder, int $withinYears = 5)
+    {
+        return $builder->where('start_date', '>=', now()->subYears($withinYears));
+    }
+
+    public function scopeSortOrderBy(Builder $builder, $sortField, $sortOrder = 'desc')
+    {
+        // for sorting on imdb_info table we need first join that table
+        return $builder->when(in_array($sortField, ['popularity_score', 'rating']), function ($q) use ($sortOrder, $sortField) {
+            $q = $q->select('tv_shows.*')
+                // Without ->select('tv_shows.*'), the id from tv_show_imdb_info might overwrite tv_shows.id
+                // in the result, causing broken relations.
+                ->join('tv_show_imdb_info', 'tv_show_imdb_info.tv_show_id', '=', 'tv_shows.id')
+                ->orderBy($sortField, $sortOrder);
+            return $q;
+        }, function ($q) use ($sortOrder, $sortField) {
+            return $q->orderBy($sortField, $sortOrder);
+        });
+    }
+
+
     // users that subscribed to tvshow
     public function subscribers(): BelongsToMany
     {
@@ -156,6 +212,11 @@ class TVShow extends Model
         return $maxLen > 0 ? substr($description, 0, $maxLen) : $description;
     }
 
+
+    public function isActive(): bool {
+        return in_array(TVShowStatus::tryFrom($this->status), self::ACTIVE_SHOWS);
+    }
+
     public function isRunning(): bool
     {
         return $this->status == TVShowStatus::Running || strtolower($this->status) === 'running';
@@ -164,23 +225,6 @@ class TVShow extends Model
     public function isEnded(): bool {
         return $this->status == TVShowStatus::Ended || strtolower($this->status) === 'ended';
 
-    }
-
-    public function scopeActiveShows(Builder $builder)
-    {
-        return $builder->whereIn('status', self::ACTIVE_SHOWS);
-    }
-
-    public function scopeHasNextEpisodeDate(Builder $builder)
-    {
-        return $builder->whereNotNull('next_ep_date');
-    }
-
-    // limit results to given show ids
-    // usually use for filtering shows to current user subscribed shows
-    public function scopeLimitToIDs(Builder $builder, array $showIDs)
-    {
-        return count($showIDs) ? $builder->whereIn('id', $showIDs) : $builder;
     }
 
     public function getFullInfoUrl()
@@ -402,7 +446,7 @@ class TVShow extends Model
         $allEpisodes = $allEpisodes->map(function ($episode) {
             $episode['air_date'] = date_create($episode['air_date']);// Carbon::make($episode['air_date']);
             return (object)($episode);
-            return EpisodeData::from($episode);
+//            return EpisodeData::from($episode);
         });
 
         $result =  $allEpisodes->groupBy('season')

@@ -28,7 +28,7 @@
         <div class="flex justify-start pb-5 flex-col sm:flex-row">
             <div class="break-words"><div class="flex items-center grow">
                 {{--  Sort Icon--}}
-                <div class="flex shrink-0 mr-2" >
+                <div class="flex shrink-0 mb-2 sm:mb-0 mr-2" >
                     <svg style="width: 24px; height: 24px; ">
                         <use xlink:href="#sort">
                             <symbol id="sort" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6 15.793L3.707 13.5l-1.414 1.414 4 4a1 1 0 001.414 0l4-4-1.414-1.414L8 15.793V5H6v10.793zM22 5H10v2h12V5zm0 4H12v2h10V9zm0 4h-8v2h8v-2zm-6 4h6v2h-6v-2z" clip-rule="evenodd"></path></symbol>
@@ -39,7 +39,7 @@
             <div class="contents">
             @foreach($validSortFields as $sField)
                 <span
-                    class="cursor-pointer whitespace-nowrap text-body-2 mr-2
+                    class="cursor-pointer whitespace-nowrap mb-2 sm:mb-0 ml-8 sm:ml-0 mr-3
                     {{ $sortField === $sField['name'] && $sortOrder === $sField['order'] ? 'text-red-400 font-bold hover:text-red-600 ' : 'text-gray-500 hover:text-gray-700 ' }}"
                     wire:click="changeSortField('{{$sField['id']}}')"
                 >
