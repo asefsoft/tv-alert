@@ -330,11 +330,13 @@ class TVShow extends Model
     // get on-air tvshows which the air date is close
     public static function getCloseAirDateShows($page = 1, $perPage = 20, $targetShows = []): LengthAwarePaginator
     {
+        $minPopularShows =  isTesting() ? 5 : 35;
         $q = static::activeShows() // only active shows, not ENDED shows
             ->LimitToIDs($targetShows) // only return shows we want, usually user's subscribed shows
             ->with('imdbinfo')
             // get shows with close air-date
             ->hasNextEpisodeDate()
+            ->popular($minPopularShows) // have some popularity
             ->whereBetween('next_ep_date', [now(), now()->addDays(2)]) // only next 2 days shows
             ->orderBy('next_ep_date', 'asc');
         //  ->select(['name', 'next_ep_date', 'updated_at']);

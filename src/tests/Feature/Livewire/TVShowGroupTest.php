@@ -13,8 +13,8 @@ class TVShowGroupTest extends TestCase
     public function recent_shows_renders_successfully()
     {
         // first test without auth user
-        Livewire::test(TVShowGroup::class, ['type' => 'recent-shows', 'title' => 'Recent Shows'])
-            ->assertSee(['Recent Shows', '</livewire:TVShow-Box>',
+        Livewire::test(TVShowGroup::class, ['type' => 'recent-shows', 'title' => 'Airing Soon'])
+            ->assertSee(['Airing Soon', '</livewire:TVShow-Box>',
                 'alt="TV Show Poster"', 'aria-label="Pagination Navigation"'], false) // see all necessary parts
             ->assertDontSee(['Only Subscribed Shows?', 'No tv show available!'])
             ->assertSet('canToggleSubscribedShowsFilter', false)
@@ -23,8 +23,8 @@ class TVShowGroupTest extends TestCase
 
         // now with auth user
         $user = User::factory()->create();
-        Livewire::actingAs($user)->test(TVShowGroup::class, ['type' => 'recent-shows', 'title' => 'Recent Shows'])
-            ->assertSee(['Recent Shows', '</livewire:TVShow-Box>', 'Only Subscribed Shows?',
+        Livewire::actingAs($user)->test(TVShowGroup::class, ['type' => 'recent-shows', 'title' => 'Airing Soon'])
+            ->assertSee(['Airing Soon', '</livewire:TVShow-Box>', 'Only Subscribed Shows?',
                 'alt="TV Show Poster"', 'aria-label="Pagination Navigation"'], false) // see all necessary parts
             ->assertDontSee(['No tv show available!'])
             ->assertSet('canToggleSubscribedShowsFilter', true) // can toggle var now must be true

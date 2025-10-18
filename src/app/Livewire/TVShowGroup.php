@@ -14,7 +14,7 @@ class TVShowGroup extends Component
     use WithPagination, WithoutUrlPagination;
 
     const VALID_SORT_FIELDS = [
-        ['id' => 1, 'text' => 'Release Soon', 'name' => 'next_ep_date', 'order' => 'asc', 'putBeforeTodayToEnd'=> true ],
+        ['id' => 1, 'text' => 'Airing Soon', 'name' => 'next_ep_date', 'order' => 'asc', 'putBeforeTodayToEnd'=> true ],
         ['id' => 2, 'text' => 'Recently Released', 'name' => 'last_ep_date', 'order' => 'desc', 'putBeforeTodayToEnd'=> true],
         ['id' => 3, 'text' => 'Newest', 'name' => 'start_date', 'order' => 'desc'],
         ['id' => 4, 'text' => 'Oldest', 'name' => 'start_date', 'order' => 'asc'],
@@ -52,6 +52,7 @@ class TVShowGroup extends Component
     {
         // only auth user can use toggle option
         $this->canToggleSubscribedShowsFilter = auth()->check();
+        $this->setDefaultSortField();
     }
 
     public function render()
@@ -71,6 +72,17 @@ class TVShowGroup extends Component
             $this->sortOrder = $fieldData['order'];
             $this->putBeforeTodayToEnd = $fieldData['putBeforeTodayToEnd'] ?? false;
             $this->resetPage();
+        }
+    }
+
+
+    public function setSortFieldByName($fieldName) {
+        $fieldData = collect(self::VALID_SORT_FIELDS)->firstWhere('name', $fieldName);
+        if ($fieldData) {
+            $this->sortField = $fieldData['name'];
+            $this->sortOrder = $fieldData['order'];
+            $this->putBeforeTodayToEnd = $fieldData['putBeforeTodayToEnd'] ?? false;
+//            $this->resetPage();
         }
     }
 
@@ -99,8 +111,9 @@ class TVShowGroup extends Component
             case 'recent-popular-shows':
             case 'ongoing-popular-shows':
             case 'popular-shows':
-            $this->canToggleSubscribedShowsFilter = false;
-            $query = $this->getPopularShows($this->type);
+                $this->canToggleSubscribedShowsFilter = false;
+                $query = $this->getPopularShows($this->type);
+                $this->query = $query->toRawSql();
                 $this->shows = $query->paginate($this->perPage);
                 break;
             default:
@@ -143,5 +156,26 @@ class TVShowGroup extends Component
         }
 
         return $userTvShows;
+    }
+
+    private function setDefaultSortField(): void {
+        switch ($this->type) {
+            case 'recent-shows':
+            case 'last-7-days-shows':
+            case 'subscribed-shows':
+                break;
+
+            case 'popular-shows':
+                $this->setSortFieldByName('popularity_score');
+                break;
+
+            case 'recent-popular-shows':
+                $this->setSortFieldByName('rating');
+                break;
+
+            case 'ongoing-popular-shows':
+                $this->setSortFieldByName('popularity_score');
+                break;
+        }
     }
 }

@@ -18,7 +18,7 @@ class TVShowImdbInfoFactory extends Factory
             'imdb_url' => function (array $attributes) {
                 return 'https://www.imdb.com/title/tt' . $attributes['imdb_id'];
             },
-            'seasons' => $this->faker->numberBetween(1, 20),
+            'seasons' => $this->faker->numberBetween(1, 15),
             'lang' => $this->faker->randomElement(['en', 'es', 'fr', 'de']),
             'year' => $this->faker->year(),
             'yearspan' => function (array $attributes) {
@@ -31,7 +31,7 @@ class TVShowImdbInfoFactory extends Factory
             'keywords' => $this->faker->words(5),
             'rating' => $this->faker->randomFloat(1, 1, 10),
             'votes' => $this->faker->numberBetween(1000, 2000000),
-            'popularity_score' => 0,
+            'popularity_score' => $this->faker->numberBetween(20, 95),
         ];
     }
 

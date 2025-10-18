@@ -22,7 +22,7 @@
                 {{-- Popular --}}
                 <div class="hidden  truncate  sm:ml-4 md:ml-6 sm:flex">
                     <x-nav-link href="{{ route('popular-shows') }}" :active="request()->routeIs('popular-shows')">
-                        {{ __('Popular Shows') }}
+                        {{ __('Popular Series') }}
                     </x-nav-link>
                 </div>
 
@@ -204,7 +204,7 @@
         {{-- popular-shows --}}
         <div class="sm:ml-4 md:ml-6space-y-1">
             <x-responsive-nav-link href="{{ route('popular-shows') }}" :active="request()->routeIs('popular-shows')">
-                {{ __('Popular Shows') }}
+                {{ __('Popular Series') }}
             </x-responsive-nav-link>
         </div>
 

@@ -19,7 +19,8 @@ class TVShowFactory extends Factory
         $name = fake()->unique()->tvShow();
         $startDate = $fake->dateTimeBetween('-10 years', '+1 year');
 
-    $hasImdbInfo = $fake->boolean();
+        $hasImdbInfo = random_int(1, 100) > 30;
+
         return [
             'name' => $name,
             'permalink' => Str::slug($name) . Str::random(15),

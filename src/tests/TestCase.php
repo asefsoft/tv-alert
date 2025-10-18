@@ -37,7 +37,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        // for github action we need to disable Vite
+        // for GitHub action we need to disable Vite
         $this->withoutVite();
     }
 
@@ -71,6 +71,9 @@ abstract class TestCase extends BaseTestCase
             // 7 or more is needed to activate pagination
             if (TVShow::getCloseAirDateShows()->count() < 7 || TVShow::count() < TVShowSeeder::TOTAL_TVSHOWS_SEED) {
                 Artisan::call('db:seed --class=TVShowSeeder');
+                if(TVShow::getCloseAirDateShows()->count() < 7) {
+                    throw new \Exception("DB seed has been run on TVShow but still there is not enough tvshows on getCloseAirDateShows!\ncheck db seeds on TestCase.php file.");
+                }
             }
 
             if (User::count() < 10) {
