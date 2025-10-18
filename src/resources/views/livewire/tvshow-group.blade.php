@@ -23,7 +23,7 @@
 
     {{-- Sort TV shows by date --}}
     @if($canSort)
-        @include('livewire\partials\sorting-box')
+        @include('livewire.partials.sorting-box')
     @endif
 
     @if(! empty($shows) && $shows->count() > 0)
