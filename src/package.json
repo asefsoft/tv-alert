@@ -1,4 +1,5 @@
 {
+    "name": "tv-alert",
     "private": true,
     "type": "module",
     "scripts": {
